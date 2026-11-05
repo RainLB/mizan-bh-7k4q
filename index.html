@@ -376,6 +376,9 @@ input, select { font: inherit; color: inherit; }
 #accent-chips .chip { flex: 0 0 auto; white-space: nowrap; }
 .notearea { resize: none; min-height: 64px; line-height: 1.4; font: inherit; width: 100%; }
 .item .s, .row-btn .rs, .card .meta, .payments button span { white-space: pre-line; overflow-wrap: anywhere; text-overflow: clip; }
+.pjs-nav { display: flex; align-items: center; justify-content: space-between; }
+.pjs-nav b { font-weight: 600; }
+.pjs-nav .icon-btn { width: 40px; height: 40px; font-size: 22px; }
 .customcol { display: flex; align-items: center; gap: 10px; margin-top: 10px; font-size: 14px; color: var(--ink-2); }
 .customcol input[type=color] { width: 44px; height: 32px; padding: 0; border: 1px solid var(--line); border-radius: 8px; background: none; }
 /* Accueil : tout tient dans l'écran, sans défiler */
@@ -495,11 +498,14 @@ input:focus, textarea:focus, .select:focus { outline: 2px solid color-mix(in srg
 
   <section class="view" id="view-pjstats" hidden>
     <div class="section-title" data-i="pjStatsBtn"></div>
-    <div class="seg3" role="group" id="pjs-period">
+    <div class="seg3" role="group" id="pjs-period" style="grid-template-columns:repeat(4,1fr)">
       <button data-pjs="month" data-i="thisMonth"></button>
       <button data-pjs="year" data-i="thisYear"></button>
       <button data-pjs="all" data-i="all"></button>
+      <button data-pjs="custom" data-i="pCustom"></button>
     </div>
+    <div class="pjs-nav" id="pjs-nav"><button type="button" class="icon-btn" id="pjs-prev" aria-label="‹">‹</button><b id="pjs-lbl"></b><button type="button" class="icon-btn" id="pjs-next" aria-label="›">›</button></div>
+    <div class="range" id="pjs-range" hidden><input type="date" id="pjs-from" aria-label="De"><span>→</span><input type="date" id="pjs-to" aria-label="À"></div>
     <div id="pjs" style="display:flex;flex-direction:column;gap:14px"></div>
   </section>
 
@@ -832,6 +838,7 @@ input:focus, textarea:focus, .select:focus { outline: 2px solid color-mix(in srg
     </div>
     <div class="two">
       <div class="field"><label for="pr-courier" data-i="prodCourier"></label><input id="pr-courier" type="text" maxlength="40"></div>
+      <div class="field"><label for="pr-recv" data-i="recvDate"></label><input id="pr-recv" type="date"></div>
       <div class="field"><label for="pr-client" data-i="prodClient"></label><input id="pr-client" type="text" maxlength="40"></div>
       <div class="field"><label for="pr-phone" data-i="clPhone"></label><input id="pr-phone" type="tel" inputmode="tel" maxlength="24" placeholder="06 12 34 56 78"></div>
     </div>
@@ -1719,6 +1726,11 @@ Object.assign(DICT, {
   bdTitle: ['Budgets du mois', 'This month\'s budgets', 'ميزانيات الشهر', 'بودجي د هاد الشهر'],
   bdAlert: ['Budget dépassé : {n}', 'Budget exceeded: {n}', 'تجاوزت الميزانية: {n}', 'فاتك البودجي: {n}'],
   bkAlert: ['Pense à faire une sauvegarde', 'Time to make a backup', 'حان وقت النسخ الاحتياطي', 'دير سوفكارد']
+});
+
+Object.assign(DICT, {
+  recvDate: ['Date de réception', 'Date received', 'تاريخ الاستلام', 'نهار التوصل'],
+  pCustom: ['Perso', 'Custom', 'مخصص', 'مخصص']
 });
 /* ---------- Icônes (traits 24x24) et couleurs ---------- */
 const ICONS = {
@@ -3194,7 +3206,7 @@ function renderProduct() {
     '<div class="field"><label for="pd-status">' + esc(t('prodStatus')) + '</label><select class="select" id="pd-status">' + statuses().map(s => '<option value="' + esc(s.id) + '"' + (s.id === p.status || (!p.status && s === statuses()[0]) ? ' selected' : '') + '>' + esc(stName(s)) + '</option>').join('') + '</select></div>' +
     '<div class="tags">' + pillHtml(st) + batTag(p.battery) + colTag(p) + '</div>' +
     '<div class="kv">' + row(t('prodType'), p.type) + row(t('prodStorage'), p.storage) + 
-    row(t('prodSerial'), p.serial) + row(t('prodCourier'), p.courier) + row(t('prodClient'), p.client) + row(t('prodPrice', { c: cur() }), c.price ? fmt(c.price) : '') + '</div>' +
+    row(t('prodSerial'), p.serial) + row(t('prodCourier'), p.courier) + row(t('recvDate'), p.recv ? shortDate(p.recv) : '') + row(t('prodClient'), p.client) + row(t('prodPrice', { c: cur() }), c.price ? fmt(c.price) : '') + '</div>' +
     contactHtml(p, c) + (c.returned ? '<div class="note">' + esc(t('retNote2')) + '</div>' : '') + '</div>';
   /* dépenses */
   h += '<div class="card"><div class="section-title">' + esc(t('pjExpenses')) + '</div><div class="rows">' + (p.expenses || []).slice().sort((a, b) => (a.date < b.date ? 1 : -1)).map(e =>
@@ -3254,6 +3266,7 @@ function openProd(id) {
   $('#pr-name').value = g('name', ''); $('#pr-type').value = g('type', pTypes()[0]);
   $('#pr-status').value = p ? (p.status || statuses()[0].id) : statuses()[0].id;
   ['storage', 'battery', 'color', 'serial', 'courier', 'client', 'phone'].forEach(k => { $('#pr-' + k).value = g(k, ''); });
+  $('#pr-recv').value = (p && (p.recv || p.date)) || today();
   $('#pr-color-c').value = (p && p.colorHex) || colHex(g('color', '')) || '#6B7280';
   const main = p ? (p.expenses || []).find(e => e.id === 'main') : null;
   $('#pr-partner').innerHTML = partners().map(x => '<option value="' + esc(x.id) + '">' + esc(x.name) + '</option>').join('');
@@ -3299,6 +3312,7 @@ $('#form-prod').addEventListener('submit', async e => {
   const cfg = clone(projCfg()); let cfgChanged = false;
   if (p.storage && pStorages().indexOf(p.storage) < 0) { cfg.storages = pStorages().concat([p.storage]); cfgChanged = true; }
   p.colorHex = p.color ? $('#pr-color-c').value : '';
+  p.recv = $('#pr-recv').value || p.date || today();
   if (p.color) {
     const list = pColorList(), f = list.find(x => x.n.toLowerCase() === p.color.toLowerCase());
     if (!f) { cfg.colors = list.concat([{ n: p.color, c: p.colorHex }]); cfg.colorsV = 2; cfgChanged = true; }
@@ -3649,13 +3663,22 @@ makeCombo('#pr-color', () => pColorList().map(x => ({ v: x.n, c: x.c })));
 makeCombo('#pe-kind', () => { const used = []; prodList().forEach(p => (p.expenses || []).forEach(e => { const l = kindLabel(e.kind); if (used.indexOf(l) < 0) used.push(l); })); return KINDKEYS.map(k => t('ek.' + k)).concat(used.filter(l => KINDKEYS.every(k => t('ek.' + k) !== l))).map(v => ({ v: v })); });
 
 /* Statistiques du projet (vue dédiée) */
-let pjsP = 'month';
+let pjsP = 'month', pjsA = new Date(), pjsFrom = '', pjsTo = '';
 $('#btn-pstats').addEventListener('click', () => setTab('pjstats'));
-$('#pjs-period').addEventListener('click', e => { const b = e.target.closest('[data-pjs]'); if (b) { pjsP = b.dataset.pjs; renderPjStats(); } });
+$('#pjs-period').addEventListener('click', e => { const b = e.target.closest('[data-pjs]'); if (b) { pjsP = b.dataset.pjs; if (pjsP === 'month' || pjsP === 'year') pjsA = new Date(); renderPjStats(); } });
+$('#pjs-prev').addEventListener('click', () => { pjsA = pjsP === 'year' ? new Date(pjsA.getFullYear() - 1, 0, 1) : new Date(pjsA.getFullYear(), pjsA.getMonth() - 1, 1); renderPjStats(); });
+$('#pjs-next').addEventListener('click', () => { pjsA = pjsP === 'year' ? new Date(pjsA.getFullYear() + 1, 0, 1) : new Date(pjsA.getFullYear(), pjsA.getMonth() + 1, 1); renderPjStats(); });
+$('#pjs-from').addEventListener('change', e => { pjsFrom = e.target.value; renderPjStats(); });
+$('#pjs-to').addEventListener('change', e => { pjsTo = e.target.value; renderPjStats(); });
 function renderPjStats() {
   $$('[data-pjs]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.pjs === pjsP)));
   if (state.tab !== 'pjstats') return;
-  const now = new Date(), r = rangeOf(pjsP, now);
+  const now = pjsA;
+  let r;
+  if (pjsP === 'custom') { const a = pjsFrom || ymd(new Date()), b2 = pjsTo || a; r = a <= b2 ? [a, b2] : [b2, a]; } else r = rangeOf(pjsP, now);
+  $('#pjs-nav').hidden = !(pjsP === 'month' || pjsP === 'year'); $('#pjs-range').hidden = pjsP !== 'custom';
+  $('#pjs-from').value = pjsFrom; $('#pjs-to').value = pjsTo;
+  $('#pjs-lbl').textContent = pjsP === 'year' ? String(now.getFullYear()) : now.toLocaleDateString(loc(), { month: 'long', year: 'numeric' });
   const all = pjList().filter(p => pjPartner === 'all' || partnerOf(p.partner).id === pjPartner);
   const lastD = p => (p.payments || []).map(x => x.date).sort().pop() || p.date || today();
   const info = all.map(p => ({ p: p, c: prodCalc(p), d: lastD(p) }));
@@ -3669,6 +3692,7 @@ function renderPjStats() {
   /* bénéfice par mois sur la période */
   const months = [];
   if (pjsP === 'year') for (let m = 0; m < 12; m++) months.push(new Date(now.getFullYear(), m, 1));
+  else if (pjsP === 'custom') { let d0 = new Date(r[0] + 'T00:00:00'); d0 = new Date(d0.getFullYear(), d0.getMonth(), 1); const e0 = new Date(r[1] + 'T00:00:00'); while (d0 <= e0 && months.length < 24) { months.push(new Date(d0)); d0 = new Date(d0.getFullYear(), d0.getMonth() + 1, 1); } if (!months.length) months.push(d0); }
   else for (let i = (pjsP === 'all' ? 11 : 5); i >= 0; i--) months.push(new Date(now.getFullYear(), now.getMonth() - i, 1));
   const sold = info.filter(x => !x.c.returned && stOf(x.p.status).kind === 'sold');
   const vals = months.map(d => { const k = d.getFullYear() + '-' + pad(d.getMonth() + 1); return sumBy(sold.filter(x => x.d.slice(0, 7) === k), x => x.c.profit); });
