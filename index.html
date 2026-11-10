@@ -668,6 +668,7 @@ input:focus, textarea:focus, .select:focus { outline: 2px solid color-mix(in srg
       <div class="field"><label for="loan-note" data-i="note"></label><textarea id="loan-note" class="notearea" rows="2" maxlength="300" data-ph="optional"></textarea></div>
     </div>
     <div class="note" id="loan-hint"></div>
+    <button type="button" class="btn danger small" id="loan-del" hidden></button>
     <div class="err" id="loan-err" role="alert"></div>
     <div class="row-actions">
       <button type="button" class="btn ghost" data-close data-i="cancel"></button>
@@ -1732,6 +1733,11 @@ Object.assign(DICT, {
   recvDate: ['Date de réception', 'Date received', 'تاريخ الاستلام', 'نهار التوصل'],
   pCustom: ['Perso', 'Custom', 'مخصص', 'مخصص']
 });
+
+Object.assign(DICT, {
+  errBelowPaid: ['Le montant ne peut pas être inférieur à ce qui a déjà été payé ({n}).', 'The amount cannot be lower than what is already paid ({n}).', 'لا يمكن أن يكون المبلغ أقل من المدفوع ({n}).', 'ما يمكنش يكون المبلغ أقل من اللي تخلص ({n}).'],
+  loanDelWarn: ['Supprimer efface aussi tous les paiements de ce prêt ou crédit.', 'Deleting also erases all payments of this loan or credit.', 'الحذف يمسح أيضًا جميع دفعات هذا القرض.', 'المسح كيمسح حتى كاع الدفعات د هاد القرض.']
+});
 /* ---------- Icônes (traits 24x24) et couleurs ---------- */
 const ICONS = {
   cart: '<circle cx="9" cy="20" r="1.2"/><circle cx="18" cy="20" r="1.2"/><path d="M2 3h3l2.7 11.5a2 2 0 0 0 2 1.5h8.2a2 2 0 0 0 2-1.5L21 7H6"/>',
@@ -2515,18 +2521,19 @@ $('#btn-reports').addEventListener('click', () => setTab('reports'));
 let swipe = null;
 document.addEventListener('touchstart', e => {
   const tg = e.target;
-  if (e.touches.length !== 1 || tg.closest('input, select, textarea, .calc, .sheet, .scrim, .donut, #pj-filter, #topseg, #accent-chips')) { swipe = null; return; }
+  if (e.touches.length !== 1 || tg.closest('input, select, textarea, .calc, .sheet, .scrim, .donut, #pj-filter, #pj-projs, #topseg, #accent-chips')) { swipe = null; return; }
   swipe = { x: e.touches[0].clientX, y: e.touches[0].clientY };
 }, { passive: true });
 document.addEventListener('touchend', e => {
-  if (!swipe || TABS.indexOf(state.tab) < 0) { swipe = null; return; }
+  if (!swipe) return;
   const c = e.changedTouches[0], dx = c.clientX - swipe.x, dy = c.clientY - swipe.y;
   swipe = null;
   if (Math.abs(dx) < 70 || Math.abs(dy) > 45 || Math.abs(dx) < Math.abs(dy) * 2) return;
-  /* Le sens du geste suit la position des onglets dans la barre (valable en arabe aussi) : glisser vers la gauche amène l'onglet situé à droite, vers la droite celui situé à gauche (comme une page qu'on tire) ; au bout de la barre on reboucle. */
-  const order = $$('.tabs [data-tab]').filter(b => !b.hidden && TABS.indexOf(b.dataset.tab) >= 0).sort((p, q) => p.getBoundingClientRect().left - q.getBoundingClientRect().left).map(b => b.dataset.tab);
-  const n = order.length, i = order.indexOf(state.tab);
-  setTab(order[(i + (dx < 0 ? 1 : -1) + n) % n]);
+  /* Le balayage reste dans la rubrique : projets (Projet) ou Crédit/Prêt/Projet/Tous (Crédits). Jamais d'un onglet à l'autre. */
+  const next = (dx < 0) !== RTL(); /* dans la langue de gauche à droite : glisser vers la gauche = suivant */
+  const step = (list, cur) => { const i = list.indexOf(cur), j = i + (next ? 1 : -1); return i >= 0 && j >= 0 && j < list.length ? list[j] : null; };
+  if (state.tab === 'project') { const id = step(pjs().map(x => x.id), curPj().id); if (id) { setPjCur(id); render(); } }
+  else if (state.tab === 'loans') { const k = step(['borrowed', 'lent', 'project', 'all'], state.lk); if (k) { state.lk = k; render(); } }
 }, { passive: true });
 $('#acc-filter').addEventListener('change', e => { state.acc = e.target.value; render(); });
 
@@ -2623,11 +2630,13 @@ function paintLoanDir() {
   $('#loan-who-l').textContent = t(loanDir === 'lent' ? 'whoLent' : 'whoBorrowed');
   $('#loan-hint').textContent = t(loanDir === 'lent' ? 'hintLent' : 'hintBorrowed');
 }
+let loanConfirm = false;
 function openLoan(id) {
   const l = id ? state.loans[id] : null;
   loanEdit = id || null; loanDir = l ? l.dir : 'lent'; paintLoanDir();
   $('#loan-title').textContent = t(l ? 'editLoan' : 'btnLoan');
   $('#loan-who').value = l ? l.who : ''; $('#calc-loan').calc.set(l ? l.amount : ''); $('#loan-note').value = l ? (l.note || '') : ''; $('#loan-date').value = l ? l.date : today(); $('#loan-err').textContent = '';
+  loanConfirm = false; $('#loan-del').hidden = !l; $('#loan-del').textContent = t('del');
   fillAccSelect('#loan-acc', l ? l.acc : defaultAcc()); openSheet('#sheet-loan');
   if (!l) setTimeout(() => $('#loan-who').focus(), 30);
 }
@@ -2639,9 +2648,16 @@ $('#form-loan').addEventListener('submit', async e => {
   if (!who) { $('#loan-err').textContent = t('errWho'); return; }
   if (!(amount > 0)) { $('#loan-err').textContent = t('errAmount'); return; }
   const old = loanEdit ? clone(state.loans[loanEdit]) : null;
+  if (old && amount < paidOf(old) - 0.001) { $('#loan-err').textContent = t('errBelowPaid', { n: money(paidOf(old)) }); return; }
   const obj = Object.assign(old || { payments: [], ts: Date.now() }, { dir: loanDir, who: who, amount: amount, acc: $('#loan-acc').value, date: $('#loan-date').value || today(), note: $('#loan-note').value.trim() });
   const id = loanEdit || newId(); closeSheets();
   try { await store.put('loans', id, obj); toast(t(old ? 'tSaved' : 'tLoan')); if (!old) setTab('loans'); } catch (err) { /* message déjà affiché */ }
+});
+
+$('#loan-del').addEventListener('click', async () => {
+  if (!loanConfirm) { loanConfirm = true; $('#loan-del').textContent = t('confirmDel'); $('#loan-err').textContent = t('loanDelWarn'); return; }
+  const id = loanEdit; closeSheets();
+  try { await store.del('loans', id); toast(t('tDeleted')); } catch (err) { /* message déjà affiché */ }
 });
 
 /* Remboursements par tranches, chacun sur le compte choisi */
@@ -3078,21 +3094,26 @@ const KINDKEYS = ['purchase', 'transport', 'accessories', 'repair', 'other'];
 const kindLabel = k => KINDKEYS.indexOf(k) >= 0 ? t('ek.' + k) : (k || t('ek.other'));
 const kindKey = v => { const x = String(v || '').trim(), f = KINDKEYS.find(k => t('ek.' + k).toLowerCase() === x.toLowerCase()); return f || x || 'other'; };
 const pillHtml = st => '<span class="cpill" style="--c:' + stColor(st) + '">' + esc(stName(st)) + '</span>';
-const defColors = () => COLDEF.map(r => ({ n: r[1 + lidx()], c: r[4] }));
+/* Couleurs : nom reconnu dans toutes les langues, affiché dans la langue courante */
+const COLSHORT = ['black', 'white', 'red', 'green', 'yellow', 'purple', 'blue', 'pink', 'spacegray', 'silver', 'gold', 'graphite', 'midnight', 'starlight', 'tnat', 'deeppurple'];
+const colRow_ = name => { const k = String(name || '').trim().toLowerCase(); return k ? COLDEF.find(r => r[1].toLowerCase() === k || r[2].toLowerCase() === k || r[3] === String(name).trim()) : null; };
+const colLabel = name => { const r = colRow_(name); return r ? r[1 + lidx()] : (name || ''); };
+const colSame = (a, b) => { const x = String(a || '').trim().toLowerCase(), y = String(b || '').trim().toLowerCase(); if (x === y) return !!x; const r1 = colRow_(a), r2 = colRow_(b); return !!(r1 && r2 && r1[0] === r2[0]); };
+const defColors = () => COLSHORT.map(k => COLDEF.find(r => r[0] === k)).map(r => ({ n: r[1 + lidx()], c: r[4] }));
 /* Anciennes couleurs par défaut (version précédente) : remplacées par la liste officielle */
 const oldColNames = () => new Set(Object.keys(DICT).filter(k => k.indexOf('col.') === 0).reduce((a, k) => a.concat(DICT[k]), []).map(x => x.toLowerCase()));
 const pColorList = () => {
   const c = projCfg().colors;
   if (!(Array.isArray(c) && c.length)) return defColors();
   const stored = c.map(x => typeof x === 'string' ? { n: x, c: '#6B7280' } : x);
-  if (projCfg().colorsV >= 2) return stored;
+  if (projCfg().colorsV >= 2) return stored.map(x => ({ n: colLabel(x.n), c: x.c }));
   const old = oldColNames(), out = defColors();
   stored.forEach(x => { if (!old.has(x.n.toLowerCase()) && !out.some(o => o.n.toLowerCase() === x.n.toLowerCase())) out.push(x); });
   return out;
 };
 const pColors = () => pColorList().map(x => x.n);
-const colHex = name => (pColorList().find(x => x.n.toLowerCase() === String(name || '').toLowerCase()) || {}).c;
-const colTag = p => p.color ? '<span class="tag"><i class="cdot" style="background:' + (p.colorHex || colHex(p.color) || '#6B7280') + '"></i>' + esc(p.color) + '</span>' : '';
+const colHex = name => (pColorList().find(x => colSame(x.n, name)) || {}).c;
+const colTag = p => p.color ? '<span class="tag"><i class="cdot" style="background:' + (p.colorHex || colHex(p.color) || '#6B7280') + '"></i>' + esc(colLabel(p.color)) + '</span>' : '';
 const pStorages = () => (projCfg().storages && projCfg().storages.length) ? projCfg().storages : ['32 GB', '64 GB', '128 GB', '256 GB', '512 GB', '1 TB'];
 const sumBy = (arr, f) => round2((arr || []).reduce((s, x) => s + f(x), 0));
 /* Dépense en monnaie locale : le taux est figé dans la dépense */
@@ -3266,6 +3287,7 @@ function openProd(id) {
   $('#pr-name').value = g('name', ''); $('#pr-type').value = g('type', pTypes()[0]);
   $('#pr-status').value = p ? (p.status || statuses()[0].id) : statuses()[0].id;
   ['storage', 'battery', 'color', 'serial', 'courier', 'client', 'phone'].forEach(k => { $('#pr-' + k).value = g(k, ''); });
+  $('#pr-color').value = colLabel(g('color', ''));
   $('#pr-recv').value = (p && (p.recv || p.date)) || today();
   $('#pr-color-c').value = (p && p.colorHex) || colHex(g('color', '')) || '#6B7280';
   const main = p ? (p.expenses || []).find(e => e.id === 'main') : null;
@@ -3314,7 +3336,7 @@ $('#form-prod').addEventListener('submit', async e => {
   p.colorHex = p.color ? $('#pr-color-c').value : '';
   p.recv = $('#pr-recv').value || p.date || today();
   if (p.color) {
-    const list = pColorList(), f = list.find(x => x.n.toLowerCase() === p.color.toLowerCase());
+    const list = pColorList(), f = list.find(x => colSame(x.n, p.color));
     if (!f) { cfg.colors = list.concat([{ n: p.color, c: p.colorHex }]); cfg.colorsV = 2; cfgChanged = true; }
     else if (f.c !== p.colorHex) { f.c = p.colorHex; cfg.colors = list; cfg.colorsV = 2; cfgChanged = true; }
   }
