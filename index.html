@@ -376,6 +376,8 @@ input, select { font: inherit; color: inherit; }
 #accent-chips .chip { flex: 0 0 auto; white-space: nowrap; }
 .notearea { resize: none; min-height: 64px; line-height: 1.4; font: inherit; width: 100%; }
 .item .s, .row-btn .rs, .card .meta, .payments button span { white-space: pre-line; overflow-wrap: anywhere; text-overflow: clip; }
+button.stat.tog { text-align: start; width: 100%; cursor: pointer; font: inherit; color: inherit; border: 1px solid var(--line); }
+button.stat.tog[aria-pressed="true"] { border-color: var(--accent); }
 .pjs-nav { display: flex; align-items: center; justify-content: space-between; }
 .pjs-nav b { font-weight: 600; }
 .pjs-nav .icon-btn { width: 40px; height: 40px; font-size: 22px; }
@@ -447,7 +449,7 @@ input:focus, textarea:focus, .select:focus { outline: 2px solid color-mix(in srg
     <div class="pnav">
       <button id="p-prev" data-al="prev"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button>
       <div class="label" id="p-label"></div>
-      <div class="range" id="p-range" hidden><input type="date" id="c-from" aria-label="De"><span>→</span><input type="date" id="c-to" aria-label="À"></div>
+      <div class="range" id="p-range" hidden><input type="date" id="c-from" data-al="dFrom"><span>→</span><input type="date" id="c-to" data-al="dTo"></div>
       <button id="p-next" data-al="next"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button>
     </div>
     <div class="ringwrap" id="ring"></div>
@@ -464,7 +466,7 @@ input:focus, textarea:focus, .select:focus { outline: 2px solid color-mix(in srg
   </section>
 
   <section class="view" id="view-search" hidden>
-    <div class="field"><input id="search-q" type="search" data-ph="searchPh" autocomplete="off" aria-label="Recherche"></div>
+    <div class="field"><input id="search-q" type="search" data-ph="searchPh" autocomplete="off" data-al="searchL"></div>
     <div id="search-res"></div>
   </section>
 
@@ -505,21 +507,22 @@ input:focus, textarea:focus, .select:focus { outline: 2px solid color-mix(in srg
       <button data-pjs="custom" data-i="pCustom"></button>
     </div>
     <div class="pjs-nav" id="pjs-nav"><button type="button" class="icon-btn" id="pjs-prev" aria-label="‹">‹</button><b id="pjs-lbl"></b><button type="button" class="icon-btn" id="pjs-next" aria-label="›">›</button></div>
-    <div class="range" id="pjs-range" hidden><input type="date" id="pjs-from" aria-label="De"><span>→</span><input type="date" id="pjs-to" aria-label="À"></div>
+    <div class="range" id="pjs-range" hidden><input type="date" id="pjs-from" data-al="dFrom"><span>→</span><input type="date" id="pjs-to" data-al="dTo"></div>
     <div id="pjs" style="display:flex;flex-direction:column;gap:14px"></div>
   </section>
 
   <section class="view" id="view-project" hidden>
-    <div class="chips" id="pj-projs"></div>
     <div class="field"><input id="pj-q" type="search" data-ph="pjSearch" autocomplete="off"></div>
     <div class="section-title" data-i="project"></div>
     <button class="alertbar" id="pj-alert" hidden></button>
     <div class="loan-summary" style="grid-template-columns:1fr 1fr">
-      <div class="stat"><div class="k" data-i="pjProfit"></div><div class="v inc num" id="pj-profit">0</div></div>
-      <div class="stat"><div class="k" data-i="pjCollect"></div><div class="v loan num" id="pj-collect">0</div></div>
-      <div class="stat"><div class="k" id="pj-give-l"></div><div class="v exp num" id="pj-give">0</div></div>
-      <div class="stat"><div class="k" data-i="pjStock"></div><div class="v num" id="pj-stock">0</div></div>
+      <button type="button" class="stat tog" data-tog="profit"><div class="k" id="pj-profit-l"></div><div class="v inc num" id="pj-profit">0</div></button>
+      <button type="button" class="stat tog" data-tog="collect"><div class="k" id="pj-collect-l"></div><div class="v loan num" id="pj-collect">0</div></button>
+      <button type="button" class="stat tog" data-tog="give"><div class="k" id="pj-give-l"></div><div class="v exp num" id="pj-give">0</div></button>
+      <button type="button" class="stat tog" data-tog="prods"><div class="k" id="pj-stock-l"></div><div class="v num" id="pj-stock">0</div></button>
+      <button type="button" class="stat tog" data-tog="buy" style="grid-column:1/-1"><div class="k" id="pj-buy-l"></div><div class="v num" id="pj-buy">0</div></button>
     </div>
+    <div class="rep-card" id="pj-statusbox" hidden></div>
     <div class="rep-card" id="pj-gains"></div>
     <div class="two"><button class="btn" id="btn-add-prod" data-i="newProd"></button><button class="btn ghost" id="btn-pset" data-i="pjSettings"></button></div>
     <button class="btn ghost" id="btn-pstats" data-i="pjStatsBtn" style="width:100%"></button>
@@ -758,7 +761,7 @@ input:focus, textarea:focus, .select:focus { outline: 2px solid color-mix(in srg
   </form>
 </div>
 
-<nav class="tabs" aria-label="Navigation">
+<nav class="tabs" data-al="navL">
   <div class="tabs-in">
     <button data-tab="home" aria-current="page"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6.4 6.4"/></svg><span data-i="home"></span></button>
     <button data-tab="loans"><svg viewBox="0 0 24 24"><path d="M17 3l4 4-4 4"/><path d="M3 11V9a2 2 0 0 1 2-2h16"/><path d="M7 21l-4-4 4-4"/><path d="M21 13v2a2 2 0 0 1-2 2H3"/></svg><span data-i="loans"></span></button>
@@ -834,7 +837,7 @@ input:focus, textarea:focus, .select:focus { outline: 2px solid color-mix(in srg
       <div class="field"><label for="pr-battery" data-i="prodBattery"></label><input id="pr-battery" type="text" inputmode="numeric" maxlength="4"></div>
     </div>
     <div class="two">
-      <div class="field"><label for="pr-color" data-i="prodColor"></label><div class="colrow"><input id="pr-color" type="text" maxlength="30"><input id="pr-color-c" type="color" value="#6B7280" aria-label="Code couleur"></div></div>
+      <div class="field"><label for="pr-color" data-i="prodColor"></label><div class="colrow"><input id="pr-color" type="text" maxlength="30"><input id="pr-color-c" type="color" value="#6B7280" data-al="colorCode"></div></div>
       <div class="field"><label for="pr-serial" data-i="prodSerial"></label><input id="pr-serial" type="text" maxlength="40"></div>
     </div>
     <div class="two">
@@ -925,18 +928,6 @@ input:focus, textarea:focus, .select:focus { outline: 2px solid color-mix(in srg
   </form>
 </div>
 
-<div class="scrim" id="sheet-newpj" hidden>
-  <form class="sheet" id="form-newpj" autocomplete="off">
-    <h2 data-i="pjNewProj"></h2>
-    <div class="field"><label for="np-name" data-i="pjNameL"></label><input id="np-name" type="text" maxlength="40"></div>
-    <div class="two">
-      <div class="field"><label for="np-role" data-i="pjRoleL"></label><select class="select" id="np-role"><option value="1">1</option><option value="2">2</option></select></div>
-      <div class="field"><label for="np-pct" data-i="pjPctL"></label><input id="np-pct" type="number" inputmode="decimal" min="1" max="99" step="0.5" value="50"></div>
-    </div>
-    <div class="err" id="np-err" role="alert"></div>
-    <div class="row-actions"><button type="button" class="btn ghost" data-close data-i="cancel"></button><button type="submit" class="btn" data-i="save"></button></div>
-  </form>
-</div>
 <div class="scrim" id="sheet-pset" hidden>
   <form class="sheet" id="form-pset" autocomplete="off">
     <h2 data-i="pjSetTitle"></h2>
@@ -969,7 +960,6 @@ input:focus, textarea:focus, .select:focus { outline: 2px solid color-mix(in srg
     <div class="field"><label data-i="setColors"></label><div id="ps-colors" style="display:flex;flex-direction:column;gap:8px"></div><button type="button" class="btn ghost small" id="ps-add-col" data-i="addColor"></button></div>
     <div class="field"><label for="ps-storages" data-i="setStorages"></label><textarea id="ps-storages" rows="4"></textarea></div>
     <div class="field"><button type="button" class="btn ghost" id="ps-import" data-i="pjImport"></button><input type="file" id="ps-file" accept=".xlsx,.xls,.csv" hidden><div class="note" data-i="pjImportNote"></div></div>
-    <button type="button" class="btn danger small" id="ps-delpj" hidden></button>
     <div class="err" id="ps-err" role="alert"></div>
     <div class="row-actions">
       <button type="button" class="btn ghost" data-close data-i="cancel"></button>
@@ -1738,6 +1728,32 @@ Object.assign(DICT, {
   errBelowPaid: ['Le montant ne peut pas être inférieur à ce qui a déjà été payé ({n}).', 'The amount cannot be lower than what is already paid ({n}).', 'لا يمكن أن يكون المبلغ أقل من المدفوع ({n}).', 'ما يمكنش يكون المبلغ أقل من اللي تخلص ({n}).'],
   loanDelWarn: ['Supprimer efface aussi tous les paiements de ce prêt ou crédit.', 'Deleting also erases all payments of this loan or credit.', 'الحذف يمسح أيضًا جميع دفعات هذا القرض.', 'المسح كيمسح حتى كاع الدفعات د هاد القرض.']
 });
+
+Object.assign(DICT, {
+  pjEst: ['estimé', 'estimated', 'تقديري', 'تقديري'],
+  pjProds: ['Produits', 'Products', 'المنتجات', 'المنتجات'],
+  pjTotal: ['Total', 'Total', 'المجموع', 'المجموع'],
+  pjBuyTotal: ["Total des prix d'achat", 'Total purchase price', 'إجمالي أسعار الشراء', 'مجموع ثمن الشراء'],
+  pjBuyCur: ["en monnaie d'achat", 'in purchase currency', 'بعملة الشراء', 'بعملة الشراء']
+});
+
+Object.assign(DICT, {
+  pjsMore: ['Statistiques détaillées', 'Detailed statistics', 'إحصائيات مفصلة', 'إحصائيات مفصلة'],
+  pjsSoldN: ['Produits vendus', 'Products sold', 'المنتجات المباعة', 'المنتجات اللي تباعو'],
+  pjsAvgDays: ['Durée moyenne de vente', 'Average time to sell', 'متوسط مدة البيع', 'المعدل د مدة البيع'],
+  pjsDays: ['j', 'd', 'يوم', 'يوم'],
+  pjsMargin: ['Marge moyenne', 'Average margin', 'متوسط الهامش', 'المعدل د الربح'],
+  pjsSoldMad: ['Total vendu', 'Total sold', 'إجمالي المبيعات', 'مجموع المبيعات'],
+  pjsSoldAed: ['Total vendu (AED)', 'Total sold (AED)', 'إجمالي المبيعات (AED)', 'مجموع المبيعات (AED)'],
+  pjsBest: ['Meilleur produit', 'Best product', 'أفضل منتج', 'أحسن منتوج'],
+  pjsWorst: ['Moins bon produit', 'Weakest product', 'أضعف منتج', 'أضعف منتوج'],
+  pjsLate: ['Paiements en retard (plus de 30 jours)', 'Late payments (over 30 days)', 'دفعات متأخرة (أكثر من 30 يومًا)', 'خلاصات متأخرة (أكتر من 30 يوم)']
+});
+
+Object.assign(DICT, {
+  dFrom: ['De', 'From', 'من', 'من'], dTo: ['À', 'To', 'إلى', 'ل'],
+  searchL: ['Recherche', 'Search', 'بحث', 'قلّب'], navL: ['Navigation', 'Navigation', 'التنقل', 'التنقل']
+});
 /* ---------- Icônes (traits 24x24) et couleurs ---------- */
 const ICONS = {
   cart: '<circle cx="9" cy="20" r="1.2"/><circle cx="18" cy="20" r="1.2"/><path d="M2 3h3l2.7 11.5a2 2 0 0 0 2 1.5h8.2a2 2 0 0 0 2-1.5L21 7H6"/>',
@@ -2146,6 +2162,7 @@ function applyStatic() {
   $$('[data-i]').forEach(e => { e.textContent = t(e.dataset.i); });
   $$('[data-ph]').forEach(e => { e.placeholder = t(e.dataset.ph); });
   $$('[data-al]').forEach(e => { e.setAttribute('aria-label', t(e.dataset.al)); });
+  $$('[data-al]').forEach(e => { e.setAttribute('aria-label', t(e.dataset.al)); });
   $('#set-lang').innerHTML = LANGS.map(l => '<option value="' + l + '">' + LANG_NAMES[l] + '</option>').join('');
   let dn = null;
   try { dn = new Intl.DisplayNames([loc()], { type: 'currency' }); } catch (e) { dn = null; }
@@ -2485,7 +2502,7 @@ initCalc($('#calc-dep'));
 initCalc($('#calc-pexp'));
 initCalc($('#calc-ppay'));
 /* ---------- Navigation, feuilles, saisie ---------- */
-const SHEETS = ['#sheet-tx', '#sheet-loan', '#sheet-edit', '#sheet-fixed', '#sheet-other', '#sheet-incl', '#sheet-dep', '#sheet-confirm', '#sheet-prod', '#sheet-pexp', '#sheet-ppay', '#sheet-pset', '#sheet-padd', '#sheet-lpay', '#sheet-np', '#sheet-zk', '#sheet-newpj'];
+const SHEETS = ['#sheet-tx', '#sheet-loan', '#sheet-edit', '#sheet-fixed', '#sheet-other', '#sheet-incl', '#sheet-dep', '#sheet-confirm', '#sheet-prod', '#sheet-pexp', '#sheet-ppay', '#sheet-pset', '#sheet-padd', '#sheet-lpay', '#sheet-np', '#sheet-zk'];
 const VIEWS = ['home', 'history', 'loans', 'zakat', 'accounts', 'settings', 'search', 'savings', 'reports', 'project', 'product', 'pjstats'];
 const TABS = ['home', 'loans', 'zakat', 'savings', 'project'];
 function openSheet(sel) { closeSheets(); $(sel).hidden = false; }
@@ -2521,7 +2538,7 @@ $('#btn-reports').addEventListener('click', () => setTab('reports'));
 let swipe = null;
 document.addEventListener('touchstart', e => {
   const tg = e.target;
-  if (e.touches.length !== 1 || tg.closest('input, select, textarea, .calc, .sheet, .scrim, .donut, #pj-filter, #pj-projs, #topseg, #accent-chips')) { swipe = null; return; }
+  if (e.touches.length !== 1 || tg.closest('input, select, textarea, .calc, .sheet, .scrim, .donut, #pj-filter, #topseg, #accent-chips')) { swipe = null; return; }
   swipe = { x: e.touches[0].clientX, y: e.touches[0].clientY };
 }, { passive: true });
 document.addEventListener('touchend', e => {
@@ -2529,10 +2546,10 @@ document.addEventListener('touchend', e => {
   const c = e.changedTouches[0], dx = c.clientX - swipe.x, dy = c.clientY - swipe.y;
   swipe = null;
   if (Math.abs(dx) < 70 || Math.abs(dy) > 45 || Math.abs(dx) < Math.abs(dy) * 2) return;
-  /* Le balayage reste dans la rubrique : projets (Projet) ou Crédit/Prêt/Projet/Tous (Crédits). Jamais d'un onglet à l'autre. */
+  /* Le balayage reste dans la rubrique : partenaires (Projet) ou Crédit/Prêt/Projet/Tous (Crédits). Jamais d'un onglet à l'autre. */
   const next = (dx < 0) !== RTL(); /* dans la langue de gauche à droite : glisser vers la gauche = suivant */
   const step = (list, cur) => { const i = list.indexOf(cur), j = i + (next ? 1 : -1); return i >= 0 && j >= 0 && j < list.length ? list[j] : null; };
-  if (state.tab === 'project') { const id = step(pjs().map(x => x.id), curPj().id); if (id) { setPjCur(id); render(); } }
+  if (state.tab === 'project') { const id = step(partners().map(x => x.id).concat(['all']), pjPartner); if (id) { pjPartner = id; render(); } }
   else if (state.tab === 'loans') { const k = step(['borrowed', 'lent', 'project', 'all'], state.lk); if (k) { state.lk = k; render(); } }
 }, { passive: true });
 $('#acc-filter').addEventListener('change', e => { state.acc = e.target.value; render(); });
@@ -3065,8 +3082,12 @@ function setPjCur(id) { pjCur = id; pjPartner = 'all'; try { localStorage.setIte
 const inPj = p => ((p.proj || 'main') === curPj().id);
 const allSt = () => pjs().reduce((a, x) => a.concat((x.cfg && x.cfg.statuses) || []), []).concat(DEF_ST);
 const pn1 = () => partners()[0].name;
-const pn2 = () => projCfg().n2 || t(pjRole() === 1 ? 'partnerMe1' : 'partner2');
-const partnersOfCfg = c => (Array.isArray(c.partners) && c.partners.length) ? c.partners : [{ id: 'p1', name: c.n1 || t(pjRole(c) === 1 ? 'partner2' : 'partner1') }];
+const pn2 = () => nameL(projCfg().n2) || t(pjRole() === 1 ? 'partnerMe1' : 'partner2');
+const nameL = n => { const x = String(n || '').trim().toLowerCase(); if (!x) return n; for (const k of ['partner1', 'partner2', 'partnerMe1']) if ((DICT[k] || []).some(v => v && String(v).toLowerCase() === x)) return t(k); return n; };
+const typeKey = v => { const x = String(v || '').trim().toLowerCase(); return ['phone', 'tablet', 'airpods', 'other'].find(k => (DICT['pt.' + k] || []).some(q => q && String(q).toLowerCase() === x)); };
+const typeLabel = v => { const k = typeKey(v); return k ? t('pt.' + k) : (v || ''); };
+const partnersOfCfg = c => partnersOfCfg0(c).map(x => ({ id: x.id, name: nameL(x.name) }));
+const partnersOfCfg0 = c => (Array.isArray(c.partners) && c.partners.length) ? c.partners : [{ id: 'p1', name: c.n1 || t(pjRole(c) === 1 ? 'partner2' : 'partner1') }];
 const partners = () => partnersOfCfg(projCfg());
 const partnerOf = id => partners().find(x => x.id === id) || partners()[0];
 const pnOf = p => { const l = partnersOfCfg(cfgOf(p)); return (l.find(x => x.id === (p && p.partner)) || l[0]).name; };
@@ -3078,7 +3099,7 @@ const KINDS = ['stock', 'selling', 'sold', 'repair', 'returned'];
 const statuses = () => (projCfg().statuses && projCfg().statuses.length) ? projCfg().statuses : DEF_ST;
 const stName = s => s.name || t('st.' + (s.key || s.kind));
 const stOf = id => statuses().find(s => s.id === id) || allSt().find(s => s.id === id) || statuses()[0];
-const pTypes = () => (projCfg().types && projCfg().types.length) ? projCfg().types : ['phone', 'tablet', 'airpods', 'other'].map(k => t('pt.' + k));
+const pTypes = () => ((projCfg().types && projCfg().types.length) ? projCfg().types : ['phone', 'tablet', 'airpods', 'other'].map(k => t('pt.' + k))).map(typeLabel);
 const KCOL = { stock: '#3D6FB6', selling: '#B8820F', sold: '#0B7A66', repair: '#2E8FA3', returned: '#6B7280' };
 const stColor = s => s.color || KCOL[s.kind] || '#6B7280';
 const DEF_NAMES = ['iPhone 11', 'iPhone 11 Pro', 'iPhone 11 Pro Max', 'iPhone 12', 'iPhone 12 mini', 'iPhone 12 Pro', 'iPhone 12 Pro Max', 'iPhone 13', 'iPhone 13 mini', 'iPhone 13 Pro', 'iPhone 13 Pro Max',
@@ -3141,6 +3162,19 @@ const prodList = () => Object.keys(state.products).map(id => Object.assign({ id:
 const pjList = () => prodList().filter(inPj);
 const putProd = p => { const c = clone(p); delete c.id; return store.put('products', p.id, c); };
 let pjFilter = 'all', pjQ = '';
+const pjTog = { profit: false, collect: false, give: false, prods: false, buy: false };
+$('#view-project').addEventListener('click', e => { const b = e.target.closest('[data-tog]'); if (b) { pjTog[b.dataset.tog] = !pjTog[b.dataset.tog]; renderProject(); } });
+/* Estimation : le produit est supposé payé au prix demandé */
+function estCalc(p) {
+  const c = prodCalc(p); if (c.returned || !(c.price > 0) || c.paid >= c.price) return c;
+  return prodCalc(Object.assign({}, p, { payments: (p.payments || []).concat([{ id: 'est', amount: round2(c.price - c.paid), date: today() }]) }));
+}
+/* Prix d'achat : total en MAD et détail par monnaie d'achat */
+function purchases(list) {
+  let mad = 0; const byCur = {};
+  list.forEach(p => (p.expenses || []).filter(e => e.kind === 'purchase').forEach(e => { mad += expMAD(e); const c = e.cur || 'MAD'; byCur[c] = (byCur[c] || 0) + Number(e.amount); }));
+  return { mad: round2(mad), parts: Object.keys(byCur).map(c => fmt(round2(byCur[c])) + ' ' + c) };
+}
 
 function renderProject() {
   renderPjChips();
@@ -3152,15 +3186,24 @@ function renderProject() {
   if (state.tab !== 'project') return;
   if (pjPartner !== 'all' && !partners().some(x => x.id === pjPartner)) pjPartner = 'all';
   const list = pjList().filter(p => pjPartner === 'all' || partnerOf(p.partner).id === pjPartner);
-  let profit = 0, collect = 0, give = 0, stock = 0;
+  let profit = 0, collect = 0, give = 0, eProfit = 0, eCollect = 0, eGive = 0;
   list.forEach(p => {
-    const c = prodCalc(p), k = stOf(p.status).kind;
-    profit += c.profit; give += c.toGive;
+    const c = prodCalc(p), k = stOf(p.status).kind, e = estCalc(p);
+    profit += c.profit; give += c.toGive; eProfit += e.profit; eGive += e.toGive;
     if (!c.returned && (k === 'selling' || k === 'sold')) collect += c.rest;
-    if (k === 'stock' || k === 'selling' || k === 'repair') stock++;
+    if (!c.returned && c.price > 0) eCollect += Math.max(0, round2(c.price - c.paid));
   });
-  $('#pj-profit').textContent = money(profit); $('#pj-collect').textContent = money(collect);
-  $('#pj-give-l').textContent = pjPartner === 'all' ? t('pjGiveAll') : t('pjGive', { n: partnerOf(pjPartner).name }); $('#pj-give').textContent = money(give); $('#pj-stock').textContent = String(stock);
+  const tg = pjTog, est = t('pjEst'), giveL = pjPartner === 'all' ? t('pjGiveAll') : t('pjGive', { n: partnerOf(pjPartner).name });
+  const pur = purchases(list);
+  $('#pj-profit-l').textContent = t('pjProfit') + (tg.profit ? ' · ' + est : ''); $('#pj-profit').textContent = money(round2(tg.profit ? eProfit : profit));
+  $('#pj-collect-l').textContent = t('pjCollect') + (tg.collect ? ' · ' + est : ''); $('#pj-collect').textContent = money(round2(tg.collect ? eCollect : collect));
+  $('#pj-give-l').textContent = giveL + (tg.give ? ' · ' + est : ''); $('#pj-give').textContent = money(round2(tg.give ? eGive : give));
+  $('#pj-stock-l').textContent = t('pjProds'); $('#pj-stock').textContent = String(list.length);
+  $('#pj-buy-l').textContent = t('pjBuyTotal') + (tg.buy ? ' · ' + t('pjBuyCur') : ''); $('#pj-buy').textContent = tg.buy ? (pur.parts.join(' · ') || '—') : money(pur.mad);
+  $$('#view-project [data-tog]').forEach(b => b.setAttribute('aria-pressed', String(!!tg[b.dataset.tog])));
+  const sb = $('#pj-statusbox'); sb.hidden = !tg.prods;
+  if (tg.prods) { const cnt = {}; list.forEach(p => { cnt[p.status] = (cnt[p.status] || 0) + 1; });
+    sb.innerHTML = '<h3>' + esc(t('pjProds')) + '</h3><div class="kv">' + statuses().map(s => '<span>' + pillHtml(s) + '</span><b class="num">' + (cnt[s.id] || 0) + '</b>').join('') + '<span class="tot">' + esc(t('pjTotal')) + '</span><b class="tot num">' + list.length + '</b></div>'; }
   let sale = 0, prof = 0, s1T = 0, s2T = 0, gaveT = 0, giveT = 0; const per = {};
   list.forEach(p => { const c = prodCalc(p); if (c.returned) return; if (stOf(p.status).kind === 'sold') sale += c.price; prof += c.profit; s1T += c.s1; s2T += c.s2; gaveT += c.gave; giveT += c.toGive; const id = partnerOf(p.partner).id; per[id] = (per[id] || 0) + c.toGive; });
   const sel = pjPartner !== 'all' ? partnerOf(pjPartner).name : '';
@@ -3176,11 +3219,11 @@ function renderProject() {
     statuses().map(s => '<button type="button" class="chip" data-pf="' + esc(s.id) + '" aria-pressed="' + (pjFilter === s.id) + '">' + esc(stName(s)) + '</button>').join('');
   const words = norm(pjQ).split(/\s+/).filter(Boolean);
   const shown = list.filter(p => (pjFilter === 'all' || p.status === pjFilter) &&
-    words.every(w => norm([p.name, p.type, p.client, p.serial, p.color, p.storage, p.courier, stName(stOf(p.status))].join(' ')).indexOf(w) >= 0))
+    words.every(w => norm([p.name, typeLabel(p.type), p.client, p.serial, p.color, p.storage, p.courier, stName(stOf(p.status))].join(' ')).indexOf(w) >= 0))
     .sort((a, b) => (b.ts || 0) - (a.ts || 0));
   $('#pj-list').innerHTML = !shown.length ? '<div class="empty"><strong>' + esc(t('noProdT')) + '</strong>' + esc(t('noProdB')) + '</div>' : shown.map(p => {
     const c = prodCalc(p), pct = c.price > 0 ? Math.min(100, c.paid / c.price * 100) : 0, st = stOf(p.status);
-    const meta = [p.type, p.client].filter(Boolean).join(' · ');
+    const meta = [typeLabel(p.type), p.client].filter(Boolean).join(' · ');
     return '<div class="card prodcard" data-prod="' + esc(p.id) + '" role="button" tabindex="0"><div class="head"><div style="min-width:0"><div class="who">' + esc(p.name) + '</div><div class="meta">' + esc(meta) + '</div></div>' +
       pillHtml(st) + '</div>' + '<div class="tags">' + (p.storage ? '<span class="tag">' + esc(p.storage) + '</span>' : '') + batTag(p.battery) + colTag(p) + '</div>' +
       (c.price > 0 ? '<div class="bar"><i style="width:' + pct.toFixed(1) + '%"></i></div>' : '') +
@@ -3194,7 +3237,7 @@ function renderProject() {
     const c = prodCalc(p); if (c.returned) return;
     const d = (p.payments || []).map(x => x.date).sort().pop() || p.date || today();
     byM[d.slice(0, 7)] = (byM[d.slice(0, 7)] || 0) + c.profit;
-    const ty = p.type || '—'; byT[ty] = (byT[ty] || 0) + c.profit;
+    const ty = typeLabel(p.type) || '—'; byT[ty] = (byT[ty] || 0) + c.profit;
   });
   list.forEach(p => { const n = stName(stOf(p.status)); cnt[n] = (cnt[n] || 0) + 1; });
   const now = new Date(), months = [];
@@ -3226,7 +3269,7 @@ function renderProduct() {
     '<button class="icon-btn" data-pact="editprod" aria-label="' + esc(t('editProd')) + '">' + ico('pencil') + '</button></div>' +
     '<div class="field"><label for="pd-status">' + esc(t('prodStatus')) + '</label><select class="select" id="pd-status">' + statuses().map(s => '<option value="' + esc(s.id) + '"' + (s.id === p.status || (!p.status && s === statuses()[0]) ? ' selected' : '') + '>' + esc(stName(s)) + '</option>').join('') + '</select></div>' +
     '<div class="tags">' + pillHtml(st) + batTag(p.battery) + colTag(p) + '</div>' +
-    '<div class="kv">' + row(t('prodType'), p.type) + row(t('prodStorage'), p.storage) + 
+    '<div class="kv">' + row(t('prodType'), typeLabel(p.type)) + row(t('prodStorage'), p.storage) + 
     row(t('prodSerial'), p.serial) + row(t('prodCourier'), p.courier) + row(t('recvDate'), p.recv ? shortDate(p.recv) : '') + row(t('prodClient'), p.client) + row(t('prodPrice', { c: cur() }), c.price ? fmt(c.price) : '') + '</div>' +
     contactHtml(p, c) + (c.returned ? '<div class="note">' + esc(t('retNote2')) + '</div>' : '') + '</div>';
   /* dépenses */
@@ -3284,7 +3327,7 @@ function openProd(id) {
   $('#pr-title').textContent = t(p ? 'editProd' : 'newProd');
   $('#pr-status').innerHTML = statuses().map(s => '<option value="' + esc(s.id) + '">' + esc(stName(s)) + '</option>').join('');
   const g = (k, d) => p ? (p[k] == null ? '' : p[k]) : d;
-  $('#pr-name').value = g('name', ''); $('#pr-type').value = g('type', pTypes()[0]);
+  $('#pr-name').value = g('name', ''); $('#pr-type').value = typeLabel(g('type', pTypes()[0]));
   $('#pr-status').value = p ? (p.status || statuses()[0].id) : statuses()[0].id;
   ['storage', 'battery', 'color', 'serial', 'courier', 'client', 'phone'].forEach(k => { $('#pr-' + k).value = g(k, ''); });
   $('#pr-color').value = colLabel(g('color', ''));
@@ -3481,7 +3524,7 @@ function stRow(s) {
 $('#btn-pset').addEventListener('click', () => {
   const c = projCfg();
   $('#ps-name').value = curPj().name || ''; $('#ps-role').value = String(pjRole()); $('#ps-pct').value = myPct(); $('#ps-pctl').textContent = t('pjPctOther', { n: 100 - myPct() });
-  $('#ps-wa').value = waTpl(); $('#ps-delpj').hidden = pjs().length < 2; $('#ps-delpj').textContent = t('pjDelete'); $('#form-pset h2').textContent = t('pjSetTitle');
+  $('#ps-wa').value = waTpl(); $('#form-pset h2').textContent = t('pjSetTitle');
   $('#ps-n2').value = c.n2 || ''; $('#ps-n2').placeholder = t(pjRole() === 1 ? 'partnerMe1' : 'partner2');
   $('#ps-rate').value = pRate(); $('#ps-rate-l').textContent = t('setRate', { c: cur() });
   $('#ps-statuses').innerHTML = statuses().map(stRow).join('');
@@ -3550,7 +3593,7 @@ function projectReportHtml(r) {
     '<span>' + esc(t('pjRepAvg')) + '</span><b class="num">' + esc(money(sold.length ? round2(profit / sold.length) : 0)) + '</b>' +
     '<span>' + esc(pjPartner === 'all' ? t('pjRepPartners') : t('pjRepShare', { n: partnerOf(pjPartner).name })) + '</span><b class="num">' + esc(money(s1)) + '</b>' +
     '<span>' + esc(t('pjRepShare', { n: pn2() })) + '</span><b class="num">' + esc(money(s2)) + '</b></div></div>';
-  const bt = {}; sold.forEach(x => { const k = x.p.type || '—'; bt[k] = (bt[k] || 0) + x.c.profit; });
+  const bt = {}; sold.forEach(x => { const k = typeLabel(x.p.type) || '—'; bt[k] = (bt[k] || 0) + x.c.profit; });
   const types = Object.keys(bt).sort((a, b) => bt[b] - bt[a]), mx = Math.max(1, ...types.map(k => bt[k]));
   if (types.length) h += '<div class="rep-card"><h3>' + esc(t('pjRepBy')) + '</h3>' + types.map(k => '<div class="hbar"><span>' + esc(k) + '</span><b class="num">' + esc(money(bt[k])) + '</b></div><div class="bar"><i style="width:' + (bt[k] / mx * 100).toFixed(1) + '%;background:#F08A24"></i></div>').join('') + '</div>';
   const top = sold.slice().sort((a, b) => b.c.profit - a.c.profit).slice(0, 5);
@@ -3729,37 +3772,29 @@ function renderPjStats() {
   const me = sumBy(inP, x => x.c.s2); if (me) bp[pn2()] = (bp[pn2()] || 0) + me;
   const ks = Object.keys(bp).sort((a, b) => bp[b] - bp[a]), m2 = Math.max(1, ...ks.map(k => bp[k]));
   if (ks.length) h += '<div class="rep-card"><h3>' + esc(t('pjsByPartner')) + '</h3>' + ks.map(k => '<div class="hbar"><span>' + esc(k) + '</span><b class="num">' + esc(money(bp[k])) + '</b><div class="track"><i style="width:' + (bp[k] / m2 * 100).toFixed(1) + '%;background:var(--accent)"></i></div></div>').join('') + '</div>';
+  /* statistiques détaillées */
+  const dd = (a, b) => Math.max(0, Math.round((new Date(b + 'T00:00:00') - new Date(a + 'T00:00:00')) / 864e5));
+  const avgDays = inP.length ? Math.round(sumBy(inP, x => dd(x.p.recv || x.p.date || x.d, x.d)) / inP.length) : 0;
+  const tPaid = sumBy(inP, x => x.c.paid), tProfit = sumBy(inP, x => x.c.profit), margin = tPaid > 0 ? round2(tProfit / tPaid * 100) : 0;
+  const ranked = inP.slice().sort((a, b) => b.c.profit - a.c.profit), best = ranked[0], worst = ranked[ranked.length - 1];
+  const soldMad = sumBy(inP, x => x.c.price), pur = purchases(all);
+  const late = info.filter(x => !x.c.returned && x.c.rest > 0 && x.c.price > 0 && dd(x.p.recv || x.p.date || x.d, today()) > 30).sort((a, b) => b.c.rest - a.c.rest);
+  h += '<div class="rep-card"><h3>' + esc(t('pjsMore')) + '</h3><div class="kv">' +
+    '<span>' + esc(t('pjsSoldN')) + '</span><b class="num">' + inP.length + '</b>' +
+    '<span>' + esc(t('pjsAvgDays')) + '</span><b class="num">' + avgDays + ' ' + esc(t('pjsDays')) + '</b>' +
+    '<span>' + esc(t('pjsMargin')) + '</span><b class="num">' + fmt(margin) + ' %</b>' +
+    '<span>' + esc(t('pjsSoldMad')) + '</span><b class="num">' + esc(money(round2(soldMad))) + '</b>' +
+    '<span>' + esc(t('pjsSoldAed')) + '</span><b class="num">' + fmt(round2(soldMad / pRate())) + ' AED</b>' +
+    '<span>' + esc(t('pjBuyTotal')) + '</span><b class="num">' + esc(money(pur.mad)) + '</b>' +
+    '<span>' + esc(t('pjBuyCur')) + '</span><b class="num">' + esc(pur.parts.join(' · ') || '—') + '</b>' +
+    (best ? '<span>' + esc(t('pjsBest')) + '</span><b>' + esc(best.p.name) + ' · ' + esc(money(best.c.profit)) + '</b>' : '') +
+    (worst && worst !== best ? '<span>' + esc(t('pjsWorst')) + '</span><b>' + esc(worst.p.name) + ' · ' + esc(money(worst.c.profit)) + '</b>' : '') + '</div></div>';
+  h += '<div class="rep-card"><h3>' + esc(t('pjsLate')) + ' (' + late.length + ')</h3>' + (late.length ? late.slice(0, 8).map(x => '<div class="hbar"><span>' + esc(x.p.name) + (x.p.client ? ' · ' + esc(x.p.client) : '') + ' <span style="color:var(--ink-2)">' + dd(x.p.recv || x.p.date || x.d, today()) + ' ' + esc(t('pjsDays')) + '</span></span><b class="num">' + esc(money(x.c.rest)) + '</b></div>').join('') : '<div class="note">' + esc(t('repNoData')) + '</div>') + '</div>';
   $('#pjs').innerHTML = h;
 }
 
-/* ----- Projets multiples : puces, ajout, suppression ----- */
-function renderPjChips() {
-  const el = $('#pj-projs'); if (!el) return;
-  el.innerHTML = pjs().map(x => '<button type="button" class="chip" data-pjsel="' + esc(x.id) + '" aria-pressed="' + (x.id === curPj().id) + '">' + esc(pjName(x)) + '</button>').join('') +
-    '<button type="button" class="chip" data-pjnew="1">+ ' + esc(t('pjNewProj')) + '</button>';
-  $$('#view-project .section-title, #view-pjstats .section-title').forEach(e => { if (e.closest('#view-project')) e.textContent = pjName(curPj()); });
-}
-$('#pj-projs').addEventListener('click', e => {
-  const b = e.target.closest('[data-pjsel]'), n = e.target.closest('[data-pjnew]');
-  if (b) { setPjCur(b.dataset.pjsel); render(); return; }
-  if (n) { $('#np-name').value = ''; $('#np-role').value = '2'; $('#np-pct').value = 50; $('#np-err').textContent = ''; openSheet('#sheet-newpj'); setTimeout(() => $('#np-name').focus(), 30); }
-});
-$('#form-newpj').addEventListener('submit', async e => {
-  e.preventDefault();
-  const name = $('#np-name').value.trim(), pct = num($('#np-pct').value);
-  if (!name) { $('#np-err').textContent = t('errName'); return; }
-  if (!(pct > 0 && pct < 100)) { $('#np-err').textContent = t('errAmount'); return; }
-  const list = clone(pjs()), id = newId();
-  list.push({ id: id, name: name, cfg: { role: $('#np-role').value === '1' ? 1 : 2, pct: pct } });
-  closeSheets();
-  try { await store.setSettings({ pjs: list }); setPjCur(id); toast(t('tSaved')); render(); } catch (err) { /* message déjà affiché */ }
-});
-$('#ps-delpj').addEventListener('click', async () => {
-  if (pjList().length) { $('#ps-err').textContent = t('pjDelNone'); return; }
-  const list = clone(pjs()).filter(x => x.id !== curPj().id);
-  closeSheets();
-  try { await store.setSettings({ pjs: list }); setPjCur(list[0].id); toast(t('tDeleted')); render(); } catch (err) { /* message déjà affiché */ }
-});
+/* Un seul projet : on n'affiche que son nom (les partenaires font la différence) */
+function renderPjChips() { $$('#view-project .section-title').forEach(e => { e.textContent = pjName(curPj()); }); }
 $('#ps-pct').addEventListener('input', e => { const v = num(e.target.value); $('#ps-pctl').textContent = t('pjPctOther', { n: v > 0 && v < 100 ? round2(100 - v) : '—' }); });
 
 /* ----- Coordonnées client : appel, WhatsApp, message de rappel ----- */

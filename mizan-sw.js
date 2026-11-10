@@ -1,4 +1,4 @@
-const CACHE = 'mizan-20261110013119';
+const CACHE = 'mizan-20261110014408';
 const CORE = ['./', 'index.html', 'mizan.webmanifest', 'mizan-icon-180.png', 'mizan-icon-192.png', 'mizan-icon-512.png'];
 const EXTRA = ['https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js'];
 self.addEventListener('install', e => {
