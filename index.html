@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="fr"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#2456C8">
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Mizan"><meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -378,6 +378,11 @@ input, select { font: inherit; color: inherit; }
 .item .s, .row-btn .rs, .card .meta, .payments button span { white-space: pre-line; overflow-wrap: anywhere; text-overflow: clip; }
 button.stat.tog { text-align: start; width: 100%; cursor: pointer; font: inherit; color: inherit; border: 1px solid var(--line); }
 button.stat.tog[aria-pressed="true"] { border-color: var(--accent); }
+#pj-lotbar { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+#pj-lotbar::-webkit-scrollbar { display: none; }
+#pj-lotbar .chip { flex: 0 0 auto; white-space: nowrap; }
+.lotcard .head[data-lottoggle] { cursor: pointer; align-items: center; }
+.lotbody { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--line); }
 .pjs-nav { display: flex; align-items: center; justify-content: space-between; }
 .pjs-nav b { font-weight: 600; }
 .pjs-nav .icon-btn { width: 40px; height: 40px; font-size: 22px; }
@@ -424,14 +429,62 @@ input:focus, textarea:focus, .select:focus { outline: 2px solid color-mix(in srg
 .pill, .cpill, .tag { font-size: 12px; font-weight: 500; }
 .num { letter-spacing: -0.005em; }
 .tabs button { font-size: 11.5px; font-weight: 500; }
+
+.scope[hidden], .view[hidden] { display: none; }
+.scope { display: flex; flex-direction: column; gap: 14px; }
+.lock { position: fixed; inset: 0; z-index: 200; background: var(--bg); display: flex; align-items: center; justify-content: center; padding: 24px; }
+.lock[hidden] { display: none; }
+.lock-in { width: 100%; max-width: 320px; display: flex; flex-direction: column; gap: 14px; text-align: center; }
+.lock-in input { text-align: center; font-size: 28px; letter-spacing: .5em; padding: 12px; width: 100%; box-sizing: border-box; }
+.lock-in #lock-word { font-size: 16px; letter-spacing: normal; }
+html.priv .num, html.priv .ringwrap text, html.priv .ringwrap .cv, html.priv .balance, html.priv .rs, html.priv .pill.num { filter: blur(7px); }
+.sbrow, .sbhead { display: grid; grid-template-columns: 1fr 34px minmax(86px, auto); gap: 8px; align-items: center; width: 100%; padding: 7px 4px; border: 0; background: none; color: inherit; font: inherit; text-align: start; border-bottom: 1px solid var(--line); }
+.sbrow[aria-pressed="true"] { background: var(--surface-2); border-radius: 8px; }
+.sbrow b { text-align: center; }
+.sbamt { text-align: end; }
+.sbhead { font-size: 12px; color: var(--ink-2); padding-block: 2px; text-align: center; }
+.sbrow.tot { font-weight: 700; border-bottom: 0; }
+#pj-buy { font-size: clamp(14px, 4vw, 18px); overflow-wrap: anywhere; }
+.sbtile { display: block; }
+.sbtile .k { display: flex; justify-content: space-between; align-items: center; }
+.sbchips { display: flex; flex-wrap: wrap; gap: 4px 12px; margin-top: 6px; font-size: 12px; }
+.sbchip { display: inline-flex; align-items: center; gap: 5px; white-space: nowrap; }
+.sbchip i { width: 9px; height: 9px; border-radius: 50%; display: inline-block; }
+.sbchev { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; transition: transform .15s; flex: none; }
+.sbhd { display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 0; border: 0; background: none; color: inherit; font: inherit; text-align: start; }
+.sbhd h3 { margin: 0; }
+.prow { display: flex; flex-direction: column; gap: 6px; }
+.pmain { display: flex; align-items: center; gap: 6px; }
+.pmain input[type=text] { flex: 1; min-width: 0; }
+.pctin { width: 64px !important; text-align: center; flex: none; }
+.pctu { color: var(--ink-2); }
+.pmenu { padding: 8px 10px; border: 1px solid var(--line); border-radius: 10px; display: flex; flex-direction: column; gap: 6px; }
+.pmenu[hidden] { display: none; }
+.wabtns { margin-top: 10px; }
+.chipsep { width: 1px; background: var(--line); margin: 2px 2px; }
+.selbar { position: fixed; left: 0; right: 0; bottom: 56px; z-index: 25; display: flex; align-items: center; gap: 8px; padding: 8px 12px; background: var(--surface); border-top: 1px solid var(--line); box-shadow: 0 -4px 14px rgba(0,0,0,.08); }
+.selbar[hidden] { display: none; }
+.selbar #sel-n { flex: 1; font-weight: 600; font-size: 14px; }
+.selbar .btn { width: auto; padding-inline: 14px; }
+.selmode .prodcard { position: relative; padding-inline-start: 42px; }
+.selmode .prodcard::before { content: ''; position: absolute; inset-inline-start: 12px; top: 14px; width: 18px; height: 18px; border: 2px solid var(--ink-2); border-radius: 5px; background: var(--surface); box-sizing: border-box; }
+.selmode .prodcard.picked::before { content: '✓'; background: var(--accent); border-color: var(--accent); color: var(--accent-ink); font-size: 13px; line-height: 14px; text-align: center; }
+.selmode .prodcard.picked, .selmode .lotcard.lpicked { outline: 2px solid var(--accent); }
+.selmode { padding-bottom: 60px; }
+/* iPhone : pas de zoom au double-toucher, pas de loupe ni de menu d'appui long sur les boutons */
+html, body, body * { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+button, [role="button"], .tabs, .seg, .chip, .stat, .lotcard .head { -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; }
+.chips[hidden] { display: none; }
+.chipdot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-inline-end: 5px; }
 </style>
 
-<style>.app{padding-top:max(12px,env(safe-area-inset-top,0px))} body{-webkit-text-size-adjust:100%;overscroll-behavior-y:none} input,select,textarea{font-size:16px}</style></head><body>
+<style>.app{padding-top:max(12px,env(safe-area-inset-top,0px))} body{-webkit-text-size-adjust:100%;overscroll-behavior-y:none} input,select,textarea{font-size:16px} html,body,body *{touch-action:manipulation}</style></head><body>
 <div class="app">
   <div class="topbar">
     <button class="icon-btn" id="btn-back" data-al="back" hidden><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button>
     <select class="select" id="acc-filter" data-al="accFilterAria"></select>
     <div class="seg barseg" id="topseg" hidden></div>
+    <button class="icon-btn" id="btn-eye" data-al="privBtn" hidden><svg viewBox="0 0 24 24"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button>
     <button class="icon-btn" id="btn-search" data-al="searchL"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></button>
     <button class="icon-btn" id="btn-settings" data-al="settings"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3h0a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9v0a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button>
   </div>
@@ -474,7 +527,6 @@ input:focus, textarea:focus, .select:focus { outline: 2px solid color-mix(in srg
     <button class="alertbar" id="zk-dummy" hidden></button>
     <div class="section-title" data-i="zakat"></div>
     <div id="zk-main" style="display:flex;flex-direction:column;gap:12px"></div>
-    <div class="card" id="zk-settings"></div>
     <div class="card" id="zk-hist"></div>
   </section>
 
@@ -519,13 +571,14 @@ input:focus, textarea:focus, .select:focus { outline: 2px solid color-mix(in srg
       <button type="button" class="stat tog" data-tog="profit"><div class="k" id="pj-profit-l"></div><div class="v inc num" id="pj-profit">0</div></button>
       <button type="button" class="stat tog" data-tog="collect"><div class="k" id="pj-collect-l"></div><div class="v loan num" id="pj-collect">0</div></button>
       <button type="button" class="stat tog" data-tog="give"><div class="k" id="pj-give-l"></div><div class="v exp num" id="pj-give">0</div></button>
-      <button type="button" class="stat tog" data-tog="prods"><div class="k" id="pj-stock-l"></div><div class="v num" id="pj-stock">0</div></button>
-      <button type="button" class="stat tog" data-tog="buy" style="grid-column:1/-1"><div class="k" id="pj-buy-l"></div><div class="v num" id="pj-buy">0</div></button>
+      <button type="button" class="stat tog" data-tog="buy"><div class="k" id="pj-buy-l"></div><div class="v num" id="pj-buy">0</div></button>
     </div>
-    <div class="rep-card" id="pj-statusbox" hidden></div>
+    <div class="rep-card" id="pj-statusbox"></div>
     <div class="rep-card" id="pj-gains"></div>
-    <div class="two"><button class="btn" id="btn-add-prod" data-i="newProd"></button><button class="btn ghost" id="btn-pset" data-i="pjSettings"></button></div>
+    <button class="btn" id="btn-add-prod" data-i="newProd" style="width:100%"></button><button id="btn-pset" hidden></button>
     <button class="btn ghost" id="btn-pstats" data-i="pjStatsBtn" style="width:100%"></button>
+    <div class="two"><button class="btn ghost small" id="btn-select" data-i="selBtn"></button><button class="btn small" id="btn-share" data-i="shareBtn"></button></div>
+    <div class="chips" id="pj-lotbar"></div>
     <div class="chips" id="pj-filter"></div>
     <div id="pj-list" style="display:flex;flex-direction:column;gap:12px"></div>
     <div id="pj-charts" style="display:flex;flex-direction:column;gap:14px"></div>
@@ -562,26 +615,13 @@ input:focus, textarea:focus, .select:focus { outline: 2px solid color-mix(in srg
   </section>
 
   <section class="view" id="view-settings" hidden>
-    <div class="group">
-      <h3 data-i="regional"></h3>
-      <div class="field"><label for="set-lang" data-i="langL"></label><select class="select" id="set-lang"></select></div>
-      <div class="field"><label for="set-cur" data-i="curL"></label><select class="select" id="set-cur"></select></div>
-      <div class="field"><label data-i="accentL"></label><div class="chips" id="accent-chips"></div></div>
-      <div class="field"><label data-i="themeL"></label>
-        <div class="seg3" role="group">
-          <button data-theme-btn="auto" data-i="themeAuto"></button>
-          <button data-theme-btn="light" data-i="themeLight"></button>
-          <button data-theme-btn="dark" data-i="themeDark"></button>
-        </div>
+    <div class="section-title" id="set-title"></div>
+    <button type="button" class="btn ghost small" id="btn-gen-link" data-i="genLink"></button>
+    <div data-scope="home" class="scope">
+      <div class="group">
+        <h3 data-i="accounts"></h3>
+        <button class="btn ghost small" id="btn-set-accs" data-i="manageAccs"></button>
       </div>
-    </div>
-    <div class="group">
-      <h3 data-i="lkColorsT"></h3>
-      <div class="lkrow"><label for="lk-borrowed" data-i="lkCredit"></label><input type="color" id="lk-borrowed"></div>
-      <div class="lkrow"><label for="lk-lent" data-i="lkLoan"></label><input type="color" id="lk-lent"></div>
-      <div class="lkrow"><label for="lk-project" data-i="lkProj"></label><input type="color" id="lk-project"></div>
-      <button type="button" class="btn ghost small" id="lk-reset" data-i="resetColors"></button>
-    </div>
     <div class="group">
       <h3 data-i="catsTitle"></h3>
       <div class="sub" data-i="catExp"></div>
@@ -598,6 +638,58 @@ input:focus, textarea:focus, .select:focus { outline: 2px solid color-mix(in srg
       <button class="btn ghost small" id="btn-add-fixed" data-i="addFixed"></button>
       <p class="note" data-i="fixedNote"></p>
     </div>
+      <div class="group">
+        <h3 data-i="bdTitle"></h3>
+        <label class="check"><input id="set-budget" type="checkbox"><span data-i="bdOn"></span></label>
+        <p class="note" data-i="optNote"></p>
+      </div>
+    <div class="group">
+      <h3 data-i="reports"></h3>
+      <button class="btn ghost small" id="btn-reports" data-i="openReports"></button>
+    </div>
+    </div>
+    <div data-scope="loans" class="scope" hidden>
+    <div class="group">
+      <h3 data-i="lkColorsT"></h3>
+      <div class="lkrow"><label for="lk-borrowed" data-i="lkCredit"></label><input type="color" id="lk-borrowed"></div>
+      <div class="lkrow"><label for="lk-lent" data-i="lkLoan"></label><input type="color" id="lk-lent"></div>
+      <div class="lkrow"><label for="lk-project" data-i="lkProj"></label><input type="color" id="lk-project"></div>
+      <button type="button" class="btn ghost small" id="lk-reset" data-i="resetColors"></button>
+    </div>
+      <div class="group">
+        <h3 data-i="waLoanT"></h3>
+        <p class="help" data-i="waLoanHelp"></p>
+        <div class="field"><label for="set-wa-lent" data-i="waLentL"></label><textarea id="set-wa-lent" rows="3" class="notearea"></textarea></div>
+        <div class="field"><label for="set-wa-borrowed" data-i="waBorrowedL"></label><textarea id="set-wa-borrowed" rows="3" class="notearea"></textarea></div>
+      </div>
+    </div>
+    <div data-scope="zakat" class="scope" hidden>
+      <div class="card" id="zk-settings"></div>
+    </div>
+    <div data-scope="savings" class="scope" hidden>
+      <div class="group">
+        <h3 data-i="goalsT"></h3>
+        <div class="rows" id="goal-rows"></div>
+        <button class="btn ghost small" id="btn-add-goal2" data-i="addGoal"></button>
+      </div>
+    </div>
+  </section>
+
+  <section class="view" id="view-general" hidden>
+    <div class="section-title" data-i="genTitle"></div>
+    <div class="group">
+      <h3 data-i="regional"></h3>
+      <div class="field"><label for="set-lang" data-i="langL"></label><select class="select" id="set-lang"></select></div>
+      <div class="field"><label for="set-cur" data-i="curL"></label><select class="select" id="set-cur"></select></div>
+      <div class="field"><label data-i="accentL"></label><div class="chips" id="accent-chips"></div></div>
+      <div class="field"><label data-i="themeL"></label>
+        <div class="seg3" role="group">
+          <button data-theme-btn="auto" data-i="themeAuto"></button>
+          <button data-theme-btn="light" data-i="themeLight"></button>
+          <button data-theme-btn="dark" data-i="themeDark"></button>
+        </div>
+      </div>
+    </div>
     <div class="group">
       <h3 data-i="tabsTitle"></h3>
       <label class="check"><input id="set-tab-loans" type="checkbox" checked><span data-i="tabLoansL"></span></label>
@@ -606,21 +698,20 @@ input:focus, textarea:focus, .select:focus { outline: 2px solid color-mix(in srg
       <p class="note" data-i="tabsNote"></p>
     </div>
     <div class="group">
-      <h3 data-i="optTitle"></h3>
+      <h3 data-i="secTitle"></h3>
       <div class="field"><label for="set-bk" data-i="bkRemind"></label><select class="select" id="set-bk"><option value="0" data-i="bkOff"></option><option value="7">7</option><option value="14">14</option><option value="30">30</option></select></div>
-      <label class="check"><input id="set-budget" type="checkbox"><span data-i="bdOn"></span></label>
-      <p class="note" data-i="optNote"></p>
-    </div>
-    <div class="group">
-      <h3 data-i="reports"></h3>
-      <button class="btn ghost small" id="btn-reports" data-i="openReports"></button>
+      <button class="btn ghost small" id="btn-pin" data-i="pinSet"></button>
+      <label class="check"><input id="set-priv" type="checkbox"><span data-i="privOn"></span></label>
+      <p class="note" data-i="privNote"></p>
     </div>
     <div class="group">
       <h3 data-i="dataGroup"></h3>
       <p class="help" data-i="dataHelp"></p>
-      <button class="btn ghost small" id="btn-xlsx" data-i="dataExcel"></button>
-      <button class="btn ghost small" id="btn-backup" data-i="dataBackup"></button>
+      <button class="btn small" id="btn-backup" data-i="dataShare"></button>
+      <button class="btn ghost small" id="btn-dl" data-i="dataDl"></button>
       <button class="btn ghost small" id="btn-import" data-i="dataImport"></button>
+      <button class="btn ghost small" id="btn-undo-import" data-i="dataUndo" hidden></button>
+      <button class="btn ghost small" id="btn-xlsx" data-i="dataExcel"></button>
       <input type="file" id="file-import" accept=".json,application/json" hidden>
       <button class="btn danger small" id="btn-clear" data-i="dataClear"></button>
       <p class="note" id="last-backup"></p>
@@ -664,6 +755,7 @@ input:focus, textarea:focus, .select:focus { outline: 2px solid color-mix(in srg
       <button type="button" class="chip" data-dir="borrowed" aria-pressed="false" data-i="dirBorrowed"></button>
     </div>
     <div class="field"><label for="loan-who" id="loan-who-l"></label><input id="loan-who" type="text" maxlength="40" data-ph="person"></div>
+    <div class="field"><label for="loan-phone" data-i="loanPhoneL"></label><input id="loan-phone" type="tel" inputmode="tel" maxlength="24"></div>
     <div class="field"><label id="loan-amount-l"></label><div class="calc" id="calc-loan"></div></div>
     <div class="field"><label for="loan-acc" data-i="account"></label><select class="select" id="loan-acc"></select></div>
     <div class="two">
@@ -761,6 +853,40 @@ input:focus, textarea:focus, .select:focus { outline: 2px solid color-mix(in srg
   </form>
 </div>
 
+<div class="selbar" id="selbar" hidden>
+  <span id="sel-n"></span>
+  <button type="button" class="btn ghost small" id="sel-all" data-i="selAll"></button>
+  <button type="button" class="btn small" id="sel-share" data-i="shareBtn"></button>
+  <button type="button" class="icon-btn" id="sel-cancel" data-al="cancel">✕</button>
+</div>
+
+<div class="scrim" id="sheet-sharepay" hidden>
+  <div class="sheet">
+    <h2 data-i="shTitle"></h2>
+    <div class="stack" style="display:flex;flex-direction:column;gap:8px">
+      <button type="button" class="btn small" data-spfmt="html" data-i="spHtml"></button>
+      <button type="button" class="btn ghost small" data-spfmt="copy" data-i="spCopy"></button>
+      <button type="button" class="btn small" data-spfmt="img" data-i="spImg"></button>
+      <button type="button" class="btn small" data-spfmt="txt" data-i="spTxt"></button>
+      <button type="button" class="btn ghost" data-close data-i="cancel"></button>
+    </div>
+  </div>
+</div>
+
+<div class="scrim" id="sheet-share" hidden>
+  <div class="sheet" id="form-share">
+    <h2 data-i="shTitle"></h2>
+    <div class="field"><label for="sh-scope" data-i="shScope"></label><select class="select" id="sh-scope"></select></div>
+    <div class="note" id="sh-note"></div>
+    <div class="row-actions">
+      <button type="button" class="btn small" data-shfmt="pdf" data-i="shPdf"></button>
+      <button type="button" class="btn small" data-shfmt="xls" data-i="shXls"></button>
+      <button type="button" class="btn small" data-shfmt="wa" data-i="shWa"></button>
+    </div>
+    <button type="button" class="btn ghost" data-close data-i="cancel"></button>
+  </div>
+</div>
+
 <nav class="tabs" data-al="navL">
   <div class="tabs-in">
     <button data-tab="home" aria-current="page"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6.4 6.4"/></svg><span data-i="home"></span></button>
@@ -768,6 +894,7 @@ input:focus, textarea:focus, .select:focus { outline: 2px solid color-mix(in srg
     <button data-tab="zakat"><svg viewBox="0 0 24 24"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z"/></svg><span data-i="zakat"></span></button>
     <button data-tab="savings"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></svg><span data-i="savings"></span></button>
     <button data-tab="project"><svg viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg><span data-i="project"></span><i class="tab-dot" id="tab-dot" hidden></i></button>
+    <button data-tab="general"><svg viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg><span data-i="genTab"></span></button>
   </div>
 </nav>
 
@@ -809,11 +936,42 @@ input:focus, textarea:focus, .select:focus { outline: 2px solid color-mix(in srg
   </form>
 </div>
 
+<div class="scrim" id="sheet-pin" hidden>
+  <form class="sheet" id="form-pin" autocomplete="off">
+    <h2 data-i="pinTitle"></h2>
+    <p class="help" data-i="pinHelp"></p>
+    <div class="field" id="pin-old-f"><label for="pin-old" data-i="pinOld"></label><input id="pin-old" type="password" inputmode="numeric" maxlength="4" pattern="[0-9]*" autocomplete="off"></div>
+    <div class="field"><label for="pin-new" data-i="pinNew"></label><input id="pin-new" type="password" inputmode="numeric" maxlength="4" pattern="[0-9]*" autocomplete="off"></div>
+    <div class="field"><label for="pin-new2" data-i="pinNew2"></label><input id="pin-new2" type="password" inputmode="numeric" maxlength="4" pattern="[0-9]*" autocomplete="off"></div>
+    <div class="err" id="pin-err" role="alert"></div>
+    <div class="row-actions">
+      <button type="button" class="btn ghost" data-close data-i="cancel"></button>
+      <button type="submit" class="btn" data-i="save"></button>
+    </div>
+    <button type="button" class="btn danger small" id="pin-off" data-i="pinOff" hidden></button>
+  </form>
+</div>
+
+<div id="lock" class="lock" hidden>
+  <div class="lock-in">
+    <h2 data-i="lockTitle"></h2>
+    <input id="lock-pin" type="password" inputmode="numeric" maxlength="4" pattern="[0-9]*" autocomplete="off" data-al="lockTitle">
+    <div class="err" id="lock-err" role="alert"></div>
+    <button type="button" class="btn ghost small" id="lock-forgot" data-i="lockForgot"></button>
+    <div id="lock-reset" hidden>
+      <p class="help" id="lock-reset-t"></p>
+      <input id="lock-word" type="text" autocomplete="off">
+      <button type="button" class="btn danger small" id="lock-wipe" data-i="clearGo"></button>
+    </div>
+  </div>
+</div>
+
 <div class="scrim" id="sheet-confirm" hidden>
   <form class="sheet" id="form-confirm" autocomplete="off">
     <h2 id="cf-title"></h2>
     <p class="help" id="cf-body"></p>
     <div class="field" id="cf-word-f"><label for="cf-word" id="cf-word-l"></label><input id="cf-word" type="text"></div>
+    <button type="button" class="btn" id="cf-alt" hidden></button>
     <div class="err" id="cf-err" role="alert"></div>
     <div class="row-actions">
       <button type="button" class="btn ghost" data-close data-i="cancel"></button>
@@ -849,6 +1007,8 @@ input:focus, textarea:focus, .select:focus { outline: 2px solid color-mix(in srg
     <div class="sub" data-i="partnersL"></div>
     <div class="field"><label for="pr-partner" data-i="partnerL"></label><select class="select" id="pr-partner"></select></div>
     <div class="field"><input id="pr-newpartner" type="text" maxlength="30" data-ph="newPartnerPh"></div>
+    <div class="field"><label for="pr-lot" data-i="lotL"></label><select class="select" id="pr-lot"></select></div>
+    <div class="field"><input id="pr-newlot" type="text" maxlength="40" data-ph="newLotPh"></div>
     <div class="field"><label for="pr-n2" data-i="myNameL"></label><input id="pr-n2" type="text" maxlength="30"></div>
     <div class="sub" data-i="prodBuyT"></div>
     <div class="two">
@@ -859,6 +1019,7 @@ input:focus, textarea:focus, .select:focus { outline: 2px solid color-mix(in srg
       <div class="field" id="pr-rate-f"><label for="pr-buy-rate" id="pr-rate-l"></label><input id="pr-buy-rate" type="number" inputmode="decimal" min="0" step="0.0001"></div>
       <div class="field"><label for="pr-buy-who" data-i="expWho"></label><select class="select" id="pr-buy-who"></select></div>
     </div>
+    <div class="note" id="pr-buy-mad" style="font-weight:600"></div>
     <div class="field"><label for="pr-price" id="pr-price-l"></label><input id="pr-price" type="number" inputmode="decimal" min="0" step="0.01" placeholder="0"></div>
     <div class="note" id="pr-warn"></div>
     <div class="err" id="pr-err" role="alert"></div>
@@ -928,37 +1089,62 @@ input:focus, textarea:focus, .select:focus { outline: 2px solid color-mix(in srg
   </form>
 </div>
 
+<div class="scrim" id="sheet-lot" hidden>
+  <form class="sheet" id="form-lot" autocomplete="off">
+    <h2 id="lot-title"></h2>
+    <div class="field"><label for="lot-name" data-i="lotName"></label><input id="lot-name" type="text" maxlength="40"></div>
+    <div class="two">
+      <div class="field"><label for="lot-date" data-i="lotDate"></label><input id="lot-date" type="date"></div>
+      <div class="field"><label for="lot-partner" data-i="partnerL"></label><select class="select" id="lot-partner"></select></div>
+    </div>
+    <div class="err" id="lot-err" role="alert"></div>
+    <div id="lot-actions" style="display:flex;flex-direction:column;gap:8px">
+      <button type="button" class="btn ghost small" data-lotact="toggle" id="lot-toggle"></button>
+      <div class="sub" data-i="lotCopyMove"></div>
+      <div class="field"><label for="lot-target" data-i="lotTarget"></label><select class="select" id="lot-target"></select></div>
+      <label class="check"><input id="lot-withprods" type="checkbox" checked><span data-i="lotWithProds"></span></label>
+      <div class="two"><button type="button" class="btn ghost small" data-lotact="copy" data-i="lotCopy"></button><button type="button" class="btn ghost small" data-lotact="move" data-i="lotMove"></button></div>
+      <div class="two"><button type="button" class="btn ghost small" data-lotact="pdf" data-i="expPdf"></button><button type="button" class="btn ghost small" data-lotact="xls" data-i="expXls"></button></div>
+      <button type="button" class="btn ghost small" data-lotact="wa" data-i="shWa"></button>
+      <button type="button" class="btn danger small" data-lotact="del" id="lot-del"></button>
+    </div>
+    <div class="row-actions">
+      <button type="button" class="btn ghost" data-close data-i="cancel"></button>
+      <button type="submit" class="btn" data-i="save"></button>
+    </div>
+  </form>
+</div>
 <div class="scrim" id="sheet-pset" hidden>
   <form class="sheet" id="form-pset" autocomplete="off">
     <h2 data-i="pjSetTitle"></h2>
     <div class="field"><label for="ps-name" data-i="pjNameL"></label><input id="ps-name" type="text" maxlength="40"></div>
+    <div class="sub" data-i="partnersL"></div>
+    <div class="field"><div id="ps-partners" style="display:flex;flex-direction:column;gap:8px"></div><button type="button" class="btn ghost small" id="ps-add-partner" data-i="addPartner"></button></div>
+    <div class="note" data-i="partsHint"></div>
+    <div class="sub" data-i="myPartT"></div>
+    <div class="field"><label for="ps-n2" data-i="partner2"></label><input id="ps-n2" type="text" maxlength="30"></div>
     <div class="two">
       <div class="field"><label for="ps-role" data-i="pjRoleL"></label><select class="select" id="ps-role"><option value="1">1</option><option value="2">2</option></select></div>
-      <div class="field"><label for="ps-pct" data-i="pjPctL"></label><input id="ps-pct" type="number" inputmode="decimal" min="1" max="99" step="0.5"></div>
     </div>
-    <div class="note" id="ps-pctl"></div>
-    <div class="field"><label for="ps-wa" data-i="waTplL"></label><textarea id="ps-wa" rows="4" class="notearea"></textarea><div class="note" data-i="waTplH"></div></div>
-    <div class="sub" data-i="setNames"></div>
-    <div class="two">
-      <div class="field"><label for="ps-n2" data-i="partner2"></label><input id="ps-n2" type="text" maxlength="30"></div>
-    </div>
+    <div class="sub" data-i="setStatuses"></div>
+    <div class="note" data-i="stKindHint"></div>
+    <div id="ps-statuses" style="display:flex;flex-direction:column;gap:8px"></div>
+    <button type="button" class="btn ghost small" id="ps-add-st" data-i="addStatus"></button>
+    <div class="sub" data-i="pjOther"></div>
     <div class="field"><label for="ps-rate" id="ps-rate-l"></label><input id="ps-rate" type="number" inputmode="decimal" min="0" step="0.0001"></div>
+    <div class="field"><label for="ps-late" data-i="lateDaysL"></label><input id="ps-late" type="number" inputmode="numeric" min="1" max="365" step="1"><div class="note" data-i="lateDaysH"></div></div>
+    <div class="field"><label for="ps-wa" data-i="waTplL"></label><textarea id="ps-wa" rows="4" class="notearea"></textarea><div class="note" data-i="waTplH"></div></div>
+    <div class="sub" data-i="setLists"></div>
+    <div class="field"><label for="ps-names" data-i="setProdNames"></label><textarea id="ps-names" rows="5"></textarea></div>
+    <div class="field"><label for="ps-types" data-i="setTypes"></label><textarea id="ps-types" rows="4"></textarea></div>
+    <div class="field"><label for="ps-storages" data-i="setStorages"></label><textarea id="ps-storages" rows="4"></textarea></div>
+    <div class="field"><label data-i="setColors"></label><div id="ps-colors" style="display:flex;flex-direction:column;gap:8px"></div><button type="button" class="btn ghost small" id="ps-add-col" data-i="addColor"></button></div>
     <div class="sub" data-i="batTitle"></div>
     <div class="two">
       <div class="field"><label for="ps-bgood" data-i="batGood"></label><input id="ps-bgood" type="number" inputmode="numeric" min="1" max="100"></div>
       <div class="field"><label for="ps-bmid" data-i="batMid"></label><input id="ps-bmid" type="number" inputmode="numeric" min="1" max="100"></div>
     </div>
     <div class="field"><label data-i="batCols"></label><div class="colors3"><input type="color" id="ps-bcg"><input type="color" id="ps-bcm"><input type="color" id="ps-bcb"></div></div>
-    <div class="sub" data-i="setStatuses"></div>
-    <div class="note" data-i="stKindHint"></div>
-    <div id="ps-statuses" style="display:flex;flex-direction:column;gap:8px"></div>
-    <button type="button" class="btn ghost small" id="ps-add-st" data-i="addStatus"></button>
-    <div class="sub" data-i="setLists"></div>
-    <div class="field"><label for="ps-names" data-i="setProdNames"></label><textarea id="ps-names" rows="5"></textarea></div>
-    <div class="field"><label data-i="partnersL"></label><div id="ps-partners" style="display:flex;flex-direction:column;gap:8px"></div><button type="button" class="btn ghost small" id="ps-add-partner" data-i="addPartner"></button></div>
-    <div class="field"><label for="ps-types" data-i="setTypes"></label><textarea id="ps-types" rows="4"></textarea></div>
-    <div class="field"><label data-i="setColors"></label><div id="ps-colors" style="display:flex;flex-direction:column;gap:8px"></div><button type="button" class="btn ghost small" id="ps-add-col" data-i="addColor"></button></div>
-    <div class="field"><label for="ps-storages" data-i="setStorages"></label><textarea id="ps-storages" rows="4"></textarea></div>
     <div class="field"><button type="button" class="btn ghost" id="ps-import" data-i="pjImport"></button><input type="file" id="ps-file" accept=".xlsx,.xls,.csv" hidden><div class="note" data-i="pjImportNote"></div></div>
     <div class="err" id="ps-err" role="alert"></div>
     <div class="row-actions">
@@ -1747,12 +1933,159 @@ Object.assign(DICT, {
   pjsSoldAed: ['Total vendu (AED)', 'Total sold (AED)', 'إجمالي المبيعات (AED)', 'مجموع المبيعات (AED)'],
   pjsBest: ['Meilleur produit', 'Best product', 'أفضل منتج', 'أحسن منتوج'],
   pjsWorst: ['Moins bon produit', 'Weakest product', 'أضعف منتج', 'أضعف منتوج'],
-  pjsLate: ['Paiements en retard (plus de 30 jours)', 'Late payments (over 30 days)', 'دفعات متأخرة (أكثر من 30 يومًا)', 'خلاصات متأخرة (أكتر من 30 يوم)']
+  pjsLate: ['Paiements en retard (plus de {n} jours)', 'Late payments (over {n} days)', 'دفعات متأخرة (أكثر من {n} يومًا)', 'خلاصات متأخرة (أكتر من {n} يوم)']
 });
 
 Object.assign(DICT, {
   dFrom: ['De', 'From', 'من', 'من'], dTo: ['À', 'To', 'إلى', 'ل'],
   searchL: ['Recherche', 'Search', 'بحث', 'قلّب'], navL: ['Navigation', 'Navigation', 'التنقل', 'التنقل']
+});
+
+Object.assign(DICT, {
+  expPdf: ['Exporter en PDF', 'Export as PDF', 'تصدير PDF', 'صدّر PDF'],
+  expXls: ['Exporter en Excel', 'Export as Excel', 'تصدير Excel', 'صدّر Excel'],
+  lotL: ['Lot', 'Batch', 'الدفعة', 'اللو'],
+  newLotPh: ['…ou créer un nouveau lot', '…or create a new batch', '…أو أنشئ دفعة جديدة', '…ولا صاوب لو جديد'],
+  lotName: ['Nom du lot', 'Batch name', 'اسم الدفعة', 'سمية اللو'],
+  lotDate: ['Date de réception', 'Date received', 'تاريخ الاستلام', 'نهار التوصل'],
+  lotNew: ['Nouveau lot', 'New batch', 'دفعة جديدة', 'لو جديد'],
+  lotEdit: ['Lot', 'Batch', 'الدفعة', 'اللو'],
+  lotN: ['{n} produit(s)', '{n} product(s)', '{n} منتج', '{n} منتوج'],
+  lotOpen: ['Ouvert', 'Open', 'مفتوحة', 'مفتوح'],
+  lotClosed: ['Fermé', 'Closed', 'مغلقة', 'مسدود'],
+  lotOpenF: ['Ouverts', 'Open', 'المفتوحة', 'المفتوحين'],
+  lotClosedF: ['Fermés', 'Closed', 'المغلقة', 'المسدودين'],
+  lotGive: ['À reverser', 'To pay', 'للتحويل', 'خاصني نرجع'],
+  lotMenu: ['Menu du lot', 'Batch menu', 'قائمة الدفعة', 'قائمة اللو'],
+  lotEmpty: ['Aucun produit dans ce lot.', 'No product in this batch.', 'لا توجد منتجات في هذه الدفعة.', 'ما كاينش منتوج ف هاد اللو.'],
+  lotAddProd: ['+ Ajouter un produit', '+ Add a product', '+ إضافة منتج', '+ زيد منتوج'],
+  lotNone: ['Sans lot', 'No batch', 'بدون دفعة', 'بلا لو'],
+  lotGroup: ['Regrouper les produits par mois', 'Group products by month', 'تجميع المنتجات حسب الشهر', 'جمّع المنتوجات بالشهر'],
+  lotGrouped: ['{n} lot(s) créé(s)', '{n} batch(es) created', 'تم إنشاء {n} دفعة', 'تصاوبو {n} لو'],
+  lotClose: ['Fermer le lot', 'Close batch', 'إغلاق الدفعة', 'سد اللو'],
+  lotReopen: ['Rouvrir le lot', 'Reopen batch', 'إعادة فتح الدفعة', 'عاود حل اللو'],
+  lotCopyMove: ['Copier ou déplacer vers un partenaire', 'Copy or move to a partner', 'نسخ أو نقل إلى شريك', 'نسخ ولا نقل لشريك'],
+  lotTarget: ['Partenaire', 'Partner', 'الشريك', 'الشريك'],
+  lotWithProds: ['Copier avec les produits (sans paiements)', 'Copy with products (without payments)', 'نسخ مع المنتجات (بدون دفعات)', 'نسخ مع المنتوجات (بلا خلاصات)'],
+  lotCopy: ['Copier', 'Copy', 'نسخ', 'نسخ'],
+  lotMove: ['Déplacer', 'Move', 'نقل', 'نقل'],
+  lotDel: ['Supprimer le lot', 'Delete batch', 'حذف الدفعة', 'مسح اللو'],
+  lotDelWarn: ['Les produits du lot sont conservés (sans lot).', "The batch's products are kept (no batch).", 'تبقى منتجات الدفعة (بدون دفعة).', 'المنتوجات كيبقاو (بلا لو).'],
+  lotSame: ['Choisis un autre partenaire.', 'Choose another partner.', 'اختر شريكًا آخر.', 'خود شريك آخر.'],
+  lotMoveWarn: ['Des versements ont déjà été faits au partenaire actuel. Appuie encore une fois pour confirmer.', 'Payments were already made to the current partner. Tap again to confirm.', 'تم تحويل مبالغ للشريك الحالي. اضغط مرة أخرى للتأكيد.', 'تحولات دراهم للشريك الحالي. ضغط مرة أخرى باش تأكد.'],
+  lotCopySuffix: ['(copie)', '(copy)', '(نسخة)', '(نسخة)'],
+  lotSummary: ['Résumé', 'Summary', 'ملخص', 'ملخص'],
+  gainsPartner: ['Part du partenaire', "Partner's share", 'حصة الشريك', 'حصة الشريك']
+});
+
+Object.assign(DICT, {
+  setOf: ["Réglages · {n}", "Settings · {n}", "الإعدادات · {n}", "الإعدادات · {n}"],
+  genLink: ["Réglages généraux (langue, sauvegarde…)", "General settings (language, backup…)", "الإعدادات العامة (اللغة، النسخ الاحتياطي…)", "الإعدادات العامة (اللغة، النسخة الاحتياطية…)"],
+  manageAccs: ["Gérer les comptes", "Manage accounts", "إدارة الحسابات", "تسيير الحسابات"],
+  goalsT: ["Objectifs d'épargne", "Savings goals", "أهداف الادخار", "أهداف المدخرات"],
+  genTitle: ["Général", "General", "عام", "عام"],
+  genTab: ["Général", "General", "عام", "عام"],
+  secTitle: ["Sécurité et sauvegarde", "Security and backup", "الأمان والنسخ الاحتياطي", "الأمان والنسخة الاحتياطية"],
+  pinSet: ["Activer un code de verrouillage", "Set a lock code", "تفعيل رمز القفل", "فعّل كود القفل"],
+  pinChange: ["Changer ou désactiver le code", "Change or turn off the code", "تغيير الرمز أو إيقافه", "بدّل الكود ولا وقّفو"],
+  pinTitle: ["Code de verrouillage", "Lock code", "رمز القفل", "كود القفل"],
+  pinHelp: ["4 chiffres demandés à l'ouverture de l'app. Ce n'est pas un chiffrement : il protège d'un regard, pas d'un expert. Si tu l'oublies, il faudra effacer les données de l'appareil : fais des sauvegardes.", "Four digits asked when the app opens. It is not encryption: it keeps prying eyes out, not an expert. If you forget it, the data on this device must be erased, so keep backups.", "أربعة أرقام تُطلب عند فتح التطبيق. ليس تشفيرًا: يحميك من النظرات، لا من الخبراء. إذا نسيته يجب مسح بيانات الجهاز، لذلك احتفظ بنسخ احتياطية.", "أربع أرقام كيتطلبو منك ملي تحل التطبيق. ماشي تشفير: كيحميك من العيون، ماشي من الخبراء. إلا نسيتيه خاصك تمسح المعلومات ديال التيليفون، دير نسخ احتياطية."],
+  pinOld: ["Code actuel", "Current code", "الرمز الحالي", "الكود الحالي"],
+  pinNew: ["Nouveau code (4 chiffres)", "New code (4 digits)", "الرمز الجديد (4 أرقام)", "الكود الجديد (4 أرقام)"],
+  pinNew2: ["Répète le nouveau code", "Repeat the new code", "أعد كتابة الرمز الجديد", "عاود كتب الكود الجديد"],
+  pinOff: ["Désactiver le code", "Turn off the code", "إيقاف الرمز", "وقّف الكود"],
+  lockTitle: ["Entre ton code", "Enter your code", "أدخل رمزك", "دخل الكود ديالك"],
+  lockForgot: ["Code oublié ?", "Forgot the code?", "نسيت الرمز؟", "نسيتي الكود؟"],
+  lockResetWarn: ["Pour continuer sans le code, toutes les données de cet appareil seront effacées. Tu pourras ensuite importer une sauvegarde.", "To continue without the code, all data on this device will be erased. You can then import a backup.", "للمتابعة بدون الرمز سيتم مسح كل بيانات هذا الجهاز. يمكنك بعدها استيراد نسخة احتياطية.", "باش تكمل بلا الكود غادي تتمسح كاع المعلومات ديال هاد التيليفون. من بعد تقدر تدخل نسخة احتياطية."],
+  pinBad: ["Code incorrect.", "Wrong code.", "رمز خاطئ.", "الكود غالط."],
+  pinMismatch: ["Les deux codes sont différents.", "The two codes differ.", "الرمزان مختلفان.", "الكودين مختلفين."],
+  pinFmt: ["Le code doit avoir 4 chiffres.", "The code must have 4 digits.", "يجب أن يتكون الرمز من 4 أرقام.", "خاص الكود يكون 4 أرقام."],
+  pinSaved: ["Code enregistré.", "Code saved.", "تم حفظ الرمز.", "تسجّل الكود."],
+  pinRemoved: ["Code désactivé.", "Code turned off.", "تم إيقاف الرمز.", "تحيّد الكود."],
+  privOn: ["Bouton « œil » pour masquer les montants", "Eye button to hide amounts", "زر العين لإخفاء المبالغ", "بوطون العين باش تخبّي المبالغ"],
+  privNote: ["Le bouton apparaît en haut de l'écran. Appuie dessus pour flouter ou réafficher les montants.", "The button appears at the top of the screen. Tap it to blur or show amounts.", "يظهر الزر أعلى الشاشة. اضغط عليه لتمويه المبالغ أو إظهارها.", "البوطون كيبان فوق الشاشة. كليكي عليه باش تخبّي المبالغ ولا تبيّنها."],
+  privBtn: ["Masquer ou afficher les montants", "Hide or show amounts", "إخفاء أو إظهار المبالغ", "خبّي ولا بيّن المبالغ"],
+  dataShare: ["Sauvegarder et partager (Drive, WhatsApp…)", "Back up and share (Drive, WhatsApp…)", "حفظ ومشاركة (Drive، واتساب…)", "دير نسخة وبارطاجي (Drive، واتساب…)"],
+  dataDl: ["Télécharger le fichier sur l'appareil", "Download the file to this device", "تنزيل الملف على الجهاز", "نزّل الملف فالتيليفون"],
+  dataUndo: ["Annuler le dernier import", "Undo the last import", "التراجع عن آخر استيراد", "رجّع الحالة قبل آخر استيراد"],
+  undoBody: ["Tes données reviendront à l'état d'avant l'import du {d}.", "Your data will go back to how it was before the import of {d}.", "ستعود بياناتك كما كانت قبل الاستيراد بتاريخ {d}.", "المعلومات ديالك غادي يرجعو كيف كانو قبل الاستيراد ديال {d}."],
+  undoGo: ["Revenir en arrière", "Go back", "تراجع", "رجّع"],
+  impMerge: ["Fusionner (garder l'existant)", "Merge (keep what I have)", "دمج (مع الاحتفاظ بما لدي)", "دمج (وبقّي اللي عندي)"],
+  impChoose: ["Fusionner ajoute ce qui manque sans rien supprimer. Remplacer efface tes données actuelles. Une copie est gardée pour pouvoir annuler.", "Merging adds what is missing and deletes nothing. Replacing erases your current data. A copy is kept so you can undo.", "الدمج يضيف ما ينقص دون حذف أي شيء. الاستبدال يمسح بياناتك الحالية. تُحفظ نسخة للتراجع.", "الدمج كيزيد اللي ناقص بلا ما يمسح والو. التعويض كيمسح المعلومات اللي عندك. كتبقى نسخة باش تقدر ترجع."],
+  tMerged: ["Fusion terminée.", "Merge done.", "تم الدمج.", "تدمجو المعلومات."]
+});
+
+Object.assign(DICT, {
+  myPartT: ["Moi", "Me", "أنا", "أنا"],
+  pjOther: ["Autres réglages", "Other settings", "إعدادات أخرى", "إعدادات أخرى"],
+  pjNb: ["Nb", "No.", "العدد", "العدد"]
+});
+
+Object.assign(DICT, {
+  pjBuyShort: ["Achat","Purchase","الشراء","الشراء"]
+});
+
+Object.assign(DICT, {
+  loanPhoneL: ["Téléphone / WhatsApp (facultatif)", "Phone / WhatsApp (optional)", "هاتف / واتساب (اختياري)", "تيليفون / واتساب (اختياري)"],
+  waLoanT: ["Messages WhatsApp : crédits et prêts", "WhatsApp messages: credits and loans", "رسائل واتساب: الكريديات والقروض", "ميساجات واتساب: الكريديات والسلف"],
+  waLoanHelp: ["Modèles des messages envoyés depuis chaque crédit ou prêt. Variables : {nom} {reste} {total} {paye} {date}.", "Templates for the messages sent from each credit or loan. Variables: {nom} {reste} {total} {paye} {date}.", "قوالب الرسائل المرسلة من كل كريدي أو قرض. المتغيرات: {nom} {reste} {total} {paye} {date}.", "قوالب الميساجات اللي كتصيفط من كل كريدي ولا سلف. المتغيرات: {nom} {reste} {total} {paye} {date}."],
+  waLentL: ["Prêt : rappel à la personne qui me doit", "Loan: reminder to the person who owes me", "قرض: تذكير للشخص المدين لي", "سلف: تذكير للي خاصو ليا"],
+  waBorrowedL: ["Crédit : point sur ce que je dois", "Credit: update on what I owe", "كريدي: وضع ما أدين به", "كريدي: النقطة على اللي خاصني"],
+  waLentDef: ["Bonjour {nom}, petit rappel : il me reste {reste} à recevoir sur {total} (déjà reçu {paye}). Merci !", "Hello {nom}, a quick reminder: {reste} is still due to me out of {total} (already received {paye}). Thank you!", "مرحبا {nom}، تذكير بسيط: بقي لي {reste} من أصل {total} (استلمت {paye}). شكرا!", "السلام {nom}، تذكير صغير: باقي ليا {reste} من {total} (تسلمت {paye}). شكرا!"],
+  waBorrowedDef: ["Bonjour {nom}, je fais le point : sur {total} empruntés le {date}, j'ai déjà remboursé {paye}. Il reste {reste}.", "Hello {nom}, quick update: out of {total} borrowed on {date}, I have already repaid {paye}. {reste} remains.", "مرحبا {nom}، للتوضيح: من أصل {total} اقترضتها بتاريخ {date}، سددت {paye}. المتبقي {reste}.", "السلام {nom}، غير باش نوضح: من {total} اللي تسلفت نهار {date}، رجعت {paye}. باقي {reste}."],
+  clWaState: ["État par WhatsApp", "Send status on WhatsApp", "إرسال الوضع عبر واتساب", "صيفط الوضعية فواتساب"],
+  partsHint: ["Le pourcentage est ma part du bénéfice sur les produits de ce partenaire. Le bouton ⋮ ouvre ses détails.", "The percentage is my share of the profit on this partner's products. The ⋮ button opens its details.", "النسبة هي حصتي من الربح على منتجات هذا الشريك. زر ⋮ يفتح تفاصيله.", "النسبة هي حصتي من الربح فمنتوجات هاد الشريك. بوطون ⋮ كيحل التفاصيل ديالو."],
+  pctL: ["Ma part du bénéfice (%)", "My share of the profit (%)", "حصتي من الربح (%)", "حصتي من الربح (%)"],
+  partMenu: ["Détails du partenaire", "Partner details", "تفاصيل الشريك", "تفاصيل الشريك"],
+  pctOther: ["{n} : ma part {m} %, sa part {v} %.", "{n}: my share {m}%, their share {v}%.", "{n}: حصتي {m}٪، حصته {v}٪.", "{n}: حصتي {m}٪، حصتو {v}٪."],
+  partCount: ["{p} produit(s) · {l} lot(s)", "{p} product(s) · {l} batch(es)", "{p} منتج · {l} دفعة", "{p} منتوج · {l} لو"],
+  partFilter: ["Voir ses produits", "See their products", "عرض منتجاته", "شوف المنتوجات ديالو"],
+  partDel: ["Supprimer ce partenaire", "Delete this partner", "حذف هذا الشريك", "مسح هاد الشريك"],
+  partHas: ["Ce partenaire a des produits ou des lots : déplace-les d'abord vers un autre partenaire.", "This partner has products or batches: move them to another partner first.", "لهذا الشريك منتجات أو دفعات: انقلها أولاً إلى شريك آخر.", "هاد الشريك عندو منتوجات ولا لوات: نقلهم الأول لشريك آخر."],
+  partLast: ["Il faut garder au moins un partenaire.", "Keep at least one partner.", "يجب الاحتفاظ بشريك واحد على الأقل.", "خاصك تبقي شريك واحد على الأقل."],
+  pctWarn: ["Ce taux change et {n} produit(s) ont déjà des paiements : leurs parts seront recalculées. Appuie encore sur Enregistrer pour confirmer.", "This rate changes and {n} product(s) already have payments: their shares will be recalculated. Tap Save again to confirm.", "ستتغير النسبة و{n} منتج(ات) لها دفعات: ستُعاد حسابات الحصص. اضغط حفظ مرة أخرى للتأكيد.", "النسبة غادي تتبدل و{n} منتوج فيهم دفعات: غادي تتعاود الحصص. ضغط على تسجيل مرة أخرى باش تأكد."]
+});
+
+Object.assign(DICT, {
+  buyMad: ["≈ {v} (au taux de {r})", "≈ {v} (at a rate of {r})", "≈ {v} (بسعر {r})", "≈ {v} (بالسوم {r})"],
+  viewLots: ["Par lot", "By batch", "حسب الدفعة", "حسب اللو"],
+  viewFlat: ["Produits", "Products", "المنتجات", "المنتوجات"],
+  selBtn: ["Sélectionner", "Select", "تحديد", "اختار"],
+  shareBtn: ["Partager", "Share", "مشاركة", "بارطاجي"],
+  selN: ["{n} sélectionné(s)", "{n} selected", "{n} محدد", "{n} مختار"],
+  selAll: ["Tout", "All", "الكل", "الكل"],
+  selNone: ["Sélectionne au moins un produit ou un lot.", "Select at least one product or batch.", "حدد منتجًا أو دفعة واحدة على الأقل.", "اختار منتوج ولا لو على الأقل."],
+  shTitle: ["Partager", "Share", "مشاركة", "بارطاجي"],
+  shScope: ["Que veux-tu partager ?", "What do you want to share?", "ماذا تريد أن تشارك؟", "شنو بغيتي تبارطاجي؟"],
+  shAll: ["Tout le projet", "The whole project", "المشروع كله", "المشروع كامل"],
+  shPartner: ["Partenaire : {n}", "Partner: {n}", "الشريك: {n}", "الشريك: {n}"],
+  shSel: ["Ma sélection ({n})", "My selection ({n})", "اختياري ({n})", "الاختيار ديالي ({n})"],
+  shLots: ["Lots", "Batches", "الدفعات", "اللوات"],
+  shNote: ["Le document contient les statistiques et le détail de chaque produit.", "The document has the statistics and each product’s details.", "يحتوي المستند على الإحصائيات وتفاصيل كل منتج.", "الوثيقة فيها الإحصائيات وتفاصيل كل منتوج."],
+  shPdf: ["PDF", "PDF", "PDF", "PDF"],
+  shXls: ["Excel", "Excel", "Excel", "Excel"],
+  shWa: ["Texte WhatsApp", "WhatsApp text", "نص واتساب", "نص فواتساب"],
+  shCopied: ["Message copié : colle-le dans WhatsApp.", "Message copied: paste it into WhatsApp.", "تم نسخ الرسالة: الصقها في واتساب.", "تنسخات الرسالة: لصقها فواتساب."]
+});
+
+Object.assign(DICT, {
+  waShort: ["WhatsApp", "WhatsApp", "واتساب", "فواتساب"],
+  waPayList: ["Paiements reçus :", "Payments received:", "الدفعات المستلمة:", "الدفعات اللي توصلت بها:"],
+  waPayDef: ["Bonjour {client}, voici le point pour {produit} : total {total}, déjà payé {paye}, reste à régler {reste}.\n{list}\nMerci !", "Hello {client}, here is the status for {produit}: total {total}, already paid {paye}, remaining {reste}.\n{list}\nThank you!", "مرحبا {client}، إليك وضع {produit}: الإجمالي {total}، المدفوع {paye}، المتبقي {reste}.\n{list}\nشكرا!", "السلام {client}، هادي النقطة على {produit}: المجموع {total}، اللي خلصتي {paye}، الباقي {reste}.\n{list}\nشكرا!"],
+  waPayDone: ["Bonjour {client}, {produit} est entièrement réglé ({total}).\n{list}\nMerci !", "Hello {client}, {produit} is fully paid ({total}).\n{list}\nThank you!", "مرحبا {client}، تم سداد {produit} بالكامل ({total}).\n{list}\nشكرا!", "السلام {client}، {produit} تخلص كامل ({total}).\n{list}\nشكرا!"]
+});
+
+Object.assign(DICT, {
+  spHtml: ["Page HTML (fichier)", "HTML page (file)", "صفحة HTML (ملف)", "صفحة HTML (ملف)"],
+  spCopy: ["Copier le HTML", "Copy the HTML", "نسخ HTML", "نسخ HTML"],
+  spImg: ["Image (PNG)", "Image (PNG)", "صورة (PNG)", "تصويرة (PNG)"],
+  spTxt: ["Texte (à coller ou envoyer)", "Text (to paste or send)", "نص (للصق أو الإرسال)", "نص (باش تلصقو ولا تصيفطو)"],
+  copiedOk: ["Copié dans le presse-papiers.", "Copied to the clipboard.", "تم النسخ.", "تنسخ."]
+});
+
+Object.assign(DICT, {
+  lateDaysL: ['Retard de paiement après (jours)', 'Payment considered late after (days)', 'يُعتبر الدفع متأخرًا بعد (أيام)', 'الخلاص كيتعتابر متأخر موراها (أيام)'],
+  lateDaysH: ['Un produit livré dont le reste à payer dépasse ce délai est signalé « en retard ».', 'A delivered product with a balance still due after this delay is flagged as late.', 'المنتج المُسلَّم الذي بقي عليه مبلغ بعد هذه المدة يُعلَّم كمتأخر.', 'المنتوج اللي تسلم وباقي فيه الفلوس موراها كيتعلم متأخر.']
 });
 /* ---------- Icônes (traits 24x24) et couleurs ---------- */
 const ICONS = {
@@ -2337,7 +2670,7 @@ function renderLoans() {
       '<span class="pill ' + (rest > 0 ? 'open' : 'done') + '">' + esc(t(rest > 0 ? 'open' : 'done')) + '</span>' +
       '<button class="icon-btn" data-loanedit="' + esc(l.id) + '" aria-label="' + esc(t('edit') + ' : ' + l.who) + '">' + ico('pencil') + '</button></div>' +
       '<div class="bar" role="img" aria-label="' + esc(t('paidAria', { p: Math.round(pct) })) + '"><i style="width:' + pct.toFixed(1) + '%"></i></div>' +
-      '<div class="figures"><span>' + esc(t(lent ? 'received' : 'returned')) + ' <b class="num">' + money(paid) + '</b></span><span>' + esc(t('rest')) + ' <b class="num">' + money(rest) + '</b></span></div>' +
+      '<div class="figures"><span>' + esc(t(lent ? 'received' : 'returned')) + ' <b class="num">' + money(paid) + '</b></span><span>' + esc(t('rest')) + ' <b class="num">' + money(rest) + '</b></span></div>' + loanWaHtml(l, lent, rest) +
       (rest > 0 ? '<form class="pay-form" data-pay="' + esc(l.id) + '" style="flex-wrap:wrap"><input id="pay-' + esc(l.id) + '" type="number" inputmode="decimal" min="0" step="0.01" placeholder="' + esc(t('payPh')) + '" aria-label="' + esc(t('payPh')) + '">' +
         '<button type="submit" class="btn small">' + esc(t(lent ? 'received' : 'returned')) + '</button><button type="button" class="btn ghost small" data-settle="' + esc(l.id) + '">' + esc(t('allBtn')) + '</button>' +
         '<select class="select" style="flex-basis:100%" aria-label="' + esc(t(lent ? 'payAccL' : 'payAccB')) + '" title="' + esc(t(lent ? 'payAccL' : 'payAccB')) + '">' + accs().map(a => '<option value="' + esc(a.id) + '"' + (accId(l.acc) === a.id ? ' selected' : '') + '>' + esc(accName(a)) + '</option>').join('') + '</select></form>' : '') +
@@ -2363,6 +2696,15 @@ function renderAccounts() {
 
 /* ---------- Réglages ---------- */
 function renderSettings() {
+  { const sc = ['home', 'loans', 'zakat', 'savings'].indexOf(state.setScope) >= 0 ? state.setScope : 'home';
+    $$('#view-settings [data-scope]').forEach(el => { el.hidden = el.dataset.scope !== sc; });
+    $('#set-title').textContent = t('setOf', { n: t(sc) });
+    const gg = '<svg class="go" viewBox="0 0 24 24">' + ICONS.chev + '</svg>';
+    $('#goal-rows').innerHTML = goals().map(g => '<button class="row-btn" data-goaledit2="' + esc(g.id) + '"><span class="dot sm" style="background:' + g.color + '">' + ico(g.icon) + '</span><span class="rt">' + esc(g.name) + '<span class="rs">' + esc(money(g.target)) + '</span></span><span></span>' + gg + '</button>').join('');
+    $('#btn-undo-import').hidden = !snapGet();
+    [['#set-wa-lent', 'waLent', 'waLentDef'], ['#set-wa-borrowed', 'waBorrowed', 'waBorrowedDef']].forEach(a => { const el = $(a[0]); if (document.activeElement !== el) el.value = state.settings[a[1]] || t(a[2]); });
+    $('#set-priv').checked = !!prefs.privOn; $('#btn-pin').textContent = t(prefs.pin ? 'pinChange' : 'pinSet');
+  }
   ['borrowed', 'lent', 'project'].forEach(k => { $('#lk-' + k).value = lkCol(k); });
   $('#set-lang').value = LANG; $('#set-cur').value = cur();
   $$('[data-theme-btn]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.themeBtn === themeNow())));
@@ -2392,11 +2734,12 @@ function accFilterSync() {
   }
   if (state.acc !== 'all' && !list.some(a => a.id === state.acc)) state.acc = 'all';
   sel.value = state.acc;
-  sel.hidden = (list.length < 2 && state.tab !== 'home') || ['accounts', 'settings', 'search', 'savings', 'project', 'product', 'loans'].indexOf(state.tab) >= 0;
+  sel.hidden = (list.length < 2 && state.tab !== 'home') || ['accounts', 'settings', 'search', 'savings', 'project', 'product', 'loans', 'general'].indexOf(state.tab) >= 0;
   renderTopSeg();
   $('#btn-back').hidden = TABS.indexOf(state.tab) >= 0;
-  $('#btn-settings').hidden = TABS.indexOf(state.tab) < 0;
-  $('#btn-search').hidden = ['search', 'settings', 'reports', 'product', 'project', 'pjstats'].indexOf(state.tab) >= 0;
+  $('#btn-settings').hidden = TABS.indexOf(state.tab) < 0 || state.tab === 'general';
+  $('#btn-eye').hidden = !prefs.privOn;
+  $('#btn-search').hidden = ['search', 'settings', 'reports', 'product', 'project', 'pjstats', 'general'].indexOf(state.tab) >= 0;
 }
 const tabOn = k => (state.settings.tabsOff || []).indexOf(k) < 0;
 function applyTabs() {
@@ -2502,9 +2845,9 @@ initCalc($('#calc-dep'));
 initCalc($('#calc-pexp'));
 initCalc($('#calc-ppay'));
 /* ---------- Navigation, feuilles, saisie ---------- */
-const SHEETS = ['#sheet-tx', '#sheet-loan', '#sheet-edit', '#sheet-fixed', '#sheet-other', '#sheet-incl', '#sheet-dep', '#sheet-confirm', '#sheet-prod', '#sheet-pexp', '#sheet-ppay', '#sheet-pset', '#sheet-padd', '#sheet-lpay', '#sheet-np', '#sheet-zk'];
-const VIEWS = ['home', 'history', 'loans', 'zakat', 'accounts', 'settings', 'search', 'savings', 'reports', 'project', 'product', 'pjstats'];
-const TABS = ['home', 'loans', 'zakat', 'savings', 'project'];
+const SHEETS = ['#sheet-tx', '#sheet-loan', '#sheet-edit', '#sheet-fixed', '#sheet-other', '#sheet-incl', '#sheet-dep', '#sheet-confirm', '#sheet-prod', '#sheet-pexp', '#sheet-ppay', '#sheet-pset', '#sheet-padd', '#sheet-lpay', '#sheet-np', '#sheet-zk', '#sheet-lot', '#sheet-pin', '#sheet-share', '#sheet-sharepay'];
+const VIEWS = ['home', 'history', 'loans', 'zakat', 'accounts', 'settings', 'search', 'savings', 'reports', 'project', 'product', 'pjstats', 'general'];
+const TABS = ['home', 'loans', 'zakat', 'savings', 'project', 'general'];
 function openSheet(sel) { closeSheets(); $(sel).hidden = false; }
 function closeSheets() { SHEETS.forEach(s => { $(s).hidden = true; }); }
 function fillAccSelect(sel, value) {
@@ -2514,16 +2857,38 @@ function fillAccSelect(sel, value) {
 }
 const defaultAcc = () => state.acc !== 'all' ? state.acc : firstAcc();
 
-function setTab(tab) {
-  if (tab === 'settings' && state.tab !== 'settings') state.prevTab = state.tab;
+/* Mémoire de navigation : chaque rubrique (Accueil, Crédits, Zakat, Épargne, Projet, Général) retrouve la page et la position où on l'a laissée */
+const ypos = {}, memo = {};
+const GROUP = { home: 'home', history: 'home', accounts: 'home', search: 'home', reports: 'home', loans: 'loans', zakat: 'zakat', savings: 'savings', project: 'project', product: 'project', pjstats: 'project', general: 'general' };
+const grp = tab => tab === 'settings' ? (state.setScope || 'home') : (GROUP[tab] || 'home');
+function setTab(tab, o) {
+  o = o || {};
+  ypos[state.tab] = window.scrollY; memo[grp(state.tab)] = { tab: state.tab, pid: state.pid, scope: state.setScope };
+  if (tab === 'settings' && state.tab !== 'settings' && TABS.indexOf(state.tab) >= 0) state.prevTab = state.tab;
   state.tab = tab; state.openKey = null; state.sel = null;
   VIEWS.forEach(v => { $('#view-' + v).hidden = v !== tab; });
   $$('[data-tab]').forEach(b => { if (b.dataset.tab === tab) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current'); });
-  render(); window.scrollTo(0, 0);
+  render(); window.scrollTo(0, o.restore ? (ypos[tab] || 0) : 0);
 }
-$$('[data-tab]').forEach(b => b.addEventListener('click', () => setTab(b.dataset.tab)));
-$('#btn-settings').addEventListener('click', () => setTab('settings'));
-$('#btn-back').addEventListener('click', () => setTab(state.tab === 'product' || state.tab === 'pjstats' ? 'project' : state.tab === 'reports' ? 'settings' : (state.tab === 'settings' && TABS.indexOf(state.prevTab) >= 0 ? state.prevTab : 'home')));
+$$('[data-tab]').filter(b => !b.closest('.tabs')).forEach(b => b.addEventListener('click', () => setTab(b.dataset.tab)));
+$$('.tabs [data-tab]').forEach(b => b.addEventListener('click', () => {
+  const tab = b.dataset.tab, g = grp(state.tab);
+  if (g === tab) { if (state.tab === tab) window.scrollTo({ top: 0, behavior: 'smooth' }); else setTab(tab); return; }
+  const m = memo[tab];
+  if (m && m.tab !== tab && (m.tab !== 'product' || state.products[m.pid])) { if (m.pid) state.pid = m.pid; if (m.scope) state.setScope = m.scope; setTab(m.tab, { restore: true }); }
+  else setTab(tab, { restore: true });
+}));
+/* ⚙ : uniquement les réglages de la rubrique affichée (Projet : sa fenêtre de réglages) */
+$('#btn-settings').addEventListener('click', () => {
+  if (state.tab === 'project') { $('#btn-pset').click(); return; }
+  state.setScope = ['home', 'loans', 'zakat', 'savings'].indexOf(state.tab) >= 0 ? state.tab : 'home';
+  setTab('settings');
+});
+$('#btn-gen-link').addEventListener('click', () => setTab('general'));
+$('#btn-set-accs').addEventListener('click', () => setTab('accounts'));
+$('#btn-add-goal2').addEventListener('click', () => openEdit('goal', null));
+$('#goal-rows').addEventListener('click', e => { const b = e.target.closest('[data-goaledit2]'); if (b) openEdit('goal', b.dataset.goaledit2); });
+$('#btn-back').addEventListener('click', () => setTab(state.tab === 'product' || state.tab === 'pjstats' ? 'project' : state.tab === 'reports' ? 'settings' : (state.tab === 'settings' && TABS.indexOf(state.prevTab) >= 0 ? state.prevTab : 'home'), { restore: true }));
 $('#btn-search').addEventListener('click', () => { state.q = ''; $('#search-q').value = ''; setTab('search'); setTimeout(() => $('#search-q').focus(), 30); });
 $('#search-q').addEventListener('input', e => { state.q = e.target.value; renderSearch(); });
 [['#set-tab-loans', 'loans'], ['#set-tab-zakat', 'zakat'], ['#set-tab-sav', 'savings']].forEach(a => $(a[0]).addEventListener('change', e => {
@@ -2652,7 +3017,7 @@ function openLoan(id) {
   const l = id ? state.loans[id] : null;
   loanEdit = id || null; loanDir = l ? l.dir : 'lent'; paintLoanDir();
   $('#loan-title').textContent = t(l ? 'editLoan' : 'btnLoan');
-  $('#loan-who').value = l ? l.who : ''; $('#calc-loan').calc.set(l ? l.amount : ''); $('#loan-note').value = l ? (l.note || '') : ''; $('#loan-date').value = l ? l.date : today(); $('#loan-err').textContent = '';
+  $('#loan-who').value = l ? l.who : ''; $('#loan-phone').value = l ? (l.phone || '') : ''; $('#calc-loan').calc.set(l ? l.amount : ''); $('#loan-note').value = l ? (l.note || '') : ''; $('#loan-date').value = l ? l.date : today(); $('#loan-err').textContent = '';
   loanConfirm = false; $('#loan-del').hidden = !l; $('#loan-del').textContent = t('del');
   fillAccSelect('#loan-acc', l ? l.acc : defaultAcc()); openSheet('#sheet-loan');
   if (!l) setTimeout(() => $('#loan-who').focus(), 30);
@@ -2666,7 +3031,8 @@ $('#form-loan').addEventListener('submit', async e => {
   if (!(amount > 0)) { $('#loan-err').textContent = t('errAmount'); return; }
   const old = loanEdit ? clone(state.loans[loanEdit]) : null;
   if (old && amount < paidOf(old) - 0.001) { $('#loan-err').textContent = t('errBelowPaid', { n: money(paidOf(old)) }); return; }
-  const obj = Object.assign(old || { payments: [], ts: Date.now() }, { dir: loanDir, who: who, amount: amount, acc: $('#loan-acc').value, date: $('#loan-date').value || today(), note: $('#loan-note').value.trim() });
+  const obj = Object.assign(old || { payments: [], ts: Date.now() }, { dir: loanDir, who: who, amount: amount, acc: $('#loan-acc').value, date: $('#loan-date').value || today(), note: $('#loan-note').value.trim(), phone: $('#loan-phone').value.trim() });
+  if (!obj.phone) delete obj.phone;
   const id = loanEdit || newId(); closeSheets();
   try { await store.put('loans', id, obj); toast(t(old ? 'tSaved' : 'tLoan')); if (!old) setTab('loans'); } catch (err) { /* message déjà affiché */ }
 });
@@ -3072,7 +3438,13 @@ const pjName = x => (x && x.name) || t('project');
 const projCfg = () => curPj().cfg || {};
 const cfgOf = p => { const x = pjs().find(q => q.id === ((p && p.proj) || 'main')); return (x && x.cfg) || {}; };
 const pjRole = c => (c || projCfg()).role === 1 ? 1 : 2;
-const myPct = c => { const v = Number((c || projCfg()).pct); return v > 0 && v < 100 ? v : 50; };
+/* Ma part du bénéfice : propre à chaque partenaire (pid), sinon le taux général du projet, sinon 50 % */
+const myPct = (c, pid) => {
+  c = c || projCfg();
+  const l = (Array.isArray(c.partners) && c.partners.length) ? c.partners : [], x = pid == null ? null : (l.find(q => q.id === pid) || l[0]);
+  const v = Number(x && x.pct); if (v > 0 && v < 100) return v;
+  const g = Number(c.pct); return g > 0 && g < 100 ? g : 50;
+};
 function saveCfg(cfg, extra) {
   const list = clone(pjs()), x = list.find(q => q.id === curPj().id);
   x.cfg = cfg; if (extra) Object.assign(x, extra);
@@ -3086,7 +3458,7 @@ const pn2 = () => nameL(projCfg().n2) || t(pjRole() === 1 ? 'partnerMe1' : 'part
 const nameL = n => { const x = String(n || '').trim().toLowerCase(); if (!x) return n; for (const k of ['partner1', 'partner2', 'partnerMe1']) if ((DICT[k] || []).some(v => v && String(v).toLowerCase() === x)) return t(k); return n; };
 const typeKey = v => { const x = String(v || '').trim().toLowerCase(); return ['phone', 'tablet', 'airpods', 'other'].find(k => (DICT['pt.' + k] || []).some(q => q && String(q).toLowerCase() === x)); };
 const typeLabel = v => { const k = typeKey(v); return k ? t('pt.' + k) : (v || ''); };
-const partnersOfCfg = c => partnersOfCfg0(c).map(x => ({ id: x.id, name: nameL(x.name) }));
+const partnersOfCfg = c => partnersOfCfg0(c).map(x => ({ id: x.id, name: nameL(x.name), pct: x.pct }));
 const partnersOfCfg0 = c => (Array.isArray(c.partners) && c.partners.length) ? c.partners : [{ id: 'p1', name: c.n1 || t(pjRole(c) === 1 ? 'partner2' : 'partner1') }];
 const partners = () => partnersOfCfg(projCfg());
 const partnerOf = id => partners().find(x => x.id === id) || partners()[0];
@@ -3152,7 +3524,7 @@ function prodCalc(p) {
     if (cost > 0) { r1 = round2(reimb * adv1 / cost); r2 = round2(reimb - r1); }
     profit = round2(Math.max(0, paid - cost));
   }
-  const h2 = round2(profit * myPct(cfgOf(p)) / 100), h1 = round2(profit - h2), s1 = round2(r1 + h1), s2 = round2(r2 + h2);
+  const h2 = round2(profit * myPct(cfgOf(p), (p && p.partner) || '') / 100), h1 = round2(profit - h2), s1 = round2(r1 + h1), s2 = round2(r2 + h2);
   const gave = sumBy(p.transfers, x => Number(x.amount));
   return { cost: cost, adv1: adv1, adv2: adv2, paid: paid, price: price, rest: Math.max(0, round2(price - paid)), expected: round2(price - cost),
     profit: profit, h1: h1, h2: h2, r1: r1, r2: r2, s1: s1, s2: s2, gave: gave, toGive: returned ? 0 : Math.max(0, round2(s1 - gave)), returned: returned };
@@ -3162,6 +3534,18 @@ const prodList = () => Object.keys(state.products).map(id => Object.assign({ id:
 const pjList = () => prodList().filter(inPj);
 const putProd = p => { const c = clone(p); delete c.id; return store.put('products', p.id, c); };
 let pjFilter = 'all', pjQ = '';
+const pjSel = { on: false, ids: new Set() };
+function prodCardHtml(p) {
+  const c = prodCalc(p), pct = c.price > 0 ? Math.min(100, c.paid / c.price * 100) : 0, st = stOf(p.status);
+  const meta = [typeLabel(p.type), p.client].filter(Boolean).join(' · ');
+  return '<div class="card prodcard" data-prod="' + esc(p.id) + '" role="button" tabindex="0"><div class="head"><div style="min-width:0"><div class="who">' + esc(p.name) + '</div><div class="meta">' + esc(meta) + '</div></div>' +
+    pillHtml(st) + '</div>' + '<div class="tags">' + (p.storage ? '<span class="tag">' + esc(p.storage) + '</span>' : '') + batTag(p.battery) + colTag(p) + '</div>' +
+    (c.price > 0 ? '<div class="bar"><i style="width:' + pct.toFixed(1) + '%"></i></div>' : '') +
+    '<div class="figures"><span>' + esc(t('pjPaid')) + ' <b class="num">' + money(c.paid) + '</b> / <span class="num">' + money(c.price) + '</span></span>' +
+    '<span>' + esc(pn2()) + ' <b class="num">' + money(c.s2) + '</b></span></div>' +
+    '<div class="figures"><span>' + esc(pnOf(p)) + ' <b class="num">' + money(c.s1) + '</b></span><span>' + esc(t('gainsGave')) + ' <b class="num">' + money(c.gave) + '</b></span></div>' + (needsAdd(p) ? '<div class="note" style="color:var(--expense);font-weight:600">⚠ ' + esc(t('alertCard')) + '</div>' : '') + '</div>';
+}
+
 const pjTog = { profit: false, collect: false, give: false, prods: false, buy: false };
 $('#view-project').addEventListener('click', e => { const b = e.target.closest('[data-tog]'); if (b) { pjTog[b.dataset.tog] = !pjTog[b.dataset.tog]; renderProject(); } });
 /* Estimation : le produit est supposé payé au prix demandé */
@@ -3185,7 +3569,7 @@ function renderProject() {
   dl('#dl-ekind', KINDKEYS.map(k => t('ek.' + k)).concat(used.filter(l => KINDKEYS.every(k => t('ek.' + k) !== l))));
   if (state.tab !== 'project') return;
   if (pjPartner !== 'all' && !partners().some(x => x.id === pjPartner)) pjPartner = 'all';
-  const list = pjList().filter(p => pjPartner === 'all' || partnerOf(p.partner).id === pjPartner);
+  const list = pjList().filter(p => (pjPartner === 'all' || partnerOf(p.partner).id === pjPartner) && lotFilterFn(p));
   let profit = 0, collect = 0, give = 0, eProfit = 0, eCollect = 0, eGive = 0;
   list.forEach(p => {
     const c = prodCalc(p), k = stOf(p.status).kind, e = estCalc(p);
@@ -3198,12 +3582,19 @@ function renderProject() {
   $('#pj-profit-l').textContent = t('pjProfit') + (tg.profit ? ' · ' + est : ''); $('#pj-profit').textContent = money(round2(tg.profit ? eProfit : profit));
   $('#pj-collect-l').textContent = t('pjCollect') + (tg.collect ? ' · ' + est : ''); $('#pj-collect').textContent = money(round2(tg.collect ? eCollect : collect));
   $('#pj-give-l').textContent = giveL + (tg.give ? ' · ' + est : ''); $('#pj-give').textContent = money(round2(tg.give ? eGive : give));
-  $('#pj-stock-l').textContent = t('pjProds'); $('#pj-stock').textContent = String(list.length);
   $('#pj-buy-l').textContent = t('pjBuyTotal') + (tg.buy ? ' · ' + t('pjBuyCur') : ''); $('#pj-buy').textContent = tg.buy ? (pur.parts.join(' · ') || '—') : money(pur.mad);
   $$('#view-project [data-tog]').forEach(b => b.setAttribute('aria-pressed', String(!!tg[b.dataset.tog])));
-  const sb = $('#pj-statusbox'); sb.hidden = !tg.prods;
-  if (tg.prods) { const cnt = {}; list.forEach(p => { cnt[p.status] = (cnt[p.status] || 0) + 1; });
-    sb.innerHTML = '<h3>' + esc(t('pjProds')) + '</h3><div class="kv">' + statuses().map(s => '<span>' + pillHtml(s) + '</span><b class="num">' + (cnt[s.id] || 0) + '</b>').join('') + '<span class="tot">' + esc(t('pjTotal')) + '</span><b class="tot num">' + list.length + '</b></div>'; }
+  { const sb = $('#pj-statusbox'), by = {}, open = !!prefs.pjProds; list.forEach(p => { (by[p.status] = by[p.status] || []).push(p); });
+    const chev = '<svg class="sbchev" viewBox="0 0 24 24" style="transform:rotate(' + (open ? 90 : 0) + 'deg)">' + ICONS.chev + '</svg>';
+    if (!open) {
+      sb.className = ''; const chips = statuses().filter(s => (by[s.id] || []).length).map(s => '<span class="sbchip"><i style="background:' + stColor(s) + '"></i>' + esc(stName(s)) + ' <b class="num">' + by[s.id].length + '</b></span>').join('');
+      sb.innerHTML = '<button type="button" class="stat tog sbtile" data-sbtog aria-expanded="false"><div class="k">' + esc(t('pjProds')) + ' · ' + list.length + chev + '</div><div class="sbchips">' + (chips || '—') + '</div></button>';
+    } else {
+      sb.className = 'rep-card';
+      const row = (s, l) => { const n = l.length; return '<button type="button" class="sbrow" data-pf="' + esc(s.id) + '" aria-pressed="' + (pjFilter === s.id) + '"><span>' + pillHtml(s) + '</span><b class="num">' + n + '</b><span class="num sbamt">' + esc(n ? money(purchases(l).mad) : '—') + '</span></button>'; };
+      sb.innerHTML = '<button type="button" class="sbhd" data-sbtog aria-expanded="true"><h3>' + esc(t('pjProds')) + ' · ' + list.length + '</h3>' + chev + '</button><div class="sbhead"><span></span><span>' + esc(t('pjNb')) + '</span><span class="sbamt">' + esc(t('pjBuyShort')) + '</span></div>' +
+        statuses().map(s => row(s, by[s.id] || [])).join('') + '<div class="sbrow tot"><span>' + esc(t('pjTotal')) + '</span><b class="num">' + list.length + '</b><span class="num sbamt">' + esc(money(pur.mad)) + '</span></div>';
+    } }
   let sale = 0, prof = 0, s1T = 0, s2T = 0, gaveT = 0, giveT = 0; const per = {};
   list.forEach(p => { const c = prodCalc(p); if (c.returned) return; if (stOf(p.status).kind === 'sold') sale += c.price; prof += c.profit; s1T += c.s1; s2T += c.s2; gaveT += c.gave; giveT += c.toGive; const id = partnerOf(p.partner).id; per[id] = (per[id] || 0) + c.toGive; });
   const sel = pjPartner !== 'all' ? partnerOf(pjPartner).name : '';
@@ -3215,22 +3606,17 @@ function renderProject() {
     '<span>' + esc(t('pjGaveTo')) + '</span><b class="num">− ' + esc(money(gaveT)) + '</b>' +
     '<span class="tot">' + esc(sel ? t('pjGive', { n: sel }) : t('pjGiveAll')) + '</span><b class="tot num">' + esc(money(giveT)) + '</b></div>' +
     (!sel && partners().length > 1 ? '<div class="sub">' + esc(t('pjToPayEach')) + '</div><div class="kv">' + partners().map(x => '<span>' + esc(x.name) + '</span><b class="num">' + esc(money(per[x.id] || 0)) + '</b>').join('') + '</div>' : '');
-  $('#pj-filter').innerHTML = '<button type="button" class="chip" data-pf="all" aria-pressed="' + (pjFilter === 'all') + '">' + esc(t('all')) + '</button>' +
-    statuses().map(s => '<button type="button" class="chip" data-pf="' + esc(s.id) + '" aria-pressed="' + (pjFilter === s.id) + '">' + esc(stName(s)) + '</button>').join('');
+  /* Filtres selon la vue : « Produits » = états (statuts) ; « Par lot » = ouverts / fermés (barre des lots) */
+  { const flat = prefs.pjView === 'flat', cnt = {}; list.forEach(p => { cnt[p.status] = (cnt[p.status] || 0) + 1; });
+    if (!flat) pjFilter = 'all'; else if (pjFilter !== 'all' && !cnt[pjFilter] && !statuses().some(s => s.id === pjFilter)) pjFilter = 'all';
+    const f = $('#pj-filter'); f.hidden = !flat;
+    f.innerHTML = '<button type="button" class="chip" data-pf="all" aria-pressed="' + (pjFilter === 'all') + '">' + esc(t('all')) + ' · ' + list.length + '</button>' +
+      statuses().filter(s => cnt[s.id] || pjFilter === s.id).map(s => '<button type="button" class="chip" data-pf="' + esc(s.id) + '" aria-pressed="' + (pjFilter === s.id) + '"><i class="chipdot" style="background:' + stColor(s) + '"></i>' + esc(stName(s)) + ' · ' + (cnt[s.id] || 0) + '</button>').join(''); }
   const words = norm(pjQ).split(/\s+/).filter(Boolean);
   const shown = list.filter(p => (pjFilter === 'all' || p.status === pjFilter) &&
     words.every(w => norm([p.name, typeLabel(p.type), p.client, p.serial, p.color, p.storage, p.courier, stName(stOf(p.status))].join(' ')).indexOf(w) >= 0))
     .sort((a, b) => (b.ts || 0) - (a.ts || 0));
-  $('#pj-list').innerHTML = !shown.length ? '<div class="empty"><strong>' + esc(t('noProdT')) + '</strong>' + esc(t('noProdB')) + '</div>' : shown.map(p => {
-    const c = prodCalc(p), pct = c.price > 0 ? Math.min(100, c.paid / c.price * 100) : 0, st = stOf(p.status);
-    const meta = [typeLabel(p.type), p.client].filter(Boolean).join(' · ');
-    return '<div class="card prodcard" data-prod="' + esc(p.id) + '" role="button" tabindex="0"><div class="head"><div style="min-width:0"><div class="who">' + esc(p.name) + '</div><div class="meta">' + esc(meta) + '</div></div>' +
-      pillHtml(st) + '</div>' + '<div class="tags">' + (p.storage ? '<span class="tag">' + esc(p.storage) + '</span>' : '') + batTag(p.battery) + colTag(p) + '</div>' +
-      (c.price > 0 ? '<div class="bar"><i style="width:' + pct.toFixed(1) + '%"></i></div>' : '') +
-      '<div class="figures"><span>' + esc(t('pjPaid')) + ' <b class="num">' + money(c.paid) + '</b> / <span class="num">' + money(c.price) + '</span></span>' +
-      '<span>' + esc(pn2()) + ' <b class="num">' + money(c.s2) + '</b></span></div>' +
-      '<div class="figures"><span>' + esc(pnOf(p)) + ' <b class="num">' + money(c.s1) + '</b></span><span>' + esc(t('gainsGave')) + ' <b class="num">' + money(c.gave) + '</b></span></div>' + (needsAdd(p) ? '<div class="note" style="color:var(--expense);font-weight:600">⚠ ' + esc(t('alertCard')) + '</div>' : '') + '</div>';
-  }).join('');
+  renderLots(list, shown, words);
   /* graphiques */
   const byM = {}, byT = {}, cnt = {};
   list.forEach(p => {
@@ -3252,8 +3638,9 @@ function renderProject() {
     '<div class="rep-card"><h3>' + esc(t('pjByStatus')) + '</h3>' + hb(cnt, n => String(n)) + '</div>' : '';
 }
 $('#pj-q').addEventListener('input', e => { pjQ = e.target.value; renderProject(); });
+$('#pj-statusbox').addEventListener('click', e => { if (e.target.closest('[data-sbtog]')) { savePrefs({ pjProds: !prefs.pjProds }); renderProject(); return; } const b = e.target.closest('[data-pf]'); if (b) { if (prefs.pjView !== 'flat') { savePrefs({ pjView: 'flat' }); pjLotF = 'all'; pjFilter = b.dataset.pf; } else pjFilter = pjFilter === b.dataset.pf ? 'all' : b.dataset.pf; renderProject(); } });
 $('#pj-filter').addEventListener('click', e => { const b = e.target.closest('[data-pf]'); if (b) { pjFilter = b.dataset.pf; renderProject(); } });
-$('#pj-list').addEventListener('click', e => { const c = e.target.closest('[data-prod]'); if (c) { state.pid = c.dataset.prod; setTab('product'); } });
+$('#pj-list').addEventListener('click', e => { const c = e.target.closest('[data-prod]'); if (c) { if (pjSel.on) { selToggle([c.dataset.prod]); return; } state.pid = c.dataset.prod; setTab('product'); } });
 $('#pj-list').addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && e.target.dataset.prod) { e.preventDefault(); state.pid = e.target.dataset.prod; setTab('product'); } });
 
 /* ----- Fiche produit ----- */
@@ -3285,7 +3672,7 @@ function renderProduct() {
       : '<div class="note">' + esc(t('pjNeedPrice')) + '</div>') +
     '<div class="rows">' + (p.payments || []).slice().sort((a, b) => (a.date < b.date ? 1 : -1)).map(x =>
     '<button class="row-btn" data-pact="editpay" data-id="' + esc(x.id) + '"><span class="dot sm" style="background:var(--income)">' + ico('coin') + '</span><span class="rt">' + esc(shortDate(x.date) + ' · ' + accName(accOf(x.acc))) + (x.note ? '<span class="rs">' + esc(x.note) + '</span>' : '') + '</span><span class="num" style="font-weight:600">' + esc(money(x.amount)) + '</span>' + go + '</button>').join('') + '</div>' +
-    '<div class="two"><button class="btn ghost small" data-pact="addpay">' + esc(t('addPay')) + '</button><button class="btn ghost small" data-pact="sharepay">' + esc(t('shareBtn')) + '</button></div></div>';
+    '<div class="two" style="grid-template-columns:1fr 1fr auto"><button class="btn ghost small" data-pact="addpay">' + esc(t('addPay')) + '</button><button class="btn ghost small" data-pact="sharepay">' + esc(t('shareBtn')) + '</button><button class="btn small" data-pact="wapay" aria-label="' + esc(t('clWaRemind')) + '">' + esc(t('waShort')) + '</button></div></div>';
   /* répartition */
   h += '<div class="card"><div class="section-title">' + esc(t('pjSplit')) + '</div><div class="kv">' +
     '<span>' + esc(t('advances', { n: pnOf(p) })) + '</span><b class="num">' + esc(money(c.adv1)) + '</b>' +
@@ -3319,9 +3706,15 @@ function syncWho() {
   $('#pr-buy-who').innerHTML = '<option value="1">' + esc(nm) + '</option><option value="2">' + esc($('#pr-n2').value.trim() || t('partner2')) + '</option>'; $('#pr-buy-who').value = keep;
 }
 ['#pr-partner', '#pr-newpartner', '#pr-n2'].forEach(i => $(i).addEventListener('input', syncWho));
-function syncBuyRate() { $('#pr-rate-f').hidden = $('#pr-buy-cur').value !== 'AED'; }
+/* Prix d'achat en monnaie d'achat : équivalent en dirhams affiché tout de suite */
+function syncBuyMad() {
+  const a = num($('#pr-buy').value), r = num($('#pr-buy-rate').value), foreign = $('#pr-buy-cur').value === 'AED' && cur() !== 'AED';
+  $('#pr-buy-mad').textContent = foreign && a > 0 && r > 0 ? t('buyMad', { v: money(round2(a * r)), r: fmt(r) }) : '';
+}
+function syncBuyRate() { $('#pr-rate-f').hidden = $('#pr-buy-cur').value !== 'AED'; syncBuyMad(); }
 $('#pr-buy-cur').addEventListener('change', syncBuyRate);
-function openProd(id) {
+$('#pr-buy').addEventListener('input', syncBuyMad); $('#pr-buy-rate').addEventListener('input', syncBuyMad);
+function openProd(id, preLot) {
   const p = id ? state.products[id] : null;
   pe = { id: id || null, confirm: false };
   $('#pr-title').textContent = t(p ? 'editProd' : 'newProd');
@@ -3336,6 +3729,7 @@ function openProd(id) {
   const main = p ? (p.expenses || []).find(e => e.id === 'main') : null;
   $('#pr-partner').innerHTML = partners().map(x => '<option value="' + esc(x.id) + '">' + esc(x.name) + '</option>').join('');
   $('#pr-partner').value = partnerOf(p ? p.partner : (pjPartner !== 'all' ? pjPartner : null)).id; $('#pr-newpartner').value = '';
+  { const pl = p ? p.lot : preLot, L = pl ? lotOf(pl) : null; if (!p && L) { $('#pr-partner').value = partnerOf(L.partner).id; $('#pr-recv').value = L.date || today(); } fillLotSelect($('#pr-partner').value, pl || ''); $('#pr-newlot').value = ''; }
   $('#pr-n2').value = projCfg().n2 || ''; $('#pr-n2').placeholder = t('partner2');
   syncWho();
   $('#pr-buy').value = main ? main.amount : ''; $('#pr-buy-cur').value = main ? main.cur : 'AED'; $('#pr-buy-rate').value = main && main.cur === 'AED' ? main.rate : pRate();
@@ -3392,6 +3786,12 @@ $('#form-prod').addEventListener('submit', async e => {
   }
   if (p.name && pNames().indexOf(p.name) < 0) { cfg.names = pNames().concat([p.name]); cfgChanged = true; }
   if (p.type && pTypes().indexOf(p.type) < 0) { cfg.types = pTypes().concat([p.type]); cfgChanged = true; }
+  /* lot : choisi, créé ou aucun (le partenaire suit le lot) */
+  const nl = $('#pr-newlot').value.trim(), sl = $('#pr-lot').value;
+  if (nl) { const lid = newId(); cfg.lots = (cfg.lots || []).concat([{ id: lid, name: nl, date: p.recv, partner: p.partner }]); cfgChanged = true; p.lot = lid; }
+  else if (sl && lotOf(sl)) { p.lot = sl; p.partner = partnerOf(lotOf(sl).partner).id; } else p.lot = '';
+  if (pe.id && state.products[pe.id] && partnerOf(state.products[pe.id].partner).id !== p.partner && (p.transfers || []).length && !pe.moveOk) { pe.moveOk = true; $('#pr-warn').textContent = t('lotMoveWarn'); return; }
+  { const L = p.lot ? lotOf(p.lot) : null; if (L && !isDone(p) && lotState(L) === 'closed') { const x = (cfg.lots || []).find(q => q.id === L.id); if (x) { x.force = 'open'; x.soldAt = lotProds(L).filter(q => q.id !== p.id && isDone(q)).length; cfgChanged = true; } } }
   const wasId = pe.id; closeSheets();
   try {
     await putProd(p);
@@ -3506,7 +3906,7 @@ $('#prod-detail').addEventListener('submit', e => { const f = e.target.closest('
 $('#prod-detail').addEventListener('click', e => {
   const b = e.target.closest('[data-pact]'); if (!b) return;
   ({ editprod: () => openProd(state.pid), addexp: () => openExp(null), editexp: () => openExp(b.dataset.id), addpay: () => openPay('pay', null), editpay: () => openPay('pay', b.dataset.id),
-    settle: () => quickPay(prodCalc(Object.assign({ id: state.pid }, state.products[state.pid])).rest), addtr: () => openPay('tr', null), edittr: () => openPay('tr', b.dataset.id), mine: openMine, sharepay: sharePayments })[b.dataset.pact]();
+    settle: () => quickPay(prodCalc(Object.assign({ id: state.pid }, state.products[state.pid])).rest), addtr: () => openPay('tr', null), edittr: () => openPay('tr', b.dataset.id), mine: openMine, sharepay: sharePayments, wapay: waPayments })[b.dataset.pact]();
 });
 
 /* ----- Réglages du projet ----- */
@@ -3523,13 +3923,13 @@ function stRow(s) {
 }
 $('#btn-pset').addEventListener('click', () => {
   const c = projCfg();
-  $('#ps-name').value = curPj().name || ''; $('#ps-role').value = String(pjRole()); $('#ps-pct').value = myPct(); $('#ps-pctl').textContent = t('pjPctOther', { n: 100 - myPct() });
-  $('#ps-wa').value = waTpl(); $('#form-pset h2').textContent = t('pjSetTitle');
+  $('#ps-name').value = curPj().name || ''; $('#ps-role').value = String(pjRole()); psWarned = false;
+  $('#ps-late').value = lateDays(); $('#ps-wa').value = waTpl(); $('#form-pset h2').textContent = t('pjSetTitle');
   $('#ps-n2').value = c.n2 || ''; $('#ps-n2').placeholder = t(pjRole() === 1 ? 'partnerMe1' : 'partner2');
   $('#ps-rate').value = pRate(); $('#ps-rate-l').textContent = t('setRate', { c: cur() });
   $('#ps-statuses').innerHTML = statuses().map(stRow).join('');
   const bc = batCfg(); $('#ps-bgood').value = bc.good; $('#ps-bmid').value = bc.mid; $('#ps-bcg').value = bc.cg; $('#ps-bcm').value = bc.cm; $('#ps-bcb').value = bc.cb;
-  $('#ps-partners').innerHTML = partners().map(partRow).join('');
+  $('#ps-partners').innerHTML = partners().map(x => partRow(x, myPct(projCfg(), x.id))).join('');
   $('#ps-names').value = pNames().join('\n'); $('#ps-types').value = pTypes().join('\n'); $('#ps-colors').innerHTML = pColorList().map(colRow).join(''); $('#ps-storages').value = pStorages().join('\n');
   $('#ps-err').textContent = ''; openSheet('#sheet-pset');
 });
@@ -3546,11 +3946,14 @@ $('#form-pset').addEventListener('submit', async e => {
     sts.push(s);
   });
   if (!sts.length) { $('#ps-err').textContent = t('errName'); return; }
-  const plist = []; $$('#ps-partners [data-partid]').forEach(i => { const nm = i.value.trim(); if (nm) plist.push({ id: i.dataset.partid, name: nm }); });
+  const plist = []; $$('#ps-partners .prow').forEach(r => { const i = $('[data-partid]', r), nm = i.value.trim(); if (nm) plist.push({ id: i.dataset.partid, name: nm, pct: Math.min(99, Math.max(1, num($('[data-partpct]', r).value) || myPct(projCfg(), i.dataset.partid))) }); });
+  { const chg = plist.filter(x => { const o = partners().find(q => q.id === x.id); return o && myPct(projCfg(), x.id) !== x.pct; });
+    const paidN = chg.reduce((n, x) => n + prodList().filter(q => partnerOf(q.partner).id === x.id && (q.payments || []).length).length, 0);
+    if (paidN && !psWarned) { psWarned = true; $('#ps-err').textContent = t('pctWarn', { n: paidN }); return; } }
   pjList().forEach(pr => { const id = partnerOf(pr.partner).id; if (!plist.some(x => x.id === id)) plist.push(clone(partnerOf(pr.partner))); });
   if (!plist.length) plist.push({ id: 'p1', name: t('partner1') });
   const cfg = { partners: plist, n1: plist[0].name, n2: $('#ps-n2').value.trim(), rate: rate, statuses: sts, names: lines('#ps-names'), types: lines('#ps-types'), bat: { good: parseInt($('#ps-bgood').value, 10) || 95, mid: parseInt($('#ps-bmid').value, 10) || 85, cg: $('#ps-bcg').value, cm: $('#ps-bcm').value, cb: $('#ps-bcb').value }, types: lines('#ps-types'), colors: colorRows(), colorsV: 2, storages: lines('#ps-storages'),
-    role: $('#ps-role').value === '1' ? 1 : 2, pct: Math.min(99, Math.max(1, num($('#ps-pct').value) || 50)), waMsg: $('#ps-wa').value.trim() };
+    role: $('#ps-role').value === '1' ? 1 : 2, pct: myPct(projCfg()), waMsg: $('#ps-wa').value.trim(), lateDays: Math.min(365, Math.max(1, Math.round(num($('#ps-late').value)) || 30)) };
   closeSheets(); try { await saveCfg(cfg, { name: $('#ps-name').value.trim() }); toast(t('tSaved')); } catch (err) { /* message déjà affiché */ }
 });
 
@@ -3623,9 +4026,8 @@ const xlColor = v => {
 const xlStorage = v => { let n = Number(String(v).replace(',', '.')); if (!(n > 0)) return ''; if (n < 10 && n !== 1) n = Math.round(n * 100); return n === 1 ? '1 TB' : n + ' GB'; };
 const xlBat = v => { const n = Number(String(v).replace(',', '.').replace('%', '')); if (!(n > 0)) return ''; return String(Math.round(n <= 1 ? n * 100 : n)); };
 async function importProjectXlsx(file) {
-  try { if (!window.XLSX) await loadScript('https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js'); } catch (e) { toast(t('tNoDl')); return; }
   let rows;
-  try { const wb = window.XLSX.read(await file.arrayBuffer(), { type: 'array' }); rows = window.XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { header: 1, defval: '' }); } catch (e) { toast(t('pjImpBad')); return; }
+  try { const wb = await window.XLSX.read(await file.arrayBuffer(), { type: 'array' }); rows = window.XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { header: 1, defval: '' }); } catch (e) { toast(t('pjImpBad')); return; }
   const hr = rows.findIndex(r => r.some(c => String(c).trim().toLowerCase() === 'phone'));
   if (hr < 0) { toast(t('pjImpBad')); return; }
   const pc = rows[hr].findIndex(c => String(c).trim().toLowerCase() === 'phone'), num2 = x => { const n = Number(String(x).replace(',', '.')); return isFinite(n) ? n : 0; };
@@ -3660,8 +4062,30 @@ async function importProjectXlsx(file) {
 $('#ps-import').addEventListener('click', () => $('#ps-file').click());
 $('#ps-file').addEventListener('change', e => { const f = e.target.files[0]; e.target.value = ''; if (f) importProjectXlsx(f); });
 
-const partRow = x => '<div class="colrow"><input type="text" data-partid="' + esc(x.id) + '" value="' + esc(x.name) + '" maxlength="30"></div>';
-$('#ps-add-partner').addEventListener('click', () => { $('#ps-partners').insertAdjacentHTML('beforeend', partRow({ id: newId(), name: '' })); const l = $$('#ps-partners input'); l[l.length - 1].focus(); });
+let psWarned = false;
+const partRow = (x, pct) => '<div class="prow" data-prid="' + esc(x.id) + '"><div class="pmain"><input type="text" data-partid="' + esc(x.id) + '" value="' + esc(x.name) + '" maxlength="30" aria-label="' + esc(t('partnerL')) + '">' +
+  '<input type="number" class="pctin" data-partpct inputmode="decimal" min="1" max="99" step="0.5" value="' + (pct || '') + '" aria-label="' + esc(t('pctL')) + '"><span class="pctu">%</span>' +
+  '<button type="button" class="icon-btn" data-partmenu aria-label="' + esc(t('partMenu')) + '"><svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="12" cy="19" r="1.6"/></svg></button></div><div class="pmenu" hidden></div></div>';
+$('#ps-add-partner').addEventListener('click', () => { $('#ps-partners').insertAdjacentHTML('beforeend', partRow({ id: newId(), name: '' }, myPct(projCfg()))); const l = $$('#ps-partners input[data-partid]'); l[l.length - 1].focus(); });
+$('#ps-partners').addEventListener('input', e => { psWarned = false; const r = e.target.closest('.prow'); if (r && !$('.pmenu', r).hidden) paintPmenu(r); });
+function paintPmenu(r) {
+  const id = r.dataset.prid, nm = $('[data-partid]', r).value.trim() || t('partnerL'), v = num($('[data-partpct]', r).value);
+  const np = prodList().filter(q => partnerOf(q.partner).id === id).length, nl = lots().filter(l => partnerOf(l.partner).id === id).length, known = partners().some(q => q.id === id);
+  $('.pmenu', r).innerHTML = '<div class="note">' + esc(t('pctOther', { n: nm, v: v > 0 && v < 100 ? round2(100 - v) : '—', m: v > 0 && v < 100 ? round2(v) : '—' })) + '</div>' +
+    '<div class="note">' + esc(t('partCount', { p: np, l: nl })) + '</div>' +
+    '<div class="two">' + (known ? '<button type="button" class="btn ghost small" data-partfilter="' + esc(id) + '">' + esc(t('partFilter')) + '</button>' : '') +
+    '<button type="button" class="btn danger small" data-partdel="' + esc(id) + '">' + esc(t('partDel')) + '</button></div>';
+}
+$('#ps-partners').addEventListener('click', e => {
+  const r = e.target.closest('.prow'); if (!r) return;
+  if (e.target.closest('[data-partmenu]')) { const m = $('.pmenu', r); m.hidden = !m.hidden; if (!m.hidden) paintPmenu(r); return; }
+  const f = e.target.closest('[data-partfilter]'); if (f) { closeSheets(); pjPartner = f.dataset.partfilter; setTab('project'); render(); return; }
+  const d = e.target.closest('[data-partdel]'); if (!d) return;
+  const id = r.dataset.prid;
+  if (prodList().some(q => partnerOf(q.partner).id === id) || lots().some(l => partnerOf(l.partner).id === id)) { $('#ps-err').textContent = t('partHas'); return; }
+  if ($$('#ps-partners .prow').length < 2) { $('#ps-err').textContent = t('partLast'); return; }
+  r.remove(); $('#ps-err').textContent = '';
+});
 
 /* Barre du haut : filtre Crédits (Crédit, Prêt, Projet, Tous) ou partenaires du projet */
 function renderTopSeg() {
@@ -3778,7 +4202,7 @@ function renderPjStats() {
   const tPaid = sumBy(inP, x => x.c.paid), tProfit = sumBy(inP, x => x.c.profit), margin = tPaid > 0 ? round2(tProfit / tPaid * 100) : 0;
   const ranked = inP.slice().sort((a, b) => b.c.profit - a.c.profit), best = ranked[0], worst = ranked[ranked.length - 1];
   const soldMad = sumBy(inP, x => x.c.price), pur = purchases(all);
-  const late = info.filter(x => !x.c.returned && x.c.rest > 0 && x.c.price > 0 && dd(x.p.recv || x.p.date || x.d, today()) > 30).sort((a, b) => b.c.rest - a.c.rest);
+  const late = info.filter(x => !x.c.returned && x.c.rest > 0 && x.c.price > 0 && dd(x.p.recv || x.p.date || x.d, today()) > lateDays()).sort((a, b) => b.c.rest - a.c.rest);
   h += '<div class="rep-card"><h3>' + esc(t('pjsMore')) + '</h3><div class="kv">' +
     '<span>' + esc(t('pjsSoldN')) + '</span><b class="num">' + inP.length + '</b>' +
     '<span>' + esc(t('pjsAvgDays')) + '</span><b class="num">' + avgDays + ' ' + esc(t('pjsDays')) + '</b>' +
@@ -3789,16 +4213,16 @@ function renderPjStats() {
     '<span>' + esc(t('pjBuyCur')) + '</span><b class="num">' + esc(pur.parts.join(' · ') || '—') + '</b>' +
     (best ? '<span>' + esc(t('pjsBest')) + '</span><b>' + esc(best.p.name) + ' · ' + esc(money(best.c.profit)) + '</b>' : '') +
     (worst && worst !== best ? '<span>' + esc(t('pjsWorst')) + '</span><b>' + esc(worst.p.name) + ' · ' + esc(money(worst.c.profit)) + '</b>' : '') + '</div></div>';
-  h += '<div class="rep-card"><h3>' + esc(t('pjsLate')) + ' (' + late.length + ')</h3>' + (late.length ? late.slice(0, 8).map(x => '<div class="hbar"><span>' + esc(x.p.name) + (x.p.client ? ' · ' + esc(x.p.client) : '') + ' <span style="color:var(--ink-2)">' + dd(x.p.recv || x.p.date || x.d, today()) + ' ' + esc(t('pjsDays')) + '</span></span><b class="num">' + esc(money(x.c.rest)) + '</b></div>').join('') : '<div class="note">' + esc(t('repNoData')) + '</div>') + '</div>';
+  h += '<div class="rep-card"><h3>' + esc(t('pjsLate', { n: lateDays() })) + ' (' + late.length + ')</h3>' + (late.length ? late.slice(0, 8).map(x => '<div class="hbar"><span>' + esc(x.p.name) + (x.p.client ? ' · ' + esc(x.p.client) : '') + ' <span style="color:var(--ink-2)">' + dd(x.p.recv || x.p.date || x.d, today()) + ' ' + esc(t('pjsDays')) + '</span></span><b class="num">' + esc(money(x.c.rest)) + '</b></div>').join('') : '<div class="note">' + esc(t('repNoData')) + '</div>') + '</div>';
   $('#pjs').innerHTML = h;
 }
 
 /* Un seul projet : on n'affiche que son nom (les partenaires font la différence) */
 function renderPjChips() { $$('#view-project .section-title').forEach(e => { e.textContent = pjName(curPj()); }); }
-$('#ps-pct').addEventListener('input', e => { const v = num(e.target.value); $('#ps-pctl').textContent = t('pjPctOther', { n: v > 0 && v < 100 ? round2(100 - v) : '—' }); });
 
 /* ----- Coordonnées client : appel, WhatsApp, message de rappel ----- */
 const phoneDigits = ph => { let d = String(ph || '').trim(); const plus = d[0] === '+'; d = d.replace(/\D/g, ''); if (plus) return d; if (d.indexOf('00') === 0) return d.slice(2); if (d[0] === '0') return '212' + d.slice(1); return d; };
+const lateDays = () => projCfg().lateDays || 30;
 const waTpl = () => projCfg().waMsg || t('waDefault');
 function waText(p, c) {
   const v = { client: p.client || '', produit: p.name || '', reste: money(c.rest), total: money(c.price), paye: money(c.paid), devise: cur() };
@@ -3831,15 +4255,73 @@ $('#btn-share-hist').addEventListener('click', () => {
   });
   shareHtmlFile('mizan-historique', t('histTitle'), '<h1>' + esc(t('histTitle')) + '</h1><p class="sub">' + esc(new Date().toLocaleDateString(loc())) + '</p><div class="card"><table>' + rows + '</table></div>');
 });
-function sharePayments() {
-  const base = state.products[state.pid]; if (!base) return;
-  const p = Object.assign({ id: state.pid }, base), c = prodCalc(p);
-  const rows = (p.payments || []).slice().sort((a, b) => (a.date < b.date ? -1 : 1)).map(x => '<tr><td>' + esc(shortDate(x.date)) + (x.note ? '<div class="s">' + esc(x.note) + '</div>' : '') + '</td><td class="r inc">' + esc(money(x.amount)) + '</td></tr>').join('');
-  shareHtmlFile('paiements-' + p.name, p.name,
-    '<h1>' + esc(p.name) + '</h1><p class="sub">' + esc([p.client, p.storage, p.serial].filter(Boolean).join(' · ')) + '</p>' +
-    '<div class="card"><div class="k"><span>' + esc(t('prodPrice', { c: cur() })) + '</span><b>' + esc(money(c.price)) + '</b></div><div class="k"><span>' + esc(t('received')) + '</span><b class="inc">' + esc(money(c.paid)) + '</b></div><div class="k"><span>' + esc(t('rest')) + '</span><b class="exp">' + esc(money(c.rest)) + '</b></div></div>' +
-    '<div class="card"><table>' + (rows || '<tr><td>—</td></tr>') + '</table></div>');
+/* Message WhatsApp au client : ce qu'il a payé et ce qu'il reste à régler (dans la langue choisie) */
+function payRecapText(p, c) {
+  if (c.rest > 0) return waText(p, c);
+  return t('waPayDone', { client: p.client || '', produit: p.name || '', total: money(c.price), list: '' }).replace(/\s*\n+\s*/g, ' ').replace(/\s+([,،])/g, '$1');
 }
+function waPayments() {
+  const base = state.products[state.pid]; if (!base) return;
+  const p = Object.assign({ id: state.pid }, base), c = prodCalc(p), d = phoneDigits(p.phone), text = payRecapText(p, c);
+  let w = null; try { w = window.open('https://wa.me/' + d + '?text=' + encodeURIComponent(text), '_blank'); } catch (err) { w = null; }
+  if (!w) { try { navigator.clipboard.writeText(text); toast(t('shCopied')); } catch (err) { toast(t('tNoDl')); } }
+}
+/* Partage de l'historique des paiements d'un produit : page HTML, HTML copié, image ou texte */
+function payData() {
+  const base = state.products[state.pid]; if (!base) return null;
+  const p = Object.assign({ id: state.pid }, base), c = prodCalc(p);
+  return { p: p, c: c, pays: (p.payments || []).slice().sort((a, b) => (a.date < b.date ? -1 : 1)), msg: payRecapText(p, c) };
+}
+function payHtml(d) {
+  const p = d.p, c = d.c;
+  const rows = d.pays.map(x => '<tr><td>' + esc(shortDate(x.date)) + (x.note ? '<div class="s">' + esc(x.note) + '</div>' : '') + '</td><td class="r inc">' + esc(money(x.amount)) + '</td></tr>').join('');
+  return '<h1>' + esc(p.name) + '</h1><p class="sub">' + esc([p.client, p.storage, p.serial].filter(Boolean).join(' · ')) + '</p>' +
+    '<div class="card"><p style="margin:0">' + esc(d.msg) + '</p></div>' +
+    '<div class="card"><div class="k"><span>' + esc(t('prodPrice', { c: cur() })) + '</span><b>' + esc(money(c.price)) + '</b></div><div class="k"><span>' + esc(t('received')) + '</span><b class="inc">' + esc(money(c.paid)) + '</b></div><div class="k"><span>' + esc(t('rest')) + '</span><b class="exp">' + esc(money(c.rest)) + '</b></div></div>' +
+    '<div class="card"><table>' + (rows || '<tr><td>—</td></tr>') + '</table></div>';
+}
+function payText(d) {
+  const p = d.p, c = d.c, L = [[p.name, p.client].filter(Boolean).join(' · '), '', d.msg, '',
+    t('prodPrice', { c: cur() }) + ' : ' + money(c.price), t('received') + ' : ' + money(c.paid), t('rest') + ' : ' + money(c.rest)];
+  if (d.pays.length) { L.push('', t('pjPayments') + ' :'); d.pays.forEach(x => L.push('• ' + shortDate(x.date) + ' : ' + money(Number(x.amount)) + (x.note ? ' (' + x.note + ')' : ''))); }
+  return L.join('\n');
+}
+async function payImage(d) {
+  const W = 900, P = 44, rtl = RTL(), cv = document.createElement('canvas'), g = cv.getContext('2d'), F = '"Segoe UI", Roboto, Arial, sans-serif';
+  const wrap = (txt, maxW) => { const out = []; String(txt).split('\n').forEach(par => { let line = ''; par.split(/\s+/).forEach(w => { const tryL = line ? line + ' ' + w : w; if (g.measureText(tryL).width > maxW && line) { out.push(line); line = w; } else line = tryL; }); out.push(line); }); return out; };
+  const ops = []; let y = P;
+  const text = (txt, size, weight, color, o) => { o = o || {}; g.font = weight + ' ' + size + 'px ' + F; const ls = wrap(txt, W - 2 * P - (o.inset || 0) * 2); ls.forEach(l => { y += size * 1.35; ops.push({ t: l, x: 0, y: y, size: size, weight: weight, color: color, inset: o.inset || 0 }); }); y += o.gap == null ? 8 : o.gap; };
+  const row = (l, v, color, bold) => { y += 38; ops.push({ t: l, y: y, size: 28, weight: 400, color: '#5b7083', inset: 28, side: 'start' }); ops.push({ t: v, y: y, size: 28, weight: bold ? 700 : 600, color: color, inset: 28, side: 'end' }); };
+  text(d.p.name, 44, 700, '#14202b', { gap: 4 }); text([d.p.client, d.p.storage, d.p.serial].filter(Boolean).join(' · '), 26, 400, '#5b7083', { gap: 18 });
+  const cardTop = []; const card = fn => { const y0 = y; y += 22; fn(); y += 30; cardTop.push([y0, y]); y += 18; };
+  card(() => text(d.msg, 30, 400, '#14202b', { inset: 28, gap: 0 }));
+  card(() => { row(t('prodPrice', { c: cur() }), money(d.c.price), '#14202b'); row(t('received'), money(d.c.paid), '#0b7a66'); row(t('rest'), money(d.c.rest), '#c8472f', true); });
+  if (d.pays.length) card(() => d.pays.forEach(x => row(shortDate(x.date) + (x.note ? ' · ' + x.note : ''), money(Number(x.amount)), '#0b7a66')));
+  y += P - 18; cv.width = W; cv.height = Math.ceil(y);
+  g.fillStyle = '#f4f6f8'; g.fillRect(0, 0, W, cv.height);
+  cardTop.forEach(c => { g.fillStyle = '#fff'; g.strokeStyle = '#dde3e9'; g.lineWidth = 2; g.beginPath(); (g.roundRect ? g.roundRect(P - 14, c[0], W - 2 * P + 28, c[1] - c[0], 18) : g.rect(P - 14, c[0], W - 2 * P + 28, c[1] - c[0])); g.fill(); g.stroke(); });
+  g.direction = rtl ? 'rtl' : 'ltr';
+  ops.forEach(o => {
+    g.font = o.weight + ' ' + o.size + 'px ' + F; g.fillStyle = o.color; const left = P + o.inset - 14 + 14, right = W - P - o.inset + 14 - 14;
+    const atStart = o.side !== 'end'; g.textAlign = (atStart ? !rtl : rtl) ? 'left' : 'right';
+    g.fillText(o.t, g.textAlign === 'left' ? left : right, o.y);
+  });
+  return new Promise(ok => cv.toBlob(ok, 'image/png'));
+}
+function sharePayments() { if (!state.products[state.pid]) return; openSheet('#sheet-sharepay'); }
+$('#sheet-sharepay').addEventListener('click', async e => {
+  const b = e.target.closest('[data-spfmt]'); if (!b) return;
+  const d = payData(); closeSheets(); if (!d) return; const fmt = b.dataset.spfmt, name = 'paiements-' + d.p.name;
+  if (fmt === 'html') shareHtmlFile(name, d.p.name, payHtml(d));
+  else if (fmt === 'copy') { try { await navigator.clipboard.writeText(htmlDoc(d.p.name, payHtml(d))); toast(t('copiedOk')); } catch (err) { toast(t('tNoDl')); } }
+  else if (fmt === 'txt') {
+    const txt = payText(d);
+    if (navigator.share) { try { await navigator.share({ text: txt }); return; } catch (err) { if (err && err.name === 'AbortError') return; } }
+    try { await navigator.clipboard.writeText(txt); toast(t('copiedOk')); } catch (err) { toast(t('tNoDl')); }
+  } else if (fmt === 'img') {
+    try { const blob = await payImage(d); if (await saveFile(name.replace(/[^\w\-]+/g, '_').slice(0, 50) + '.png', new Uint8Array(await blob.arrayBuffer()))) toast(t('tExported')); } catch (err) { toast(t('tNoDl')); }
+  }
+});
 /* ---------- Zakat annuelle : nissab (grammes d'or), taux et date réglables ---------- */
 const ZK_DEF = { gold: 0, grams: 85, rate: 2.5, due: '', lunar: true, exAcc: [], exGoal: [], inclOwed: true, inclOwe: true, stock: 'off', add: 0, sub: 0, hist: [] };
 const zk = () => Object.assign({}, ZK_DEF, state.settings.zakat || {});
@@ -3869,17 +4351,8 @@ function zkCalc() {
 }
 const zkDays = () => { const z = zk(); if (!z.due) return null; return Math.round((parseYmd(z.due) - parseYmd(today())) / 86400000); };
 const zkWhen = d => d === 0 ? t('zkToday') : d > 0 ? t('zkDaysLeft', { n: d }) : t('zkLate', { n: -d });
-function renderZakat() {
-  if (state.tab !== 'zakat') return;
-  const z = zk(), c = zkCalc(), d = zkDays(), box = $('#zk-main');
-  let h = '<div class="card zk"><div class="k">' + esc(t('zkNext')) + '</div><div class="zkdate">' + (z.due ? esc(shortDate(z.due)) : '—') + '</div><div class="note">' + esc(z.due ? zkWhen(d) : t('zkNoDate')) + '</div>' +
-    '<div class="zkline"></div><div class="k">' + esc(t('zkDue')) + '</div><div class="zkamt num">' + esc(money(c.due)) + '</div>' +
-    '<div class="note">' + esc(!c.ok ? t('zkNeedGold') : c.reached ? t('zkReached') + ' · ' + t('zkOf', { a: money(c.base), b: money(c.nisab) }) : t('zkBelow')) + '</div>' +
-    (c.reached ? '<button class="btn" id="zk-pay">' + esc(t('zkPay')) + '</button>' : '') + '</div>';
-  h += '<div class="card"><h3>' + esc(t('zkBase')) + '</h3><div class="kv">' + c.rows.map(r => '<span>' + esc(r.l) + '</span><b class="num">' + esc(money(r.v)) + '</b>').join('') +
-    '<span class="tot">' + esc(t('zkTotalBase')) + '</span><b class="tot num">' + esc(money(c.base)) + '</b>' +
-    '<span>' + esc(t('zkNisab', { g: z.grams })) + '</span><b class="num">' + esc(c.ok ? money(c.nisab) : '—') + '</b></div></div>';
-  box.innerHTML = h;
+function renderZkSettings() {
+  const z = zk();
   const sb = $('#zk-settings');
   if (!(document.activeElement && sb.contains(document.activeElement) && /INPUT|SELECT/.test(document.activeElement.tagName))) {
     sb.innerHTML = '<h3>' + esc(t('zkSettings')) + '</h3>' +
@@ -3898,6 +4371,19 @@ function renderZakat() {
       '<div class="field"><label for="zk-sub">' + esc(t('zkExtraSub', { c: cur() })) + '</label><input id="zk-sub" type="number" inputmode="decimal" min="0" step="0.01" value="' + (z.sub || '') + '"></div></div>' +
       '<div class="note">' + esc(t('zkInfo')) + '</div>';
   }
+}
+function renderZakat() {
+  if (state.tab === 'settings' && state.setScope === 'zakat') { renderZkSettings(); return; }
+  if (state.tab !== 'zakat') return;
+  const z = zk(), c = zkCalc(), d = zkDays(), box = $('#zk-main');
+  let h = '<div class="card zk"><div class="k">' + esc(t('zkNext')) + '</div><div class="zkdate">' + (z.due ? esc(shortDate(z.due)) : '—') + '</div><div class="note">' + esc(z.due ? zkWhen(d) : t('zkNoDate')) + '</div>' +
+    '<div class="zkline"></div><div class="k">' + esc(t('zkDue')) + '</div><div class="zkamt num">' + esc(money(c.due)) + '</div>' +
+    '<div class="note">' + esc(!c.ok ? t('zkNeedGold') : c.reached ? t('zkReached') + ' · ' + t('zkOf', { a: money(c.base), b: money(c.nisab) }) : t('zkBelow')) + '</div>' +
+    (c.reached ? '<button class="btn" id="zk-pay">' + esc(t('zkPay')) + '</button>' : '') + '</div>';
+  h += '<div class="card"><h3>' + esc(t('zkBase')) + '</h3><div class="kv">' + c.rows.map(r => '<span>' + esc(r.l) + '</span><b class="num">' + esc(money(r.v)) + '</b>').join('') +
+    '<span class="tot">' + esc(t('zkTotalBase')) + '</span><b class="tot num">' + esc(money(c.base)) + '</b>' +
+    '<span>' + esc(t('zkNisab', { g: z.grams })) + '</span><b class="num">' + esc(c.ok ? money(c.nisab) : '—') + '</b></div></div>';
+  box.innerHTML = h;
   const hist = (z.hist || []).slice().sort((a, b) => (a.date < b.date ? 1 : -1));
   $('#zk-hist').innerHTML = '<h3>' + esc(t('zkHist')) + '</h3>' + (hist.length ? '<div class="kv">' + hist.map(x => '<span>' + esc(shortDate(x.date)) + '</span><b class="num">' + esc(money(x.amount)) + '</b>').join('') + '</div>' : '<div class="note">' + esc(t('zkNoHist')) + '</div>');
 }
@@ -3933,17 +4419,93 @@ $('#form-zk').addEventListener('submit', async e => {
     toast(t('zkPaid'));
   } catch (err) { /* message déjà affiché */ }
 });
+/* Mini lecteur/écrivain .xlsx intégré : fonctionne hors ligne (aucune bibliothèque externe). */
+(function () {
+  if (window.XLSX) return;
+  const enc = new TextEncoder(), dec = new TextDecoder();
+  const CT = (() => { const t = []; for (let n = 0; n < 256; n++) { let c = n; for (let k = 0; k < 8; k++) c = c & 1 ? 0xEDB88320 ^ (c >>> 1) : c >>> 1; t[n] = c >>> 0; } return t; })();
+  const crc = u => { let c = 0xFFFFFFFF; for (let i = 0; i < u.length; i++) c = CT[(c ^ u[i]) & 255] ^ (c >>> 8); return (c ^ 0xFFFFFFFF) >>> 0; };
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])).replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g, '');
+  const colL = i => { let s = ''; for (i++; i > 0; i = Math.floor((i - 1) / 26)) s = String.fromCharCode(65 + (i - 1) % 26) + s; return s; };
+  const zip = files => {
+    const parts = [], cen = []; let off = 0;
+    files.forEach(([name, text]) => {
+      const nb = enc.encode(name), d = enc.encode(text), c = crc(d);
+      const h = new DataView(new ArrayBuffer(30)); h.setUint32(0, 0x04034b50, true); h.setUint16(4, 20, true); h.setUint16(6, 0x0800, true); h.setUint32(14, c, true); h.setUint32(18, d.length, true); h.setUint32(22, d.length, true); h.setUint16(26, nb.length, true);
+      const g = new DataView(new ArrayBuffer(46)); g.setUint32(0, 0x02014b50, true); g.setUint16(4, 20, true); g.setUint16(6, 20, true); g.setUint16(8, 0x0800, true); g.setUint32(16, c, true); g.setUint32(20, d.length, true); g.setUint32(24, d.length, true); g.setUint16(28, nb.length, true); g.setUint32(42, off, true);
+      parts.push(new Uint8Array(h.buffer), nb, d); cen.push(new Uint8Array(g.buffer), nb); off += 30 + nb.length + d.length;
+    });
+    const cl = cen.reduce((a, b) => a + b.length, 0), e = new DataView(new ArrayBuffer(22));
+    e.setUint32(0, 0x06054b50, true); e.setUint16(8, files.length, true); e.setUint16(10, files.length, true); e.setUint32(12, cl, true); e.setUint32(16, off, true);
+    const all = parts.concat(cen, [new Uint8Array(e.buffer)]), out = new Uint8Array(off + cl + 22); let p = 0; all.forEach(a => { out.set(a, p); p += a.length; }); return out;
+  };
+  const sheetXml = rows => '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetData>' +
+    rows.map((r, i) => '<row r="' + (i + 1) + '">' + r.map((v, j) => {
+      if (v == null || v === '') return ''; const a = colL(j) + (i + 1);
+      return typeof v === 'number' && isFinite(v) ? '<c r="' + a + '"><v>' + v + '</v></c>' : '<c r="' + a + '" t="inlineStr"><is><t xml:space="preserve">' + esc(v) + '</t></is></c>';
+    }).join('') + '</row>').join('') + '</sheetData></worksheet>';
+  const inflate = async u => { const s = new Blob([u]).stream().pipeThrough(new DecompressionStream('deflate-raw')); return new Uint8Array(await new Response(s).arrayBuffer()); };
+  const unzip = async buf => {
+    const u = new Uint8Array(buf), v = new DataView(u.buffer, u.byteOffset, u.byteLength); let e = u.length - 22;
+    while (e >= 0 && v.getUint32(e, true) !== 0x06054b50) e--;
+    if (e < 0) throw new Error('zip'); const n = v.getUint16(e + 10, true); let p = v.getUint32(e + 16, true); const out = {};
+    for (let i = 0; i < n; i++) {
+      const m = v.getUint16(p + 10, true), cs = v.getUint32(p + 20, true), nl = v.getUint16(p + 28, true), xl = v.getUint16(p + 30, true), cm = v.getUint16(p + 32, true), lo = v.getUint32(p + 42, true);
+      const name = dec.decode(u.subarray(p + 46, p + 46 + nl)), ll = v.getUint16(lo + 26, true) + v.getUint16(lo + 28, true), data = u.subarray(lo + 30 + ll, lo + 30 + ll + cs);
+      out[name] = m === 0 ? data : m === 8 ? await inflate(data) : null; p += 46 + nl + xl + cm;
+    }
+    return out;
+  };
+  const xml = b => new DOMParser().parseFromString(dec.decode(b), 'application/xml');
+  const colN = r => { let n = 0; const m = /^[A-Z]+/.exec(r)[0]; for (const ch of m) n = n * 26 + ch.charCodeAt(0) - 64; return n - 1; };
+  window.XLSX = {
+    utils: {
+      book_new: () => ({ SheetNames: [], Sheets: {} }),
+      aoa_to_sheet: rows => ({ rows }),
+      book_append_sheet: (wb, ws, name) => { name = String(name || 'Sheet').replace(/[\[\]:*?\/\\]/g, ' ').slice(0, 31) || 'Sheet'; let n = name, k = 2; while (wb.Sheets[n]) n = name.slice(0, 28) + ' ' + k++; wb.SheetNames.push(n); wb.Sheets[n] = ws; },
+      sheet_to_json: (ws, o) => { const d = o && o.defval !== undefined ? o.defval : '', w = Math.max(0, ...ws.rows.map(r => r.length)); return ws.rows.map(r => { const a = r.slice(); for (let i = 0; i < w; i++) if (a[i] == null) a[i] = d; return a; }); }
+    },
+    write: wb => {
+      const n = wb.SheetNames.length, ns = 'xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"', rn = 'xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"', pk = 'http://schemas.openxmlformats.org/package/2006/relationships', H = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>';
+      const f = [['[Content_Types].xml', H + '<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>' + wb.SheetNames.map((_, i) => '<Override PartName="/xl/worksheets/sheet' + (i + 1) + '.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>').join('') + '</Types>'],
+        ['_rels/.rels', H + '<Relationships xmlns="' + pk + '"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>'],
+        ['xl/workbook.xml', H + '<workbook ' + ns + ' ' + rn + '><sheets>' + wb.SheetNames.map((s, i) => '<sheet name="' + esc(s) + '" sheetId="' + (i + 1) + '" r:id="rId' + (i + 1) + '"/>').join('') + '</sheets></workbook>'],
+        ['xl/_rels/workbook.xml.rels', H + '<Relationships xmlns="' + pk + '">' + wb.SheetNames.map((_, i) => '<Relationship Id="rId' + (i + 1) + '" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet' + (i + 1) + '.xml"/>').join('') + '</Relationships>']];
+      wb.SheetNames.forEach((s, i) => f.push(['xl/worksheets/sheet' + (i + 1) + '.xml', sheetXml(wb.Sheets[s].rows)]));
+      return zip(f);
+    },
+    read: async buf => {
+      const z = await unzip(buf), wbx = xml(z['xl/workbook.xml']), rel = xml(z['xl/_rels/workbook.xml.rels']), rmap = {};
+      [...rel.getElementsByTagName('Relationship')].forEach(r => { rmap[r.getAttribute('Id')] = r.getAttribute('Target'); });
+      const sst = z['xl/sharedStrings.xml'] ? [...xml(z['xl/sharedStrings.xml']).getElementsByTagName('si')].map(si => [...si.getElementsByTagName('t')].map(x => x.textContent).join('')) : [];
+      const wb = { SheetNames: [], Sheets: {} };
+      for (const s of wbx.getElementsByTagName('sheet')) {
+        const rid = s.getAttribute('r:id') || s.getAttributeNS('http://schemas.openxmlformats.org/officeDocument/2006/relationships', 'id'); let tg = rmap[rid] || ''; tg = tg.replace(/^\//, ''); const path = tg.startsWith('xl/') ? tg : 'xl/' + tg;
+        if (!z[path]) continue; const rows = [];
+        [...xml(z[path]).getElementsByTagName('c')].forEach(c => {
+          const r = c.getAttribute('r'); if (!r) return; const ri = parseInt(r.replace(/\D/g, ''), 10) - 1, ci = colN(r), ty = c.getAttribute('t'), vv = c.getElementsByTagName('v')[0]; let val = '';
+          if (ty === 'inlineStr') val = [...c.getElementsByTagName('t')].map(x => x.textContent).join('');
+          else if (vv) { const x = vv.textContent; val = ty === 's' ? (sst[+x] || '') : ty === 'b' ? x === '1' : ty === 'str' || ty === 'e' ? x : (isFinite(+x) && x !== '' ? +x : x); }
+          (rows[ri] = rows[ri] || [])[ci] = val;
+        });
+        for (let i = 0; i < rows.length; i++) rows[i] = rows[i] || [];
+        wb.SheetNames.push(s.getAttribute('name')); wb.Sheets[s.getAttribute('name')] = { rows };
+      }
+      return wb;
+    }
+  };
+})();
 /* ---------- Données : Excel, sauvegarde, import, effacement ---------- */
 const stamp = () => today();
-async function saveFile(filename, data) {
+async function saveFile(filename, data, opts) {
   let dl = null;
   try { dl = window.claude && window.claude.use ? await window.claude.use('downloads') : null; } catch (e) { dl = null; }
   if (!dl) {
     /* Hors Claude (appli installée) : partage du fichier ou téléchargement classique */
     try {
-      const blob = new Blob([data], { type: /\.json$/.test(filename) ? 'application/json' : /\.html$/.test(filename) ? 'text/html' : 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+      const blob = new Blob([data], { type: /\.json$/.test(filename) ? 'application/json' : /\.html$/.test(filename) ? 'text/html' : /\.png$/.test(filename) ? 'image/png' : 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
       const file = new File([blob], filename, { type: blob.type });
-      if (navigator.canShare && navigator.canShare({ files: [file] })) { try { await navigator.share({ files: [file], title: filename }); return true; } catch (e) { if (e && e.name === 'AbortError') return false; } }
+      if (!(opts && opts.dl) && navigator.canShare && navigator.canShare({ files: [file] })) { try { await navigator.share({ files: [file], title: filename }); return true; } catch (e) { if (e && e.name === 'AbortError') return false; } }
       const url = URL.createObjectURL(blob), a = document.createElement('a');
       a.href = url; a.download = filename; document.body.appendChild(a); a.click(); a.remove();
       setTimeout(() => URL.revokeObjectURL(url), 4000);
@@ -3956,7 +4518,6 @@ function loadScript(src) {
   return new Promise((ok, ko) => { const s = document.createElement('script'); s.src = src; s.onload = ok; s.onerror = ko; document.head.appendChild(s); });
 }
 $('#btn-xlsx').addEventListener('click', async () => {
-  try { if (!window.XLSX) await loadScript('https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js'); } catch (e) { toast(t('tNoDl')); return; }
   const X = window.XLSX, ev = buildEvents('*'), wb = X.utils.book_new();
   const add = (name, rows) => X.utils.book_append_sheet(wb, X.utils.aoa_to_sheet(rows), name);
   const kindOf = id => { const x = state.tx[id]; return x ? x.kind : ''; };
@@ -3972,17 +4533,19 @@ $('#btn-xlsx').addEventListener('click', async () => {
   add(t('xAccs'), [[t('accName'), t('amountL'), t('outTotal')]].concat(accs().map(a => [accName(a), balanceFor(a.id), a.inTotal === false ? 'x' : ''])));
   add(t('xSav'), [[t('goalName'), t('goalTarget', { c: cur() }), t('saved'), t('goalDeadline')]].concat(goals().map(g => [g.name, g.target, goalSaved(g), g.deadline || ''])));
   add(t('xFixed'), [[t('nameL'), t('amountL'), t('category'), t('account'), '']].concat(fixeds().map(f => [f.name, f.amount, catName(catOf('expense', f.cat)), accName(accOf(f.acc)), freqText(f)])));
-  add(t('xProj'), [[t('prodName'), t('prodType'), t('prodStorage'), t('prodBattery'), t('prodColor'), t('prodSerial'), t('prodClient'), t('prodStatus'), t('prodPrice', { c: cur() }), t('pjPaid'), t('costTotal'), t('realizedP'), t('shareOf', { n: pn1() }), t('shareOf', { n: pn2() })]].concat(Object.keys(state.products).map(id => {
+  add(t('xProj'), [[t('prodName'), t('prodType'), t('prodStorage'), t('prodBattery'), t('prodColor'), t('prodSerial'), t('prodClient'), t('prodStatus'), t('prodPrice', { c: cur() }), t('pjPaid'), t('costTotal'), t('realizedP'), t('shareOf', { n: pn1() }), t('shareOf', { n: pn2() }), t('lotL'), t('partnerL'), t('recvDate'), t('clPhone')]].concat(Object.keys(state.products).map(id => {
     const p = state.products[id], c = prodCalc(p);
-    return [p.name, p.type || '', p.storage || '', p.battery || '', p.color || '', p.serial || '', p.client || '', stName(stOf(p.status)), p.price || 0, c.paid, c.cost, c.profit, c.s1, c.s2];
+    return [p.name, p.type || '', p.storage || '', p.battery || '', p.color || '', p.serial || '', p.client || '', stName(stOf(p.status)), p.price || 0, c.paid, c.cost, c.profit, c.s1, c.s2, (lotOf(p.lot) || {}).name || '', pnOf(p), p.recv || '', p.phone || ''];
   })));
   const buf = X.write(wb, { bookType: 'xlsx', type: 'array' });
   if (await saveFile('mizan-' + stamp() + '.xlsx', buf)) toast(t('tExported'));
 });
-$('#btn-backup').addEventListener('click', async () => {
-  const data = JSON.stringify({ app: 'mizan', version: 1, exported: new Date().toISOString(), settings: state.settings, tx: state.tx, loans: state.loans, products: state.products }, null, 1);
-  if (await saveFile('mizan-sauvegarde-' + stamp() + '.json', data)) { savePrefs({ lastBackup: stamp() }); renderSettings(); toast(t('tExported')); }
-});
+const backupJson = () => JSON.stringify({ app: 'mizan', version: 1, exported: new Date().toISOString(), settings: state.settings, tx: state.tx, loans: state.loans, products: state.products }, null, 1);
+async function doBackup(dl) {
+  if (await saveFile('mizan-sauvegarde-' + stamp() + '.json', backupJson(), dl ? { dl: true } : null)) { savePrefs({ lastBackup: stamp() }); renderSettings(); toast(t('tExported')); }
+}
+$('#btn-backup').addEventListener('click', () => doBackup(false));
+$('#btn-dl').addEventListener('click', () => doBackup(true));
 
 /* Fenêtre de confirmation (sans confirm()) */
 let cf = null;
@@ -3991,7 +4554,8 @@ function askConfirm(o) {
   $('#cf-title').textContent = o.title; $('#cf-body').textContent = o.body; $('#cf-err').textContent = '';
   $('#cf-word-f').hidden = !o.word; $('#cf-word').value = '';
   if (o.word) $('#cf-word-l').textContent = t('typeWord', { w: o.word });
-  $('#cf-ok').textContent = o.ok; openSheet('#sheet-confirm');
+  $('#cf-ok').textContent = o.ok; $('#cf-alt').hidden = !o.alt; if (o.alt) $('#cf-alt').textContent = o.alt;
+  openSheet('#sheet-confirm');
 }
 $('#form-confirm').addEventListener('submit', async e => {
   e.preventDefault();
@@ -3999,6 +4563,7 @@ $('#form-confirm').addEventListener('submit', async e => {
   const run = cf.run; closeSheets();
   try { await run(); } catch (err) { /* message déjà affiché */ }
 });
+$('#cf-alt').addEventListener('click', async () => { const run = cf.altRun; closeSheets(); try { await run(); } catch (err) { /* message déjà affiché */ } });
 $('#btn-import').addEventListener('click', () => { $('#file-import').value = ''; $('#file-import').click(); });
 $('#file-import').addEventListener('change', e => {
   const file = e.target.files && e.target.files[0]; if (!file) return;
@@ -4008,9 +4573,10 @@ $('#file-import').addEventListener('change', e => {
     try { d = JSON.parse(String(rd.result)); } catch (err) { d = null; }
     if (!d || d.app !== 'mizan' || typeof d.tx !== 'object' || typeof d.loans !== 'object' || !d.tx || !d.loans) { toast(t('impBad')); return; }
     const s = d.settings || {};
-    askConfirm({ title: t('dataImport'), ok: t('impReplace'),
-      body: t('impFound', { tx: Object.keys(d.tx).length, ln: Object.keys(d.loans).length, ac: (s.accounts || []).length || 1 }) + ' ' + t('impWarn'),
-      run: async () => { await store.replaceAll({ settings: s, tx: d.tx, loans: d.loans, products: d.products || {} }); toast(t('tImported')); setTab('home'); } });
+    askConfirm({ title: t('dataImport'), ok: t('impReplace'), alt: t('impMerge'),
+      body: t('impFound', { tx: Object.keys(d.tx).length, ln: Object.keys(d.loans).length, ac: (s.accounts || []).length || 1 }) + ' ' + t('impChoose'),
+      run: async () => { snapSet(); await store.replaceAll({ settings: s, tx: d.tx, loans: d.loans, products: d.products || {} }); toast(t('tImported')); setTab('home'); },
+      altRun: async () => { snapSet(); await store.replaceAll(mergeData(d)); toast(t('tMerged')); setTab('home'); } });
   };
   rd.readAsText(file);
 });
@@ -4019,6 +4585,39 @@ $('#btn-clear').addEventListener('click', () => askConfirm({ title: t('dataClear
     const keep = {}; ['lang', 'currency', 'theme'].forEach(k => { if (state.settings[k]) keep[k] = state.settings[k]; });
     await store.replaceAll({ settings: keep, tx: {}, loans: {}, products: {} }); toast(t('tCleared')); setTab('home');
   } }));
+
+/* Copie de sécurité avant import, et fusion */
+const SNAP = 'mizan-pre-import';
+function snapGet() { try { return JSON.parse(localStorage.getItem(SNAP) || 'null'); } catch (e) { return null; } }
+function snapSet() { try { localStorage.setItem(SNAP, JSON.stringify({ d: today(), data: { settings: state.settings, tx: state.tx, loans: state.loans, products: state.products } })); } catch (e) { /* trop gros : on continue */ } }
+function mergeData(inc) {
+  const out = { settings: clone(state.settings), tx: clone(state.tx), loans: clone(state.loans), products: clone(state.products || {}) };
+  ['tx', 'loans', 'products'].forEach(k => { const src = inc[k] || {}; Object.keys(src).forEach(id => { if (!(id in out[k])) out[k][id] = src[id]; }); });
+  const s = out.settings, is = inc.settings || {};
+  const union = (base, add, same) => { const l = base.slice(); (add || []).forEach(x => { if (x && !l.some(y => same(y, x))) l.push(x); }); return l; };
+  const byId = (a, b) => a.id === b.id;
+  [['accounts', accs()], ['fixed', fixeds()], ['goals', goals()]].forEach(a => { if (Array.isArray(is[a[0]])) { const l = union(a[1], is[a[0]], byId); if (l.length !== a[1].length || Array.isArray(s[a[0]])) s[a[0]] = l; } });
+  if (Array.isArray(is.cats)) { const l = union(cats(), is.cats, (a, b) => a.id === b.id && a.kind === b.kind); if (l.length !== cats().length || Array.isArray(s.cats)) s.cats = l; }
+  const base = clone(pjs()), incP = (Array.isArray(is.pjs) && is.pjs.length) ? is.pjs : [{ id: 'main', name: '', cfg: is.proj || {} }];
+  incP.forEach(ip => {
+    const bp = base.find(x => x.id === ip.id);
+    if (!bp) { base.push(clone(ip)); return; }
+    const bc = bp.cfg = bp.cfg || {}, ic = ip.cfg || {};
+    Object.keys(ic).forEach(k => {
+      if (k === 'partners' || k === 'lots') bc[k] = union(Array.isArray(bc[k]) ? bc[k] : [], ic[k], byId);
+      else if (!(k in bc)) bc[k] = ic[k];
+    });
+    if (!bp.name && ip.name) bp.name = ip.name;
+  });
+  s.pjs = base;
+  Object.keys(is).forEach(k => { if (!(k in s)) s[k] = is[k]; });
+  return out;
+}
+$('#btn-undo-import').addEventListener('click', () => {
+  const sn = snapGet(); if (!sn) return;
+  askConfirm({ title: t('dataUndo'), body: t('undoBody', { d: shortDate(sn.d) }), ok: t('undoGo'),
+    run: async () => { await store.replaceAll(sn.data); try { localStorage.removeItem(SNAP); } catch (e) { /* ignoré */ } toast(t('tImported')); setTab('home'); } });
+});
 /* ---------- Options facultatives : rappel de sauvegarde, budgets mensuels ---------- */
 $('#set-bk').addEventListener('change', e => setPref({ bkDays: Number(e.target.value) || 0 }));
 $('#set-budget').addEventListener('change', e => setPref({ budgetOn: e.target.checked }));
@@ -4041,18 +4640,371 @@ function homeAlert() {
   if (k > 0) {
     const last = (typeof prefs !== 'undefined' && prefs.lastBackup) || '';
     const days = last ? Math.floor((new Date(today()) - new Date(last)) / 864e5) : 9999;
-    if (days >= k) return { text: t('bkAlert'), go: 'settings' };
+    if (days >= k) return { text: t('bkAlert'), go: 'general' };
   }
   const over = budgetRows().filter(r => r.used >= r.lim);
   if (over.length) return { text: t('bdAlert', { n: catName(over[0].c) }), go: 'reports' };
   return null;
 }
+
+/* ---------- Rappels WhatsApp : crédits et prêts ---------- */
+[['#set-wa-lent', 'waLent', 'waLentDef'], ['#set-wa-borrowed', 'waBorrowed', 'waBorrowedDef']].forEach(a => $(a[0]).addEventListener('change', e => {
+  const v = e.target.value.trim(); setPref({ [a[1]]: v === t(a[2]) ? '' : v });
+}));
+function loanWaText(l, lent) {
+  const tpl = state.settings[lent ? 'waLent' : 'waBorrowed'] || t(lent ? 'waLentDef' : 'waBorrowedDef');
+  const v = { nom: l.who || '', reste: money(remainingOf(l)), total: money(l.amount), paye: money(paidOf(l)), date: shortDate(l.date) };
+  return tpl.replace(/\{(nom|reste|total|paye|date)\}/g, (m, k) => v[k]);
+}
+function loanWaHtml(l, lent, rest) {
+  if (lent && !(rest > 0)) return '';
+  const d = phoneDigits(l.phone), wa = 'https://wa.me/' + d + '?text=' + encodeURIComponent(loanWaText(l, lent));
+  return '<div class="two wabtns">' + (d ? '<a class="btn ghost small" href="tel:+' + d + '">' + esc(t('clCall')) + '</a>' : '') +
+    '<a class="btn small" href="' + esc(wa) + '" target="_blank" rel="noopener"' + (d ? '' : ' style="grid-column:1/-1"') + '>' + esc(t(lent ? 'clWaRemind' : 'clWaState')) + '</a></div>';
+}
+/* ---------- Lots : partenaire, puis lots, puis produits ---------- */
+const lots = () => Array.isArray(projCfg().lots) ? projCfg().lots : [];
+const lotOf = id => lots().find(l => l.id === id);
+const isDone = p => { const k = stOf(p.status).kind; return k === 'sold' || k === 'returned'; };
+const lotProds = l => pjList().filter(p => p.lot === l.id);
+const lotSold = l => lotProds(l).filter(isDone).length;
+/* Un lot se ferme tout seul quand tous ses produits sont vendus (ou retournés). « force » permet de le rouvrir ou de le fermer à la main. */
+function lotState(l) {
+  const ps = lotProds(l), auto = ps.length && ps.every(isDone) ? 'closed' : 'open';
+  if (l.force === 'closed') return 'closed';
+  if (l.force === 'open') return auto === 'closed' && lotSold(l) > (l.soldAt || 0) ? 'closed' : 'open';
+  return auto;
+}
+const prodLotState = p => { const l = p.lot ? lotOf(p.lot) : null; return l ? lotState(l) : 'open'; };
+let pjLotF = 'all', pjOpen = {};
+function lotTotals(ps) {
+  const r = { n: ps.length, cost: 0, price: 0, paid: 0, profit: 0, s1: 0, s2: 0, gave: 0, toGive: 0 };
+  ps.forEach(p => { const c = prodCalc(p); if (c.returned) return; r.cost += c.cost; r.price += c.price; r.paid += c.paid; r.profit += c.profit; r.s1 += c.s1; r.s2 += c.s2; r.gave += c.gave; r.toGive += c.toGive; });
+  Object.keys(r).forEach(k => { r[k] = round2(r[k]); });
+  return r;
+}
+
+async function saveLots(list) { const cfg = clone(projCfg()); cfg.lots = list; return saveCfg(cfg); }
+const lotCard = (l, shown, multi, q) => {
+  const ps = lotProds(l), tt = lotTotals(ps), st = lotState(l), open = !!pjOpen[l.id] || !!q || pjSel.on;
+  const mine = shown.filter(p => p.lot === l.id);
+  const meta = [l.date ? shortDate(l.date) : '', multi ? partnerOf(l.partner).name : '', t('lotN', { n: ps.length })].filter(Boolean).join(' · ');
+  return '<div class="card lotcard" data-lot="' + esc(l.id) + '"><div class="head" data-lottoggle="' + esc(l.id) + '" role="button" tabindex="0"><div style="min-width:0"><div class="who">' + esc(l.name) + '</div><div class="meta">' + esc(meta) + '</div></div>' +
+    '<span class="cpill" style="--c:' + (st === 'open' ? '#B8820F' : '#0B7A66') + '">' + esc(t(st === 'open' ? 'lotOpen' : 'lotClosed')) + '</span>' +
+    '<button type="button" class="icon-btn" data-lotmenu="' + esc(l.id) + '" aria-label="' + esc(t('lotMenu')) + '">⋮</button></div>' +
+    '<div class="figures"><span>' + esc(t('lotGive')) + ' <b class="num">' + esc(money(tt.toGive)) + '</b></span><span>' + esc(t('pjProfit')) + ' <b class="num">' + esc(money(tt.profit)) + '</b></span></div>' +
+    (open ? '<div class="lotbody">' + (mine.length ? mine.map(prodCardHtml).join('') : '<div class="note">' + esc(t('lotEmpty')) + '</div>') +
+      '<button type="button" class="btn ghost small" data-lotadd="' + esc(l.id) + '">' + esc(t('lotAddProd')) + '</button></div>' : '') + '</div>';
+};
+function renderLots(list, shown, words) {
+  const bar = $('#pj-lotbar'), q = words.length > 0, view = prefs.pjView === 'flat' ? 'flat' : 'lots';
+  pjShownIds = shown.map(p => p.id);
+  bar.innerHTML = [['lots', 'viewLots'], ['flat', 'viewFlat']].map(k => '<button type="button" class="chip" data-view="' + k[0] + '" aria-pressed="' + (view === k[0]) + '">' + esc(t(k[1])) + '</button>').join('') + (view === 'flat' ? '' : '<span class="chipsep"></span>' + [['all', 'all'], ['open', 'lotOpenF'], ['closed', 'lotClosedF']].map(k => '<button type="button" class="chip" data-lf="' + k[0] + '" aria-pressed="' + (pjLotF === k[0]) + '">' + esc(t(k[1])) + '</button>').join('') +
+    '<button type="button" class="chip" data-lotnew="1">+ ' + esc(t('lotNew')) + '</button>');
+  if (view === 'flat') {
+    $('#pj-list').innerHTML = shown.length ? shown.map(prodCardHtml).join('') : '<div class="empty"><strong>' + esc(t('noProdT')) + '</strong>' + esc(t('noProdB')) + '</div>';
+    selPaint(); return;
+  }
+  const multi = pjPartner === 'all' && partners().length > 1;
+  const vis = lots().filter(l => (pjPartner === 'all' || partnerOf(l.partner).id === pjPartner) && (pjLotF === 'all' || lotState(l) === pjLotF))
+    .sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0));
+  const loose = shown.filter(p => !p.lot || !lotOf(p.lot));
+  const looseAll = list.filter(p => !p.lot || !lotOf(p.lot));
+  let h = '';
+  const hasLotMatch = l => !q || shown.some(p => p.lot === l.id);
+  vis.filter(hasLotMatch).forEach(l => { h += lotCard(l, shown, multi, q); });
+  if (looseAll.length && pjLotF !== 'closed') {
+    h += '<div class="card lotcard"><div class="head" data-lottoggle="__none" role="button" tabindex="0"><div style="min-width:0"><div class="who">' + esc(t('lotNone')) + '</div><div class="meta">' + esc(t('lotN', { n: looseAll.length })) + '</div></div></div>' +
+      (pjOpen.__none || q || pjSel.on ? '<div class="lotbody">' + (loose.length ? loose.map(prodCardHtml).join('') : '<div class="note">' + esc(t('lotEmpty')) + '</div>') + '</div>' : '') + '</div>';
+    if (!lots().length || looseAll.some(p => !p.lot)) h += '<button type="button" class="btn ghost small" data-lotgroup="1">' + esc(t('lotGroup')) + '</button>';
+  }
+  $('#pj-list').innerHTML = h || '<div class="empty"><strong>' + esc(t('noProdT')) + '</strong>' + esc(t('noProdB')) + '</div>';
+  selPaint();
+}
+let pjShownIds = [];
+/* ----- Mode « Sélectionner » : produits (ou lots entiers) à partager ----- */
+function selToggle(ids) {
+  const all = ids.length && ids.every(id => pjSel.ids.has(id));
+  ids.forEach(id => { if (all) pjSel.ids.delete(id); else pjSel.ids.add(id); });
+  renderProject();
+}
+function selPaint() {
+  if (pjSel.on && state.tab !== 'project') { pjSel.on = false; pjSel.ids.clear(); }
+  document.body.classList.toggle('selmode', pjSel.on);
+  $$('#pj-list [data-prod]').forEach(el => el.classList.toggle('picked', pjSel.ids.has(el.dataset.prod)));
+  $$('#pj-list [data-lot]').forEach(el => { const ps = lotProds(lotOf(el.dataset.lot) || {}).map(p => p.id); el.classList.toggle('lpicked', pjSel.on && ps.length > 0 && ps.every(id => pjSel.ids.has(id))); });
+  const bar = $('#selbar'); bar.hidden = !pjSel.on;
+  if (pjSel.on) { $('#sel-n').textContent = t('selN', { n: pjSel.ids.size }); bar.style.bottom = $('.tabs').offsetHeight + 'px'; }
+}
+$('#btn-select').addEventListener('click', () => { pjSel.on = true; pjSel.ids.clear(); renderProject(); });
+$('#sel-cancel').addEventListener('click', () => { pjSel.on = false; pjSel.ids.clear(); renderProject(); });
+$('#sel-all').addEventListener('click', () => selToggle(pjShownIds.slice()));
+$('#sel-share').addEventListener('click', () => { if (!pjSel.ids.size) { toast(t('selNone')); return; } openShare('sel'); });
+$('#btn-share').addEventListener('click', () => openShare(pjPartner !== 'all' ? 'p:' + pjPartner : 'all'));
+
+/* Filtre appliqué aux cases du haut : ouverts / fermés */
+const lotFilterFn = p => pjLotF === 'all' || prodLotState(p) === pjLotF;
+
+/* ----- Clics sur la liste ----- */
+let lotPress = 0;
+$('#pj-lotbar').addEventListener('click', e => {
+  const f = e.target.closest('[data-lf]'), n = e.target.closest('[data-lotnew]'), v = e.target.closest('[data-view]');
+  if (v) { savePrefs({ pjView: v.dataset.view }); if (v.dataset.view === 'flat') pjLotF = 'all'; else pjFilter = 'all'; renderProject(); return; }
+  if (f) { pjLotF = f.dataset.lf; renderProject(); } else if (n) openLot(null);
+});
+$('#pj-list').addEventListener('click', e => {
+  if (e.target.closest('[data-prod]')) return;
+  const m = e.target.closest('[data-lotmenu]'); if (m) { openLot(m.dataset.lotmenu); return; }
+  const a = e.target.closest('[data-lotadd]'); if (a) { openProd(null, a.dataset.lotadd); return; }
+  if (e.target.closest('[data-lotgroup]')) { groupByMonth(); return; }
+  const tg = e.target.closest('[data-lottoggle]');
+  if (tg && pjSel.on) { const id = tg.dataset.lottoggle, ps = id === '__none' ? pjList().filter(p => !p.lot || !lotOf(p.lot)) : lotProds(lotOf(id) || {}); selToggle(ps.map(p => p.id)); return; }
+  if (tg && Date.now() - lotPress > 600) { pjOpen[tg.dataset.lottoggle] = !pjOpen[tg.dataset.lottoggle]; renderProject(); }
+});
+/* Appui long (ou clic droit) sur un lot : même menu que le bouton ⋮ */
+$('#pj-list').addEventListener('contextmenu', e => { const h = e.target.closest('[data-lottoggle]'); if (h && h.dataset.lottoggle !== '__none') { e.preventDefault(); lotPress = Date.now(); openLot(h.dataset.lottoggle); } });
+
+/* ----- Fenêtre d'un lot ----- */
+let lotEd = null;
+function partnerOpts(sel) { return partners().map(x => '<option value="' + esc(x.id) + '"' + (x.id === sel ? ' selected' : '') + '>' + esc(x.name) + '</option>').join(''); }
+function openLot(id) {
+  const l = id ? lotOf(id) : null;
+  lotEd = { id: id, confirmDel: false, confirmMove: false };
+  $('#lot-title').textContent = t(l ? 'lotEdit' : 'lotNew');
+  $('#lot-name').value = l ? l.name : ''; $('#lot-date').value = l ? (l.date || today()) : today();
+  $('#lot-partner').innerHTML = partnerOpts(l ? partnerOf(l.partner).id : (pjPartner !== 'all' ? pjPartner : partners()[0].id));
+  $('#lot-actions').hidden = !l; $('#lot-err').textContent = '';
+  if (l) {
+    $('#lot-toggle').textContent = t(lotState(l) === 'open' ? 'lotClose' : 'lotReopen'); $('#lot-del').textContent = t('lotDel');
+    const others = partners().filter(x => x.id !== partnerOf(l.partner).id);
+    $('#lot-target').innerHTML = partners().map(x => '<option value="' + esc(x.id) + '">' + esc(x.name) + '</option>').join('');
+    $('#lot-target').value = (others[0] || partners()[0]).id;
+  }
+  openSheet('#sheet-lot'); if (!l) setTimeout(() => $('#lot-name').focus(), 30);
+}
+$('#form-lot').addEventListener('submit', async e => {
+  e.preventDefault();
+  const name = $('#lot-name').value.trim(); if (!name) { $('#lot-err').textContent = t('errName'); return; }
+  const list = clone(lots()), pid = $('#lot-partner').value; let l = lotEd.id ? list.find(x => x.id === lotEd.id) : null;
+  const oldPartner = l ? partnerOf(l.partner).id : null;
+  if (!l) { l = { id: newId() }; list.push(l); }
+  Object.assign(l, { name: name, date: $('#lot-date').value || today(), partner: pid });
+  const moved = lotEd.id && oldPartner && oldPartner !== pid;
+  if (moved && lotProds(lotOf(lotEd.id)).some(p => (p.transfers || []).length) && !lotEd.confirmMove) { lotEd.confirmMove = true; $('#lot-err').textContent = t('lotMoveWarn'); return; }
+  closeSheets();
+  try {
+    await saveLots(list);
+    if (moved) for (const p of lotProds(lotOf(lotEd.id) || l)) { const c = clone(p); c.partner = pid; await putProd(c); }
+    toast(t('tSaved'));
+  } catch (err) { /* message déjà affiché */ }
+});
+$('#lot-actions').addEventListener('click', async e => {
+  const b = e.target.closest('[data-lotact]'); if (!b || !lotEd.id) return;
+  const l = lotOf(lotEd.id); if (!l) return; const act = b.dataset.lotact, list = clone(lots()), x = list.find(q => q.id === l.id);
+  if (act === 'toggle') {
+    if (lotState(l) === 'open') x.force = 'closed'; else { x.force = 'open'; x.soldAt = lotSold(l); }
+    closeSheets(); try { await saveLots(list); toast(t('tSaved')); } catch (err) { /* */ } return;
+  }
+  if (act === 'pdf' || act === 'xls' || act === 'wa') { closeSheets(); exportLots({ lot: l.id }, act); return; }
+  if (act === 'del') {
+    if (!lotEd.confirmDel) { lotEd.confirmDel = true; b.textContent = t('confirmDel'); $('#lot-err').textContent = t('lotDelWarn'); return; }
+    const ps = lotProds(l); closeSheets();
+    try { await saveLots(list.filter(q => q.id !== l.id)); for (const p of ps) { const c = clone(p); c.lot = ''; await putProd(c); } toast(t('tDeleted')); } catch (err) { /* */ } return;
+  }
+  const target = $('#lot-target').value, withP = $('#lot-withprods').checked;
+  if (act === 'move') {
+    if (partnerOf(l.partner).id === target) { $('#lot-err').textContent = t('lotSame'); return; }
+    const ps = lotProds(l);
+    if (ps.some(p => (p.transfers || []).length) && !lotEd.confirmMove) { lotEd.confirmMove = true; $('#lot-err').textContent = t('lotMoveWarn'); return; }
+    x.partner = target; closeSheets();
+    try { await saveLots(list); for (const p of ps) { const c = clone(p); c.partner = target; await putProd(c); } toast(t('tSaved')); } catch (err) { /* */ } return;
+  }
+  if (act === 'copy') {
+    const nid = newId(); list.push({ id: nid, name: l.name + ' ' + t('lotCopySuffix'), date: l.date || today(), partner: target }); closeSheets();
+    try {
+      await saveLots(list);
+      if (withP) for (const p of lotProds(l)) { const c = clone(p); delete c.id; Object.assign(c, { lot: nid, partner: target, payments: [], transfers: [], ts: Date.now(), status: statuses()[0].id }); await store.put('products', newId(), c); }
+      toast(t('tSaved'));
+    } catch (err) { /* */ }
+  }
+});
+
+/* ----- Regroupement des produits existants par mois de réception (par partenaire) ----- */
+async function groupByMonth() {
+  const loose = pjList().filter(p => !p.lot || !lotOf(p.lot)); if (!loose.length) return;
+  const list = clone(lots()), groups = {};
+  loose.forEach(p => { const d = p.recv || p.date || today(), key = partnerOf(p.partner).id + '|' + d.slice(0, 7); (groups[key] = groups[key] || { pid: partnerOf(p.partner).id, month: d.slice(0, 7), ps: [] }).ps.push(p); });
+  const upd = [];
+  Object.keys(groups).sort().forEach(k => {
+    const g = groups[k], first = g.ps.map(p => p.recv || p.date || today()).sort()[0];
+    const name = new Date(g.month + '-01T00:00:00').toLocaleDateString(loc(), { month: 'long', year: 'numeric' });
+    const id = newId(); list.push({ id: id, name: name, date: first, partner: g.pid }); g.ps.forEach(p => upd.push([p, id]));
+  });
+  try { await saveLots(list); for (const u of upd) { const c = clone(u[0]); c.lot = u[1]; await putProd(c); } toast(t('lotGrouped', { n: Object.keys(groups).length })); } catch (err) { /* */ }
+}
+
+/* ----- Produit : choix du lot ----- */
+function fillLotSelect(partnerId, sel) {
+  const ls = lots().filter(l => partnerOf(l.partner).id === partnerId).sort((a, b) => (a.date < b.date ? 1 : -1));
+  $('#pr-lot').innerHTML = '<option value="">' + esc(t('lotNone')) + '</option>' + ls.map(l => '<option value="' + esc(l.id) + '">' + esc(l.name) + (l.date ? ' · ' + esc(shortDate(l.date)) : '') + '</option>').join('');
+  $('#pr-lot').value = ls.some(l => l.id === sel) ? sel : '';
+}
+$('#pr-partner').addEventListener('change', () => fillLotSelect($('#pr-partner').value, ''));
+$('#pr-lot').addEventListener('change', () => {
+  const l = lotOf($('#pr-lot').value); if (!l) return;
+  $('#pr-partner').value = partnerOf(l.partner).id;
+  if (pe && !pe.id) $('#pr-recv').value = l.date || $('#pr-recv').value;
+});
+
+/* ----- Exports PDF (page à imprimer) et Excel : lot ou partenaire ----- */
+function exportScope(sc) {
+  let ls, title, loose = null; const base = pjName(curPj());
+  const pid = sc.partner || null;
+  if (sc.sel) {
+    const ids = new Set(sc.sel), ps = pjList().filter(p => ids.has(p.id));
+    ls = lots().filter(l => ps.some(p => p.lot === l.id)); title = base + ' · ' + t('selN', { n: ps.length });
+    const groups = ls.map(l => ({ lot: l, ps: ps.filter(p => p.lot === l.id) })), lo = ps.filter(p => !p.lot || !lotOf(p.lot));
+    if (lo.length) groups.push({ lot: { name: t('lotNone'), date: '', partner: '' }, ps: lo });
+    const all = groups.reduce((a, g) => a.concat(g.ps), []);
+    return { title: title, groups: groups, all: all, tt: lotTotals(all), pur: purchases(all) };
+  }
+  if (sc.lot) { const l = lotOf(sc.lot); ls = [l]; title = l.name + ' · ' + partnerOf(l.partner).name; }
+  else if (sc.all || sc.partner) { ls = lots().filter(l => !pid || partnerOf(l.partner).id === pid); title = base + (pid ? ' · ' + partnerOf(pid).name : ''); loose = pjList().filter(p => (!p.lot || !lotOf(p.lot)) && (!pid || partnerOf(p.partner).id === pid)); }
+  else { ls = lots().filter(l => (pjPartner === 'all' || partnerOf(l.partner).id === pjPartner) && (pjLotF === 'all' || lotState(l) === pjLotF)); title = base + (pjPartner === 'all' ? '' : ' · ' + partnerOf(pjPartner).name); }
+  const groups = ls.map(l => ({ lot: l, ps: lotProds(l) }));
+  if (!sc.lot && !sc.all && !sc.partner && pjLotF !== 'closed') loose = pjList().filter(p => (!p.lot || !lotOf(p.lot)) && (pjPartner === 'all' || partnerOf(p.partner).id === pjPartner));
+  if (loose && loose.length) groups.push({ lot: { name: t('lotNone'), date: '', partner: pid || (!sc.all && pjPartner !== 'all' ? pjPartner : '') }, ps: loose });
+  const all = groups.reduce((a, g) => a.concat(g.ps), []), pur = purchases(all);
+  return { title: title, groups: groups, all: all, tt: lotTotals(all), pur: pur };
+}
+const prodRow = p => { const c = prodCalc(p); return [p.name, typeLabel(p.type), p.client || '', stName(stOf(p.status)), c.cost, c.price, c.paid, c.profit, c.s1, c.gave, c.toGive, p.recv ? shortDate(p.recv) : '']; };
+const prodHead = () => [t('prodName'), t('prodType'), t('prodClient'), t('prodStatus'), t('costTotal'), t('prodPrice', { c: cur() }), t('pjPaid'), t('pjProfit'), t('gainsPartner'), t('gainsGave'), t('lotGive'), t('recvDate')];
+function exportLots(sc, kind) {
+  const d = exportScope(sc); if (!d.all.length && !d.groups.length) { toast(t('noProdT')); return; }
+  const sum = [[t('pjProds'), d.tt.n], [t('pjBuyTotal'), d.pur.mad], [t('pjBuyCur'), d.pur.parts.join(' · ')], [t('gainsColl'), d.tt.price], [t('pjPaid'), d.tt.paid], [t('pjProfit'), d.tt.profit], [t('gainsPartner'), d.tt.s1], [t('gainsGave'), d.tt.gave], [t('lotGive'), d.tt.toGive]];
+  if (kind === 'xls') return exportXls(d, sum);
+  if (kind === 'wa') return exportWa(d, sum);
+  const e = esc;
+  let inner = '<h1>' + e(d.title) + '</h1><p class="sub">' + e(new Date().toLocaleDateString(loc())) + '</p><div class="card">' +
+    sum.map(r => '<div class="k"><span>' + e(r[0]) + '</span><b>' + e(typeof r[1] === 'number' && r[0] !== t('pjProds') ? money(r[1]) : r[1]) + '</b></div>').join('') + '</div>';
+  d.groups.forEach(g => {
+    const tt = lotTotals(g.ps);
+    inner += '<div class="card"><h2>' + e(g.lot.name) + (g.lot.date ? ' · ' + e(shortDate(g.lot.date)) : '') + '</h2><table><tr class="d"><td>' + e(t('prodName')) + '</td><td class="r">' + e(t('pjPaid')) + '</td><td class="r">' + e(t('pjProfit')) + '</td></tr>' +
+      g.ps.map(p => { const c = prodCalc(p); return '<tr><td>' + e(p.name) + '<div class="s">' + e([p.client, stName(stOf(p.status))].filter(Boolean).join(' · ')) + '</div></td><td class="r">' + e(money(c.paid)) + ' / ' + e(money(c.price)) + '</td><td class="r">' + e(money(c.profit)) + '</td></tr>'; }).join('') +
+      '</table><div class="k"><span>' + e(t('lotGive')) + '</span><b>' + e(money(tt.toGive)) + '</b></div></div>';
+  });
+  inner += '<script>window.addEventListener("load",function(){setTimeout(function(){window.print()},500)})<\/script>';
+  openPrintable(d.title, inner);
+}
+async function openPrintable(title, inner) {
+  const html = htmlDoc(title, inner);
+  try { const url = URL.createObjectURL(new Blob([html], { type: 'text/html' })), w = window.open(url, '_blank'); if (w) { setTimeout(() => URL.revokeObjectURL(url), 60000); return; } } catch (err) { /* repli : fichier */ }
+  await shareHtmlFile('mizan-' + title, title, inner.replace(/<script>.*<\/script>/, ''));
+}
+async function exportXls(d, sum) {
+  const X = window.XLSX, wb = X.utils.book_new();
+  X.utils.book_append_sheet(wb, X.utils.aoa_to_sheet([[d.title, '']].concat(sum)), t('lotSummary'));
+  const rows = [[t('lotL'), t('partnerL'), t('lotDate')].concat(prodHead())];
+  d.groups.forEach(g => g.ps.forEach(p => rows.push([g.lot.name, g.lot.partner ? partnerOf(g.lot.partner).name : pnOf(p), g.lot.date || ''].concat(prodRow(p)))));
+  X.utils.book_append_sheet(wb, X.utils.aoa_to_sheet(rows), t('xProj'));
+  const buf = X.write(wb, { bookType: 'xlsx', type: 'array' });
+  if (await saveFile('mizan-' + d.title.replace(/[^\w\-]+/g, '_').slice(0, 40) + '-' + stamp() + '.xlsx', buf)) toast(t('tExported'));
+}
+function exportWa(d, sum) {
+  const L = [d.title, new Date().toLocaleDateString(loc()), ''];
+  sum.forEach(r => { if (r[1] === '' || r[1] == null) return; L.push(r[0] + ' : ' + (typeof r[1] === 'number' && r[0] !== t('pjProds') ? money(r[1]) : r[1])); });
+  if (d.groups.length) { L.push(''); d.groups.forEach(g => L.push('• ' + g.lot.name + ' (' + g.ps.length + ') — ' + t('lotGive') + ' ' + money(lotTotals(g.ps).toGive))); }
+  const text = L.join('\n'); let w = null;
+  try { w = window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank'); } catch (err) { w = null; }
+  if (!w) { try { navigator.clipboard.writeText(text); toast(t('shCopied')); } catch (err) { toast(t('tNoDl')); } }
+}
+/* ----- Fenêtre « Partager » : tout le projet, un partenaire, un lot ou ma sélection ----- */
+function openShare(def) {
+  const o = [['all', t('shAll')]];
+  if (partners().length > 1) partners().forEach(x => o.push(['p:' + x.id, t('shPartner', { n: x.name })]));
+  if (pjSel.ids.size) o.push(['sel', t('shSel', { n: pjSel.ids.size })]);
+  const ls = lots().slice().sort((a, b) => (a.date < b.date ? 1 : -1));
+  $('#sh-scope').innerHTML = o.map(x => '<option value="' + esc(x[0]) + '">' + esc(x[1]) + '</option>').join('') +
+    (ls.length ? '<optgroup label="' + esc(t('shLots')) + '">' + ls.map(l => '<option value="l:' + esc(l.id) + '">' + esc(l.name + (partners().length > 1 ? ' · ' + partnerOf(l.partner).name : '')) + '</option>').join('') + '</optgroup>' : '');
+  $('#sh-scope').value = [].some.call($('#sh-scope').options, x => x.value === def) ? def : 'all';
+  $('#sh-note').textContent = t('shNote');
+  openSheet('#sheet-share');
+}
+$('#sheet-share').addEventListener('click', e => {
+  const b = e.target.closest('[data-shfmt]'); if (!b) return;
+  const v = $('#sh-scope').value; let sc = { all: true };
+  if (v === 'sel') sc = { sel: Array.from(pjSel.ids) }; else if (v.indexOf('p:') === 0) sc = { partner: v.slice(2) }; else if (v.indexOf('l:') === 0) sc = { lot: v.slice(2) };
+  closeSheets(); exportLots(sc, b.dataset.shfmt);
+});
+/* ---------- Code de verrouillage (facultatif) et mode discret (facultatif) ---------- */
+let hiddenAt = Date.now();
+async function pinHash(salt, p) {
+  const s = salt + ':' + p;
+  try {
+    if (window.crypto && crypto.subtle) {
+      const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s));
+      return Array.from(new Uint8Array(b)).map(x => x.toString(16).padStart(2, '0')).join('');
+    }
+  } catch (e) { /* repli ci-dessous */ }
+  let h = 5381; for (let i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) | 0;
+  return 'x' + h;
+}
+const pinOk = async v => !!prefs.pin && (await pinHash(prefs.pinSalt || '', v)) === prefs.pin;
+function showLock() {
+  $('#lock').hidden = false; $('#lock-pin').value = ''; $('#lock-err').textContent = ''; $('#lock-reset').hidden = true; $('#lock-word').value = '';
+  setTimeout(() => { try { $('#lock-pin').focus(); } catch (e) { /* ignoré */ } }, 60);
+}
+$('#lock-pin').addEventListener('input', async e => {
+  const v = e.target.value.replace(/\D/g, '').slice(0, 4); e.target.value = v;
+  if (v.length < 4) return;
+  if (await pinOk(v)) { $('#lock').hidden = true; $('#lock-err').textContent = ''; } else { $('#lock-err').textContent = t('pinBad'); e.target.value = ''; }
+});
+$('#lock-forgot').addEventListener('click', () => {
+  $('#lock-reset-t').textContent = t('lockResetWarn') + ' ' + t('typeWord', { w: t('clearWord') });
+  $('#lock-reset').hidden = !$('#lock-reset').hidden;
+});
+$('#lock-wipe').addEventListener('click', async () => {
+  if ($('#lock-word').value.trim().toLowerCase() !== t('clearWord').toLowerCase()) { $('#lock-err').textContent = t('errClearWord'); return; }
+  try {
+    const keep = {}; ['lang', 'currency', 'theme'].forEach(k => { if (state.settings[k]) keep[k] = state.settings[k]; });
+    await store.replaceAll({ settings: keep, tx: {}, loans: {}, products: {} });
+    try { localStorage.removeItem(SNAP); } catch (e) { /* ignoré */ }
+    savePrefs({ pin: '', pinSalt: '' }); $('#lock').hidden = true; render(); toast(t('tCleared'));
+  } catch (e) { $('#lock-err').textContent = t('tNoDl'); }
+});
+$('#btn-pin').addEventListener('click', () => {
+  $('#pin-old-f').hidden = $('#pin-off').hidden = !prefs.pin;
+  ['#pin-old', '#pin-new', '#pin-new2'].forEach(s => { $(s).value = ''; }); $('#pin-err').textContent = '';
+  openSheet('#sheet-pin');
+});
+$('#form-pin').addEventListener('submit', async e => {
+  e.preventDefault();
+  const err = $('#pin-err'), o = $('#pin-old').value, a = $('#pin-new').value, b = $('#pin-new2').value;
+  if (prefs.pin && !(await pinOk(o))) { err.textContent = t('pinBad'); return; }
+  if (!/^\d{4}$/.test(a)) { err.textContent = t('pinFmt'); return; }
+  if (a !== b) { err.textContent = t('pinMismatch'); return; }
+  const salt = newId();
+  savePrefs({ pin: await pinHash(salt, a), pinSalt: salt }); closeSheets(); renderSettings(); toast(t('pinSaved'));
+});
+$('#pin-off').addEventListener('click', async () => {
+  if (!(await pinOk($('#pin-old').value))) { $('#pin-err').textContent = t('pinBad'); return; }
+  savePrefs({ pin: '', pinSalt: '' }); closeSheets(); renderSettings(); toast(t('pinRemoved'));
+});
+
+/* Mode discret : le bouton « œil » floute les montants */
+function applyPriv() {
+  const on = !!prefs.privOn && !!prefs.priv;
+  document.documentElement.classList.toggle('priv', on);
+  const b = $('#btn-eye'); if (b) { b.setAttribute('aria-pressed', String(on)); b.style.color = on ? 'var(--accent)' : ''; }
+}
+$('#btn-eye').addEventListener('click', () => { savePrefs({ priv: !prefs.priv }); applyPriv(); });
+$('#set-priv').addEventListener('change', e => { savePrefs({ privOn: e.target.checked, priv: e.target.checked ? !!prefs.priv : false }); applyPriv(); render(); });
 /* ---------- Démarrage ---------- */
 function onChange() {
   applyPrefs(); render(); maybeApply();
   if (!$('#sheet-incl').hidden) renderIncl();
 }
-loadPrefs(); applyPrefs(); render();
+loadPrefs(); applyPrefs(); applyPriv(); if (prefs.pin) showLock(); render();
 initStore(onChange).then(s => {
   store = s; onChange();
   /* Raccourcis (appui long sur l'icône) */
@@ -4061,7 +5013,12 @@ initStore(onChange).then(s => {
     if (a) { setTimeout(() => { if (a === 'exp') openTx('expense'); else if (a === 'inc') openTx('income'); else if (a === 'project' && tabOn('project') !== false) setTab('project'); else if (a === 'zakat') setTab('zakat'); }, 250); history.replaceState(null, '', location.pathname); }
   } catch (e) { /* ignore */ }
 });
-document.addEventListener('visibilitychange', () => { if (!document.hidden) applyFixed(); });
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) { hiddenAt = Date.now(); return; }
+  if (prefs.pin && Date.now() - hiddenAt > 60000) showLock();
+  applyFixed();
+});
 setInterval(() => { if (!document.hidden) applyFixed(); }, 60000);
+['gesturestart','gesturechange','gestureend'].forEach(function(n){document.addEventListener(n,function(e){e.preventDefault();});});document.addEventListener('touchmove',function(e){if(e.touches.length>1||(e.scale&&e.scale!==1))e.preventDefault();},{passive:false});
 if ('serviceWorker' in navigator && location.protocol.indexOf('http') === 0) navigator.serviceWorker.register('mizan-sw.js').catch(function () {});
 </script></body></html>
