@@ -566,7 +566,9 @@ button, [role="button"], .tabs, .seg, .chip, .stat, .lotcard .head { -webkit-tou
   <section class="view" id="view-project" hidden>
     <div class="field"><input id="pj-q" type="search" data-ph="pjSearch" autocomplete="off"></div>
     <div class="section-title" data-i="project"></div>
+    <div class="field" id="pj-switch" hidden><select class="select" id="pj-sel" data-al="pjSwitchL"></select></div>
     <button class="alertbar" id="pj-alert" hidden></button>
+    <div class="field" id="pj-lotsel-f" hidden><select class="select" id="pj-lotsel" data-al="pjLotSelL"></select></div>
     <div class="loan-summary" style="grid-template-columns:1fr 1fr">
       <button type="button" class="stat tog" data-tog="profit"><div class="k" id="pj-profit-l"></div><div class="v inc num" id="pj-profit">0</div></button>
       <button type="button" class="stat tog" data-tog="collect"><div class="k" id="pj-collect-l"></div><div class="v loan num" id="pj-collect">0</div></button>
@@ -1146,7 +1148,37 @@ button, [role="button"], .tabs, .seg, .chip, .stat, .lotcard .head { -webkit-tou
     </div>
     <div class="field"><label data-i="batCols"></label><div class="colors3"><input type="color" id="ps-bcg"><input type="color" id="ps-bcm"><input type="color" id="ps-bcb"></div></div>
     <div class="field"><button type="button" class="btn ghost" id="ps-import" data-i="pjImport"></button><input type="file" id="ps-file" accept=".xlsx,.xls,.csv" hidden><div class="note" data-i="pjImportNote"></div></div>
+    <div class="sub" data-i="pjMgmtT"></div>
+    <div class="field"><label for="ps-multi" data-i="pjMultiL"></label><select class="select" id="ps-multi"><option value="0" data-i="pjMultiOff"></option><option value="1" data-i="pjMultiOn"></option></select><div class="note" data-i="pjMultiH"></div></div>
+    <div id="ps-pj-btns" style="display:flex;flex-direction:column;gap:8px" hidden>
+      <div class="two"><button type="button" class="btn ghost small" id="ps-pj-add" data-i="pjAdd"></button><button type="button" class="btn ghost small" id="ps-pj-merge" data-i="pjMerge"></button></div>
+      <button type="button" class="btn danger small" id="ps-pj-del" data-i="pjDelete"></button>
+    </div>
     <div class="err" id="ps-err" role="alert"></div>
+    <div class="row-actions">
+      <button type="button" class="btn ghost" data-close data-i="cancel"></button>
+      <button type="submit" class="btn" data-i="save"></button>
+    </div>
+  </form>
+</div>
+
+<div class="scrim" id="sheet-mergepj" hidden>
+  <form class="sheet" id="form-mergepj" autocomplete="off">
+    <h2 data-i="pjMerge"></h2>
+    <div class="field"><label for="mpj-src" data-i="pjMergeSrc"></label><select class="select" id="mpj-src"></select></div>
+    <div class="note" id="mpj-note"></div>
+    <div class="row-actions">
+      <button type="button" class="btn ghost" data-close data-i="cancel"></button>
+      <button type="submit" class="btn" data-i="pjMergeGo"></button>
+    </div>
+  </form>
+</div>
+
+<div class="scrim" id="sheet-newpj" hidden>
+  <form class="sheet" id="form-newpj" autocomplete="off">
+    <h2 data-i="pjAdd"></h2>
+    <div class="field"><label for="npj-name" data-i="pjNameL"></label><input id="npj-name" type="text" maxlength="40"></div>
+    <div class="err" id="npj-err" role="alert"></div>
     <div class="row-actions">
       <button type="button" class="btn ghost" data-close data-i="cancel"></button>
       <button type="submit" class="btn" data-i="save"></button>
@@ -2087,6 +2119,30 @@ Object.assign(DICT, {
   lateDaysL: ['Retard de paiement après (jours)', 'Payment considered late after (days)', 'يُعتبر الدفع متأخرًا بعد (أيام)', 'الخلاص كيتعتابر متأخر موراها (أيام)'],
   lateDaysH: ['Un produit livré dont le reste à payer dépasse ce délai est signalé « en retard ».', 'A delivered product with a balance still due after this delay is flagged as late.', 'المنتج المُسلَّم الذي بقي عليه مبلغ بعد هذه المدة يُعلَّم كمتأخر.', 'المنتوج اللي تسلم وباقي فيه الفلوس موراها كيتعلم متأخر.']
 });
+
+Object.assign(DICT, {
+  pjCollected: ['Déjà encaissé', 'Collected so far', 'المُحصَّل حتى الآن', 'اللي تحصل حتى دابا'],
+  pjAllLots: ['Tous les lots', 'All lots', 'كل الدفعات', 'كاع اللوطات'],
+  pjLotSelL: ['Filtrer par lot', 'Filter by lot', 'التصفية حسب الدفعة', 'فلتر على حساب اللوط'],
+  pjSwitchL: ['Changer de projet', 'Switch project', 'تبديل المشروع', 'بدّل المشروع'],
+  pjMgmtT: ['Projets', 'Projects', 'المشاريع', 'المشاريع'],
+  pjAdd: ['Ajouter un projet', 'Add a project', 'إضافة مشروع', 'زيد مشروع'],
+  pjDelLast: ['Impossible de supprimer le seul projet.', 'The only project cannot be deleted.', 'لا يمكن حذف المشروع الوحيد.', 'ما يمكنش تمسح المشروع الوحيد.'],
+  pjDelBody: ['Ce projet et ses {n} produit(s) (dépenses, paiements, lots) seront supprimés définitivement. Pense à faire une sauvegarde avant.', 'This project and its {n} product(s) (expenses, payments, lots) will be permanently deleted. Consider making a backup first.', 'سيتم حذف هذا المشروع و{n} منتج (المصاريف والدفعات والدفعات الجماعية) نهائيًا. ننصح بعمل نسخة احتياطية أولًا.', 'غادي يتمسح هاد المشروع و{n} د المنتوجات (المصاريف والخلاصات واللوطات) نهائيا. دير نسخة احتياطية قبل.']
+});
+
+Object.assign(DICT, {
+  pjMultiL: ['Plusieurs projets', 'Multiple projects', 'مشاريع متعددة', 'بزاف د المشاريع'],
+  pjMultiOff: ['Non (un seul projet)', 'Off (single project)', 'لا (مشروع واحد)', 'لا (مشروع واحد)'],
+  pjMultiOn: ['Oui', 'On', 'نعم', 'إيه'],
+  pjMultiH: ['Active pour pouvoir ajouter, supprimer, fusionner et changer de projet.', 'Turn on to add, delete, merge and switch projects.', 'فعّله لإضافة المشاريع وحذفها ودمجها والتبديل بينها.', 'فعّلو باش تزيد المشاريع وتمسحهم وتدمجهم وتبدل بيناتهم.'],
+  pjMultiKeep: ['Supprime ou fusionne d\'abord les autres projets.', 'Delete or merge the other projects first.', 'احذف المشاريع الأخرى أو ادمجها أولًا.', 'مسح ولا دمج المشاريع الأخرى قبل.'],
+  pjMerge: ['Fusionner avec un autre projet', 'Merge with another project', 'دمج مع مشروع آخر', 'دمج مع مشروع آخر'],
+  pjMergeSrc: ['Projet à absorber', 'Project to absorb', 'المشروع المراد دمجه', 'المشروع اللي غادي يتدمج'],
+  pjMergeGo: ['Fusionner', 'Merge', 'دمج', 'دمج'],
+  pjMergeNote: ['Ses produits et ses lots passent dans « {n} » ; les partenaires de même nom sont regroupés, les autres sont ajoutés. Les réglages de « {n} » s\'appliquent.', 'Its products and lots move into “{n}”; partners with the same name are combined, others are added. The settings of “{n}” apply.', 'تنتقل منتجاته ودفعاته إلى «{n}»؛ يُدمج الشركاء بنفس الاسم ويُضاف الآخرون. تُطبَّق إعدادات «{n}».', 'المنتوجات واللوطات ديالو كيمشيو ل «{n}»؛ الشركاء اللي بنفس السمية كيتجمعو والباقي كيتزاد. كتطبق إعدادات «{n}».'],
+  pjMergeBody: ['« {a} » ({n} produit(s)) sera fusionné dans « {b} » puis supprimé. Cette action est définitive : pense à faire une sauvegarde avant.', '“{a}” ({n} product(s)) will be merged into “{b}” and then deleted. This cannot be undone: consider making a backup first.', 'سيتم دمج «{a}» ({n} منتج) في «{b}» ثم حذفه. لا يمكن التراجع: ننصح بنسخة احتياطية أولًا.', 'غادي يتدمج «{a}» ({n} د المنتوجات) ف «{b}» وبعدها يتمسح. ما يمكنش ترجع: دير نسخة احتياطية قبل.']
+});
 /* ---------- Icônes (traits 24x24) et couleurs ---------- */
 const ICONS = {
   cart: '<circle cx="9" cy="20" r="1.2"/><circle cx="18" cy="20" r="1.2"/><path d="M2 3h3l2.7 11.5a2 2 0 0 0 2 1.5h8.2a2 2 0 0 0 2-1.5L21 7H6"/>',
@@ -2845,7 +2901,7 @@ initCalc($('#calc-dep'));
 initCalc($('#calc-pexp'));
 initCalc($('#calc-ppay'));
 /* ---------- Navigation, feuilles, saisie ---------- */
-const SHEETS = ['#sheet-tx', '#sheet-loan', '#sheet-edit', '#sheet-fixed', '#sheet-other', '#sheet-incl', '#sheet-dep', '#sheet-confirm', '#sheet-prod', '#sheet-pexp', '#sheet-ppay', '#sheet-pset', '#sheet-padd', '#sheet-lpay', '#sheet-np', '#sheet-zk', '#sheet-lot', '#sheet-pin', '#sheet-share', '#sheet-sharepay'];
+const SHEETS = ['#sheet-tx', '#sheet-loan', '#sheet-edit', '#sheet-fixed', '#sheet-other', '#sheet-incl', '#sheet-dep', '#sheet-confirm', '#sheet-prod', '#sheet-pexp', '#sheet-ppay', '#sheet-pset', '#sheet-padd', '#sheet-lpay', '#sheet-np', '#sheet-newpj', '#sheet-mergepj', '#sheet-zk', '#sheet-lot', '#sheet-pin', '#sheet-share', '#sheet-sharepay'];
 const VIEWS = ['home', 'history', 'loans', 'zakat', 'accounts', 'settings', 'search', 'savings', 'reports', 'project', 'product', 'pjstats', 'general'];
 const TABS = ['home', 'loans', 'zakat', 'savings', 'project', 'general'];
 function openSheet(sel) { closeSheets(); $(sel).hidden = false; }
@@ -3533,7 +3589,7 @@ const lastPayAcc = p => { const l = (p.payments || []).slice().sort((a, b) => (a
 const prodList = () => Object.keys(state.products).map(id => Object.assign({ id: id }, state.products[id]));
 const pjList = () => prodList().filter(inPj);
 const putProd = p => { const c = clone(p); delete c.id; return store.put('products', p.id, c); };
-let pjFilter = 'all', pjQ = '';
+let pjFilter = 'all', pjQ = '', pjLotSel = 'all';
 const pjSel = { on: false, ids: new Set() };
 function prodCardHtml(p) {
   const c = prodCalc(p), pct = c.price > 0 ? Math.min(100, c.paid / c.price * 100) : 0, st = stOf(p.status);
@@ -3569,18 +3625,20 @@ function renderProject() {
   dl('#dl-ekind', KINDKEYS.map(k => t('ek.' + k)).concat(used.filter(l => KINDKEYS.every(k => t('ek.' + k) !== l))));
   if (state.tab !== 'project') return;
   if (pjPartner !== 'all' && !partners().some(x => x.id === pjPartner)) pjPartner = 'all';
-  const list = pjList().filter(p => (pjPartner === 'all' || partnerOf(p.partner).id === pjPartner) && lotFilterFn(p));
-  let profit = 0, collect = 0, give = 0, eProfit = 0, eCollect = 0, eGive = 0;
+  if (pjLotSel !== 'all' && !lotOf(pjLotSel)) pjLotSel = 'all';
+  { const ls = lots(), f = $('#pj-lotsel-f'); f.hidden = !ls.length; $('#pj-lotsel').innerHTML = '<option value="all">' + esc(t('pjAllLots')) + '</option>' + ls.map(l => '<option value="' + esc(l.id) + '"' + (pjLotSel === l.id ? ' selected' : '') + '>' + esc(l.name) + '</option>').join(''); }
+  const list = pjList().filter(p => (pjPartner === 'all' || partnerOf(p.partner).id === pjPartner) && lotFilterFn(p) && (pjLotSel === 'all' || p.lot === pjLotSel));
+  let profit = 0, collect = 0, give = 0, eProfit = 0, eGive = 0, paidAll = 0;
   list.forEach(p => {
     const c = prodCalc(p), k = stOf(p.status).kind, e = estCalc(p);
     profit += c.profit; give += c.toGive; eProfit += e.profit; eGive += e.toGive;
     if (!c.returned && (k === 'selling' || k === 'sold')) collect += c.rest;
-    if (!c.returned && c.price > 0) eCollect += Math.max(0, round2(c.price - c.paid));
+    if (!c.returned) paidAll += c.paid;
   });
   const tg = pjTog, est = t('pjEst'), giveL = pjPartner === 'all' ? t('pjGiveAll') : t('pjGive', { n: partnerOf(pjPartner).name });
   const pur = purchases(list);
   $('#pj-profit-l').textContent = t('pjProfit') + (tg.profit ? ' · ' + est : ''); $('#pj-profit').textContent = money(round2(tg.profit ? eProfit : profit));
-  $('#pj-collect-l').textContent = t('pjCollect') + (tg.collect ? ' · ' + est : ''); $('#pj-collect').textContent = money(round2(tg.collect ? eCollect : collect));
+  $('#pj-collect-l').textContent = tg.collect ? t('pjCollected') : t('pjCollect'); $('#pj-collect').textContent = money(round2(tg.collect ? paidAll : collect));
   $('#pj-give-l').textContent = giveL + (tg.give ? ' · ' + est : ''); $('#pj-give').textContent = money(round2(tg.give ? eGive : give));
   $('#pj-buy-l').textContent = t('pjBuyTotal') + (tg.buy ? ' · ' + t('pjBuyCur') : ''); $('#pj-buy').textContent = tg.buy ? (pur.parts.join(' · ') || '—') : money(pur.mad);
   $$('#view-project [data-tog]').forEach(b => b.setAttribute('aria-pressed', String(!!tg[b.dataset.tog])));
@@ -3923,7 +3981,7 @@ function stRow(s) {
 }
 $('#btn-pset').addEventListener('click', () => {
   const c = projCfg();
-  $('#ps-name').value = curPj().name || ''; $('#ps-role').value = String(pjRole()); psWarned = false;
+  paintPjMgmt(); $('#ps-name').value = curPj().name || ''; $('#ps-role').value = String(pjRole()); psWarned = false;
   $('#ps-late').value = lateDays(); $('#ps-wa').value = waTpl(); $('#form-pset h2').textContent = t('pjSetTitle');
   $('#ps-n2').value = c.n2 || ''; $('#ps-n2').placeholder = t(pjRole() === 1 ? 'partnerMe1' : 'partner2');
   $('#ps-rate').value = pRate(); $('#ps-rate-l').textContent = t('setRate', { c: cur() });
@@ -4218,7 +4276,77 @@ function renderPjStats() {
 }
 
 /* Un seul projet : on n'affiche que son nom (les partenaires font la différence) */
-function renderPjChips() { $$('#view-project .section-title').forEach(e => { e.textContent = pjName(curPj()); }); }
+function renderPjChips() {
+  $$('#view-project .section-title').forEach(e => { e.textContent = pjName(curPj()); });
+  $('#pj-switch').hidden = pjs().length < 2;
+  $('#pj-sel').innerHTML = pjs().map(x => '<option value="' + esc(x.id) + '"' + (x.id === curPj().id ? ' selected' : '') + '>' + esc(pjName(x)) + '</option>').join('');
+}
+$('#pj-sel').addEventListener('change', e => { setPjCur(e.target.value); pjLotSel = 'all'; pjLotF = 'all'; pjFilter = 'all'; pjQ = ''; $('#pj-q').value = ''; pjSel.on = false; pjSel.ids.clear(); renderProject(); window.scrollTo(0, 0); });
+$('#pj-lotsel').addEventListener('change', e => { pjLotSel = e.target.value; renderProject(); });
+/* Ajouter / supprimer / fusionner (réglages du projet) — activé par l'interrupteur « Plusieurs projets » */
+const multiOn = () => !!state.settings.multiPj || pjs().length > 1;
+function paintPjMgmt() {
+  const on = multiOn(), n = pjs().length; $('#ps-multi').value = on ? '1' : '0'; $('#ps-pj-btns').hidden = !on;
+  $('#ps-pj-del').hidden = n < 2; $('#ps-pj-merge').hidden = n < 2;
+}
+$('#ps-multi').addEventListener('change', async e => {
+  const v = e.target.value === '1';
+  if (!v && pjs().length > 1) { toast(t('pjMultiKeep')); paintPjMgmt(); return; }
+  try { await store.setSettings({ multiPj: v }); } catch (err) { /* message déjà affiché */ }
+  paintPjMgmt();
+});
+$('#ps-pj-merge').addEventListener('click', () => {
+  const cur = curPj(); closeSheets();
+  $('#mpj-src').innerHTML = pjs().filter(x => x.id !== cur.id).map(x => '<option value="' + esc(x.id) + '">' + esc(pjName(x)) + ' (' + prodList().filter(p => (p.proj || 'main') === x.id).length + ')</option>').join('');
+  $('#mpj-note').textContent = t('pjMergeNote', { n: pjName(cur) }); openSheet('#sheet-mergepj');
+});
+async function mergePj(srcId) {
+  const list = clone(pjs()), tgt = list.find(x => x.id === curPj().id), src = list.find(x => x.id === srcId); if (!tgt || !src) return;
+  const tc = tgt.cfg = tgt.cfg || {}, sc = src.cfg || {}, key = x => String(nameL(x.name) || '').trim().toLowerCase();
+  const tp = clone(partnersOfCfg0(tc)), sp = partnersOfCfg0(sc), map = {};
+  sp.forEach(x => {
+    let m = tp.find(q => key(q) === key(x));
+    if (!m) { m = clone(x); m.pct = myPct(sc, x.id); if (tp.some(q => q.id === m.id)) m.id = 'p' + newId(); tp.push(m); }
+    map[x.id] = m.id;
+  });
+  tc.partners = tp;
+  const ts = (tc.statuses && tc.statuses.length) ? clone(tc.statuses) : clone(DEF_ST);
+  ((sc.statuses && sc.statuses.length) ? sc.statuses : DEF_ST).forEach(s => { if (!ts.some(q => q.id === s.id)) ts.push(clone(s)); });
+  tc.statuses = ts;
+  const tl = clone(tc.lots || []), lotMap = {};
+  (sc.lots || []).forEach(l => { const c = clone(l); if (tl.some(q => q.id === c.id)) c.id = 'l' + newId(); lotMap[l.id] = c.id; if (c.partner) c.partner = map[c.partner] || c.partner; tl.push(c); });
+  tc.lots = tl;
+  const first = sp[0].id;
+  for (const p of prodList().filter(q => (q.proj || 'main') === srcId)) {
+    p.proj = tgt.id; p.partner = map[(p.partner && map[p.partner]) ? p.partner : first]; if (p.lot && lotMap[p.lot]) p.lot = lotMap[p.lot];
+    await putProd(p);
+  }
+  await store.setSettings({ pjs: list.filter(x => x.id !== srcId) });
+}
+$('#form-mergepj').addEventListener('submit', e => {
+  e.preventDefault(); const id = $('#mpj-src').value; const src = pjs().find(x => x.id === id); if (!src) return;
+  const n = prodList().filter(p => (p.proj || 'main') === id).length; closeSheets();
+  askConfirm({ title: t('pjMerge') + ' · ' + pjName(src) + ' → ' + pjName(curPj()), body: t('pjMergeBody', { n: n, a: pjName(src), b: pjName(curPj()) }), ok: t('pjMergeGo'), run: async () => {
+    await mergePj(id); pjLotSel = 'all'; pjLotF = 'all'; pjFilter = 'all'; setTab('project'); renderProject(); toast(t('tSaved'));
+  } });
+});
+/* Ajouter / supprimer un projet */
+$('#ps-pj-add').addEventListener('click', () => { closeSheets(); $('#npj-name').value = ''; $('#npj-err').textContent = ''; openSheet('#sheet-newpj'); setTimeout(() => $('#npj-name').focus(), 60); });
+$('#form-newpj').addEventListener('submit', async e => {
+  e.preventDefault(); const name = $('#npj-name').value.trim(); if (!name) { $('#npj-err').textContent = t('errName'); return; }
+  const list = clone(pjs()); let id; do { id = 'pj' + Math.random().toString(36).slice(2, 7); } while (list.some(x => x.id === id));
+  list.push({ id: id, name: name, cfg: {} });
+  closeSheets(); try { await store.setSettings({ pjs: list }); setPjCur(id); pjLotSel = 'all'; pjLotF = 'all'; pjFilter = 'all'; renderProject(); toast(t('tSaved')); } catch (err) { /* message déjà affiché */ }
+});
+$('#ps-pj-del').addEventListener('click', () => {
+  if (pjs().length < 2) { toast(t('pjDelLast')); return; }
+  const cur = curPj(), ids = pjList().map(p => p.id); closeSheets();
+  askConfirm({ title: t('pjDelete') + ' · ' + pjName(cur), body: t('pjDelBody', { n: ids.length }), ok: t('pjDelete'), run: async () => {
+    for (const id of ids) { if (state.tx['pj-' + id]) await store.del('tx', 'pj-' + id); await store.del('products', id); }
+    const list = clone(pjs()).filter(x => x.id !== cur.id); await store.setSettings({ pjs: list });
+    setPjCur(list[0].id); pjLotSel = 'all'; pjLotF = 'all'; pjFilter = 'all'; setTab('project'); renderProject(); toast(t('tDeleted'));
+  } });
+});
 
 /* ----- Coordonnées client : appel, WhatsApp, message de rappel ----- */
 const phoneDigits = ph => { let d = String(ph || '').trim(); const plus = d[0] === '+'; d = d.replace(/\D/g, ''); if (plus) return d; if (d.indexOf('00') === 0) return d.slice(2); if (d[0] === '0') return '212' + d.slice(1); return d; };
@@ -4686,7 +4814,7 @@ function lotTotals(ps) {
 
 async function saveLots(list) { const cfg = clone(projCfg()); cfg.lots = list; return saveCfg(cfg); }
 const lotCard = (l, shown, multi, q) => {
-  const ps = lotProds(l), tt = lotTotals(ps), st = lotState(l), open = !!pjOpen[l.id] || !!q || pjSel.on;
+  const ps = lotProds(l), tt = lotTotals(ps), st = lotState(l), open = !!pjOpen[l.id] || !!q || pjSel.on || pjLotSel === l.id;
   const mine = shown.filter(p => p.lot === l.id);
   const meta = [l.date ? shortDate(l.date) : '', multi ? partnerOf(l.partner).name : '', t('lotN', { n: ps.length })].filter(Boolean).join(' · ');
   return '<div class="card lotcard" data-lot="' + esc(l.id) + '"><div class="head" data-lottoggle="' + esc(l.id) + '" role="button" tabindex="0"><div style="min-width:0"><div class="who">' + esc(l.name) + '</div><div class="meta">' + esc(meta) + '</div></div>' +
@@ -4706,7 +4834,7 @@ function renderLots(list, shown, words) {
     selPaint(); return;
   }
   const multi = pjPartner === 'all' && partners().length > 1;
-  const vis = lots().filter(l => (pjPartner === 'all' || partnerOf(l.partner).id === pjPartner) && (pjLotF === 'all' || lotState(l) === pjLotF))
+  const vis = lots().filter(l => (pjPartner === 'all' || partnerOf(l.partner).id === pjPartner) && (pjLotF === 'all' || lotState(l) === pjLotF) && (pjLotSel === 'all' || l.id === pjLotSel))
     .sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0));
   const loose = shown.filter(p => !p.lot || !lotOf(p.lot));
   const looseAll = list.filter(p => !p.lot || !lotOf(p.lot));

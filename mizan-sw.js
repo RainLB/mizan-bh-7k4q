@@ -1,4 +1,4 @@
-const CACHE = 'mizan-20261110032357';
+const CACHE = 'mizan-20261111030207';
 const CORE = ['./', 'index.html', 'mizan.webmanifest', 'mizan-icon-180.png', 'mizan-icon-192.png', 'mizan-icon-512.png'];
 const EXTRA = [];
 self.addEventListener('install', e => {
