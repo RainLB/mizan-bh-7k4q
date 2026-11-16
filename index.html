@@ -304,6 +304,8 @@ input, select { font: inherit; color: inherit; }
 .catline { grid-template-columns: 38px minmax(0,1fr) auto; border: 1px solid var(--line); border-radius: 12px; }
 .field textarea { font: inherit; color: inherit; resize: vertical; }
 .prodcard { cursor: pointer; }
+.prodcard.pc-full { background: color-mix(in srgb, var(--income) 16%, var(--surface)); border-color: color-mix(in srgb, var(--income) 55%, transparent); }
+.prodcard.pc-part { background: color-mix(in srgb, #38A9E8 16%, var(--surface)); border-color: color-mix(in srgb, #38A9E8 55%, transparent); }
 .kv { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 4px 12px; font-size: 14px; }
 .kv b { text-align: end; overflow-wrap: anywhere; }
 .kv .tot { font-weight: 700; border-top: 1px solid var(--line); padding-top: 6px; }
@@ -3594,7 +3596,8 @@ const pjSel = { on: false, ids: new Set() };
 function prodCardHtml(p) {
   const c = prodCalc(p), pct = c.price > 0 ? Math.min(100, c.paid / c.price * 100) : 0, st = stOf(p.status);
   const meta = [typeLabel(p.type), p.client].filter(Boolean).join(' · ');
-  return '<div class="card prodcard" data-prod="' + esc(p.id) + '" role="button" tabindex="0"><div class="head"><div style="min-width:0"><div class="who">' + esc(p.name) + '</div><div class="meta">' + esc(meta) + '</div></div>' +
+  const lvl = c.returned || !(c.price > 0) || c.paid <= 0 ? '' : c.paid >= c.price ? ' pc-full' : ' pc-part';
+  return '<div class="card prodcard' + lvl + '" data-prod="' + esc(p.id) + '" role="button" tabindex="0"><div class="head"><div style="min-width:0"><div class="who">' + esc(p.name) + '</div><div class="meta">' + esc(meta) + '</div></div>' +
     pillHtml(st) + '</div>' + '<div class="tags">' + (p.storage ? '<span class="tag">' + esc(p.storage) + '</span>' : '') + batTag(p.battery) + colTag(p) + '</div>' +
     (c.price > 0 ? '<div class="bar"><i style="width:' + pct.toFixed(1) + '%"></i></div>' : '') +
     '<div class="figures"><span>' + esc(t('pjPaid')) + ' <b class="num">' + money(c.paid) + '</b> / <span class="num">' + money(c.price) + '</span></span>' +
