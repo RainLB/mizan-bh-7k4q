@@ -3815,7 +3815,7 @@ function renderProject() {
     lsAll.forEach(l => { cntG[lotState(l)]++; });
     $('#pj-grp').innerHTML = [['open', 'lotOpenF'], ['closed', 'lotClosedF']].map(k => '<button type="button" data-g="' + k[0] + '" aria-pressed="' + (pjGrp === k[0]) + '">' + esc(t(k[1])) + ' · ' + cntG[k[0]] + '</button>').join('') +
       '<button type="button" data-addmenu aria-pressed="false">' + esc(t('addShort')) + '</button>';
-    const inG = lsAll.filter(l => lotState(l) === pjGrp).sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0));
+    const inG = lsAll.filter(l => lotState(l) === pjGrp).sort(lotByRecv);
     const cnt = id => pjList().filter(p => (pjPartner === 'all' || partnerOf(p.partner).id === pjPartner) && p.lot === id).length;
     $('#pj-lots').innerHTML = '<button type="button" class="chip" data-ls="all" aria-pressed="' + (pjLotSel === 'all') + '">' + esc(t('all')) + '</button>' +
       inG.map(l => '<button type="button" class="chip" data-ls="' + esc(l.id) + '" aria-pressed="' + (pjLotSel === l.id) + '">' + esc(l.name) + ' · ' + cnt(l.id) + '</button>').join('') +
@@ -5004,10 +5004,13 @@ function loanWaHtml(l, lent, rest) {
 /* ---------- Lots : partenaire, puis lots, puis produits ---------- */
 const lots = () => Array.isArray(projCfg().lots) ? projCfg().lots : [];
 const lotOf = id => lots().find(l => l.id === id);
-const isDone = p => { const k = stOf(p.status).kind; return k === 'sold' || k === 'returned'; };
+const isDone = p => stOf(p.status).kind === 'sold'; /* seul un produit vendu compte pour fermer un lot */
 const lotProds = l => pjList().filter(p => p.lot === l.id);
+/* Date de réception d'un lot = la plus ancienne date de réception de ses produits (sinon la date du lot) */
+const lotRecv = l => { const ds = lotProds(l).map(p => p.recv || p.date).filter(Boolean).sort(); return ds[0] || l.date || ''; };
+const lotByRecv = (a, b) => { const x = lotRecv(a), y = lotRecv(b); return x < y ? 1 : x > y ? -1 : 0; };
 const lotSold = l => lotProds(l).filter(isDone).length;
-/* Un lot se ferme tout seul quand tous ses produits sont vendus (ou retournés). « force » permet de le rouvrir ou de le fermer à la main. */
+/* Un lot se ferme tout seul seulement quand tous ses produits sont vendus. « force » permet de le rouvrir ou de le fermer à la main. */
 function lotState(l) {
   const ps = lotProds(l), auto = ps.length && ps.every(isDone) ? 'closed' : 'open';
   if (l.force === 'closed') return 'closed';
@@ -5177,8 +5180,8 @@ async function maintainLots() {
 
 /* ----- Produit : choix du lot ----- */
 function fillLotSelect(partnerId, sel) {
-  const ls = lots().filter(l => partnerOf(l.partner).id === partnerId).sort((a, b) => (a.date < b.date ? 1 : -1));
-  $('#pr-lot').innerHTML = (ls.length ? '' : '<option value="">' + esc(t('lotAutoNew')) + '</option>') + ls.map(l => '<option value="' + esc(l.id) + '">' + esc(l.name) + (l.date ? ' · ' + esc(shortDate(l.date)) : '') + '</option>').join('');
+  const ls = lots().filter(l => partnerOf(l.partner).id === partnerId).sort(lotByRecv);
+  $('#pr-lot').innerHTML = (ls.length ? '' : '<option value="">' + esc(t('lotAutoNew')) + '</option>') + ls.map(l => '<option value="' + esc(l.id) + '">' + esc(l.name) + (lotRecv(l) ? ' · ' + esc(shortDate(lotRecv(l))) : '') + '</option>').join('');
   if (ls.length) $('#pr-lot').value = ls.some(l => l.id === sel) ? sel : ls[0].id;
 }
 $('#pr-partner').addEventListener('change', () => fillLotSelect($('#pr-partner').value, ''));
@@ -5255,7 +5258,7 @@ function openShare(def) {
   const o = [['all', t('shAll')]];
   if (partners().length > 1) partners().forEach(x => o.push(['p:' + x.id, t('shPartner', { n: x.name })]));
   if (pjSel.ids.size) o.push(['sel', t('shSel', { n: pjSel.ids.size })]);
-  const ls = lots().slice().sort((a, b) => (a.date < b.date ? 1 : -1));
+  const ls = lots().slice().sort(lotByRecv);
   $('#sh-scope').innerHTML = o.map(x => '<option value="' + esc(x[0]) + '">' + esc(x[1]) + '</option>').join('') +
     (ls.length ? '<optgroup label="' + esc(t('shLots')) + '">' + ls.map(l => '<option value="l:' + esc(l.id) + '">' + esc(l.name + (partners().length > 1 ? ' · ' + partnerOf(l.partner).name : '')) + '</option>').join('') + '</optgroup>' : '');
   $('#sh-scope').value = [].some.call($('#sh-scope').options, x => x.value === def) ? def : 'all';
