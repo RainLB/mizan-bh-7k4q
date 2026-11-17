@@ -2255,6 +2255,10 @@ Object.assign(DICT, {
   lkDone: ['Crédits et prêts soldés', 'Settled credits and loans', 'القروض المسدَّدة', 'الكريديات والسلف اللي تسداو'],
   lnSearch: ['Rechercher un prêt ou crédit…', 'Search a loan or credit…', 'بحث عن قرض أو دين…', 'قلّب على سلف ولا كريدي…']
 });
+
+Object.assign(DICT, {
+  settleBP: ['Enregistrer {a} comme payé par {w} ? Le produit sera marqué comme soldé.', 'Record {a} as paid by {w}? The product will be marked as fully paid.', 'تسجيل {a} كمدفوع من {w}؟ سيُعتبر المنتج مدفوعًا بالكامل.', 'نسجل {a} بحال خلصها {w}؟ المنتوج غادي يتعلم بحال خالص كامل.']
+});
 /* ---------- Icônes (traits 24x24) et couleurs ---------- */
 const ICONS = {
   cart: '<circle cx="9" cy="20" r="1.2"/><circle cx="18" cy="20" r="1.2"/><path d="M2 3h3l2.7 11.5a2 2 0 0 0 2 1.5h8.2a2 2 0 0 0 2-1.5L21 7H6"/>',
@@ -3808,7 +3812,7 @@ function renderProject() {
   /* Ouverts / Fermés → liste des lots (+ Tous) → tuiles du lot choisi → produits */
   { if (pjLotSel === '__none') { if (pjGrp !== 'open') pjLotSel = 'all'; } else if (pjLotSel !== 'all') { const l = lotOf(pjLotSel); if (!l) pjLotSel = 'all'; else pjGrp = lotState(l); }
     const lsAll = lots().filter(l => pjPartner === 'all' || partnerOf(l.partner).id === pjPartner), cntG = { open: 0, closed: 0 };
-    pjList().filter(p => pjPartner === 'all' || partnerOf(p.partner).id === pjPartner).forEach(p => { cntG[prodLotState(p)]++; });
+    lsAll.forEach(l => { cntG[lotState(l)]++; });
     $('#pj-grp').innerHTML = [['open', 'lotOpenF'], ['closed', 'lotClosedF']].map(k => '<button type="button" data-g="' + k[0] + '" aria-pressed="' + (pjGrp === k[0]) + '">' + esc(t(k[1])) + ' · ' + cntG[k[0]] + '</button>').join('') +
       '<button type="button" data-addmenu aria-pressed="false">' + esc(t('addShort')) + '</button>';
     const inG = lsAll.filter(l => lotState(l) === pjGrp).sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0));
@@ -4157,7 +4161,8 @@ $('#prod-detail').addEventListener('submit', e => { const f = e.target.closest('
 $('#prod-detail').addEventListener('click', e => {
   const b = e.target.closest('[data-pact]'); if (!b) return;
   ({ editprod: () => openProd(state.pid), addexp: () => openExp(null), editexp: () => openExp(b.dataset.id), addpay: () => openPay('pay', null), editpay: () => openPay('pay', b.dataset.id),
-    settle: () => quickPay(prodCalc(Object.assign({ id: state.pid }, state.products[state.pid])).rest), addtr: () => openPay('tr', null), edittr: () => openPay('tr', b.dataset.id), mine: openMine, sharepay: sharePayments, wapay: waPayments })[b.dataset.pact]();
+    settle: () => { const pp = Object.assign({ id: state.pid }, state.products[state.pid]), rest = prodCalc(pp).rest, acc = ($('#pay-prod-acc') || {}).value;
+      askConfirm({ title: t('settleT') + ' · ' + pp.name, body: t('settleBP', { a: money(rest), w: pp.client || pp.name }), ok: t('settleGo'), run: async () => { const keep = $('#pay-prod-acc'); if (keep && acc) keep.value = acc; await quickPay(rest); } }); }, addtr: () => openPay('tr', null), edittr: () => openPay('tr', b.dataset.id), mine: openMine, sharepay: sharePayments, wapay: waPayments })[b.dataset.pact]();
 });
 
 /* ----- Réglages du projet ----- */
