@@ -304,8 +304,8 @@ input, select { font: inherit; color: inherit; }
 .catline { grid-template-columns: 38px minmax(0,1fr) auto; border: 1px solid var(--line); border-radius: 12px; }
 .field textarea { font: inherit; color: inherit; resize: vertical; }
 .prodcard { cursor: pointer; }
-.prodcard.pc-full { background: color-mix(in srgb, var(--income) 16%, var(--surface)); border-color: color-mix(in srgb, var(--income) 55%, transparent); }
-.prodcard.pc-part { background: color-mix(in srgb, #38A9E8 16%, var(--surface)); border-color: color-mix(in srgb, #38A9E8 55%, transparent); }
+.prodcard.pc-full { background: color-mix(in srgb, var(--pc) 26%, var(--surface)); border-color: var(--pc); border-inline-start: 6px solid var(--pc); }
+.prodcard.pc-part { background: color-mix(in srgb, var(--pc) 22%, var(--surface)); border-color: var(--pc); border-inline-start: 6px solid var(--pc); }
 .kv { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 4px 12px; font-size: 14px; }
 .kv b { text-align: end; overflow-wrap: anywhere; }
 .kv .tot { font-weight: 700; border-top: 1px solid var(--line); padding-top: 6px; }
@@ -334,7 +334,9 @@ input, select { font: inherit; color: inherit; }
 #p-range input { min-width: 0; width: 100%; max-width: 140px; padding: 6px 8px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); font-size: 13px; }
 .barseg { display: flex; flex: 1; min-width: 0; overflow-x: auto; scrollbar-width: none; gap: 2px; }
 .barseg::-webkit-scrollbar { display: none; }
-.barseg button { flex: 1 0 auto; padding: 8px 12px; font-size: 13px; }
+.barseg button { flex: 1 1 auto; min-width: 0; padding: 8px 8px; font-size: 13px; overflow: hidden; text-overflow: ellipsis; }
+.barseg button[data-pp="all"] { flex: 0 0 auto; }
+.barseg button[data-addpartner] { flex: 0 0 auto; padding: 8px 12px; font-weight: 700; }
 /* Style sobre : cartes plates, bordures fines, rayons réduits */
 .brand { text-transform: none; letter-spacing: 0; font-weight: 600; font-size: 16px; }
 .stat, .card, .list, .group, .rep-card, .empty { border-radius: 12px; }
@@ -478,6 +480,34 @@ html, body, body * { touch-action: manipulation; -webkit-tap-highlight-color: tr
 button, [role="button"], .tabs, .seg, .chip, .stat, .lotcard .head { -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; }
 .chips[hidden] { display: none; }
 .chipdot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-inline-end: 5px; }
+.grpbar { display: grid; grid-template-columns: 1fr 1fr auto; gap: 8px; }
+.grpbar button[data-addmenu] { --g: var(--accent); padding-inline: 14px; white-space: nowrap; }
+.topname { font-weight: 700; font-size: 16px; flex: 0 1 auto; max-width: 36%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.topname[hidden], .topbar .select.topsel[hidden] { display: none; }
+.topbar .select.topsel { flex: 0 1 36%; max-width: 36%; }
+.grpbar button { padding: 10px 8px; border-radius: 12px; font-weight: 700; font-size: 14px; border: 2px solid var(--g); color: var(--g); background: transparent; }
+.grpbar button[data-g="open"] { --g: #D8392B; }
+.grpbar button[data-g="closed"] { --g: #1F9D55; }
+.grpbar button[aria-pressed="true"] { background: var(--g); color: #fff; }
+.lotchips { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; align-items: center; }
+.lotchips::-webkit-scrollbar { display: none; }
+.lotchips .chip { flex: 0 0 auto; white-space: nowrap; }
+.topq { flex: 1; min-width: 0; height: 40px; padding: 0 12px; border-radius: 12px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); font-size: 15px; }
+.topq[hidden] { display: none; }
+.fold { border: 1px solid var(--line); border-radius: 12px; padding: 0 12px; }
+.fold > summary { cursor: pointer; padding: 12px 0; font-weight: 600; list-style: none; display: flex; justify-content: space-between; gap: 8px; }
+.fold > summary::-webkit-details-marker { display: none; }
+.fold > summary::after { content: '›'; transform: rotate(90deg); font-size: 20px; line-height: 1; color: var(--ink-2); transition: transform .15s; }
+.fold[open] > summary::after { transform: rotate(-90deg); }
+.fold[open] { padding-bottom: 12px; }
+.fold > .foldbody { display: flex; flex-direction: column; gap: 10px; }
+.fold .fold { margin: 0; }
+.lnq { width: 100%; height: 42px; padding: 0 12px; border-radius: 12px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); font-size: 15px; }
+.lnq[hidden] { display: none; }
+.card.lk.done { background: color-mix(in srgb, var(--k) 9%, var(--surface)); }
+.card.lk.done .who, .card.lk.done .figures b { color: var(--ink-2); }
+.card.lk.done .bar > i { background: var(--k); }
+.payments button.ladd span:last-child { color: var(--k); font-weight: 600; }
 </style>
 
 <style>.app{padding-top:max(12px,env(safe-area-inset-top,0px))} body{-webkit-text-size-adjust:100%;overscroll-behavior-y:none} input,select,textarea{font-size:16px} html,body,body *{touch-action:manipulation}</style></head><body>
@@ -486,6 +516,8 @@ button, [role="button"], .tabs, .seg, .chip, .stat, .lotcard .head { -webkit-tou
     <button class="icon-btn" id="btn-back" data-al="back" hidden><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button>
     <select class="select" id="acc-filter" data-al="accFilterAria"></select>
     <div class="seg barseg" id="topseg" hidden></div>
+    <span class="topname" id="pj-name" hidden></span><select class="select topsel" id="pj-sel" data-al="pjSwitchL" hidden></select>
+    <input id="pj-q" class="topq" type="search" data-ph="pjSearch" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search" hidden>
     <button class="icon-btn" id="btn-eye" data-al="privBtn" hidden><svg viewBox="0 0 24 24"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button>
     <button class="icon-btn" id="btn-search" data-al="searchL"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></button>
     <button class="icon-btn" id="btn-settings" data-al="settings"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3h0a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9v0a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button>
@@ -566,11 +598,10 @@ button, [role="button"], .tabs, .seg, .chip, .stat, .lotcard .head { -webkit-tou
   </section>
 
   <section class="view" id="view-project" hidden>
-    <div class="field"><input id="pj-q" type="search" data-ph="pjSearch" autocomplete="off"></div>
-    <div class="section-title" data-i="project"></div>
-    <div class="field" id="pj-switch" hidden><select class="select" id="pj-sel" data-al="pjSwitchL"></select></div>
+    <div class="seg barseg" id="pj-partbar"></div>
     <button class="alertbar" id="pj-alert" hidden></button>
-    <div class="field" id="pj-lotsel-f" hidden><select class="select" id="pj-lotsel" data-al="pjLotSelL"></select></div>
+    <div class="grpbar" id="pj-grp"></div>
+    <div class="chips lotchips" id="pj-lots"></div>
     <div class="loan-summary" style="grid-template-columns:1fr 1fr">
       <button type="button" class="stat tog" data-tog="profit"><div class="k" id="pj-profit-l"></div><div class="v inc num" id="pj-profit">0</div></button>
       <button type="button" class="stat tog" data-tog="collect"><div class="k" id="pj-collect-l"></div><div class="v loan num" id="pj-collect">0</div></button>
@@ -578,13 +609,12 @@ button, [role="button"], .tabs, .seg, .chip, .stat, .lotcard .head { -webkit-tou
       <button type="button" class="stat tog" data-tog="buy"><div class="k" id="pj-buy-l"></div><div class="v num" id="pj-buy">0</div></button>
     </div>
     <div class="rep-card" id="pj-statusbox"></div>
-    <div class="rep-card" id="pj-gains"></div>
-    <button class="btn" id="btn-add-prod" data-i="newProd" style="width:100%"></button><button id="btn-pset" hidden></button>
-    <button class="btn ghost" id="btn-pstats" data-i="pjStatsBtn" style="width:100%"></button>
-    <div class="two"><button class="btn ghost small" id="btn-select" data-i="selBtn"></button><button class="btn small" id="btn-share" data-i="shareBtn"></button></div>
-    <div class="chips" id="pj-lotbar"></div>
     <div class="chips" id="pj-filter"></div>
     <div id="pj-list" style="display:flex;flex-direction:column;gap:12px"></div>
+    <div class="rep-card" id="pj-gains"></div>
+    <button class="btn" id="btn-add-prod" data-i="newProd" hidden></button><button id="btn-pset" hidden></button>
+    <button class="btn ghost" id="btn-pstats" data-i="pjStatsBtn" style="width:100%"></button>
+    <button class="btn ghost small" id="btn-select" data-i="selBtn" hidden></button><button class="btn small" id="btn-share" data-i="shareBtn" style="width:100%"></button>
     <div id="pj-charts" style="display:flex;flex-direction:column;gap:14px"></div>
   </section>
 
@@ -604,6 +634,7 @@ button, [role="button"], .tabs, .seg, .chip, .stat, .lotcard .head { -webkit-tou
       <div class="stat"><div class="k" data-i="owed"></div><div class="v loan num" id="ls-owed">0</div></div>
       <div class="stat"><div class="k" data-i="owe"></div><div class="v exp num" id="ls-owe">0</div></div>
     </div>
+    <input id="ln-q" class="lnq" type="search" data-ph="lnSearch" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search">
     <button class="btn" id="btn-loan" data-i="btnLoan"></button>
     <div id="loans" style="display:flex;flex-direction:column;gap:12px"></div>
   </section>
@@ -658,14 +689,17 @@ button, [role="button"], .tabs, .seg, .chip, .stat, .lotcard .head { -webkit-tou
       <div class="lkrow"><label for="lk-borrowed" data-i="lkCredit"></label><input type="color" id="lk-borrowed"></div>
       <div class="lkrow"><label for="lk-lent" data-i="lkLoan"></label><input type="color" id="lk-lent"></div>
       <div class="lkrow"><label for="lk-project" data-i="lkProj"></label><input type="color" id="lk-project"></div>
+      <div class="lkrow"><label for="lk-done" data-i="lkDone"></label><input type="color" id="lk-done"></div>
       <button type="button" class="btn ghost small" id="lk-reset" data-i="resetColors"></button>
     </div>
-      <div class="group">
-        <h3 data-i="waLoanT"></h3>
+      <details class="fold">
+        <summary><span data-i="waLoanT"></span></summary>
+        <div class="foldbody">
         <p class="help" data-i="waLoanHelp"></p>
         <div class="field"><label for="set-wa-lent" data-i="waLentL"></label><textarea id="set-wa-lent" rows="3" class="notearea"></textarea></div>
         <div class="field"><label for="set-wa-borrowed" data-i="waBorrowedL"></label><textarea id="set-wa-borrowed" rows="3" class="notearea"></textarea></div>
-      </div>
+        </div>
+      </details>
     </div>
     <div data-scope="zakat" class="scope" hidden>
       <div class="card" id="zk-settings"></div>
@@ -791,6 +825,23 @@ button, [role="button"], .tabs, .seg, .chip, .stat, .lotcard .head { -webkit-tou
   </form>
 </div>
 
+<div class="scrim" id="sheet-ladd" hidden>
+  <form class="sheet" id="form-ladd" autocomplete="off">
+    <h2 id="la-title"></h2>
+    <div class="note" id="la-hint"></div>
+    <div class="field"><label for="la-amount" data-i="amountL"></label><input id="la-amount" type="number" inputmode="decimal" min="0" step="0.01"></div>
+    <div class="field"><label for="la-acc" id="la-acc-l"></label><select class="select" id="la-acc"></select></div>
+    <div class="field"><label for="la-date" data-i="date"></label><input id="la-date" type="date"></div>
+    <div class="field"><label for="la-note" data-i="note"></label><input id="la-note" type="text" maxlength="60"></div>
+    <div class="err" id="la-err" role="alert"></div>
+    <div class="row-actions">
+      <button type="button" class="btn danger" id="la-del"></button>
+      <button type="button" class="btn ghost" data-close data-i="cancel"></button>
+      <button type="submit" class="btn" data-i="save"></button>
+    </div>
+  </form>
+</div>
+
 <div class="scrim" id="sheet-edit" hidden>
   <form class="sheet" id="form-edit" autocomplete="off">
     <h2 id="ed-title"></h2>
@@ -882,6 +933,7 @@ button, [role="button"], .tabs, .seg, .chip, .stat, .lotcard .head { -webkit-tou
     <h2 data-i="shTitle"></h2>
     <div class="field"><label for="sh-scope" data-i="shScope"></label><select class="select" id="sh-scope"></select></div>
     <div class="note" id="sh-note"></div>
+    <button type="button" class="btn ghost small" id="sh-pick" data-i="shPick"></button>
     <div class="row-actions">
       <button type="button" class="btn small" data-shfmt="pdf" data-i="shPdf"></button>
       <button type="button" class="btn small" data-shfmt="xls" data-i="shXls"></button>
@@ -1130,32 +1182,33 @@ button, [role="button"], .tabs, .seg, .chip, .stat, .lotcard .head { -webkit-tou
     <div class="two">
       <div class="field"><label for="ps-role" data-i="pjRoleL"></label><select class="select" id="ps-role"><option value="1">1</option><option value="2">2</option></select></div>
     </div>
-    <div class="sub" data-i="setStatuses"></div>
-    <div class="note" data-i="stKindHint"></div>
+    <details class="fold" id="ps-f-st"><summary><span data-i="setStatuses"></span></summary><div class="foldbody">    <div class="note" data-i="stKindHint"></div>
     <div id="ps-statuses" style="display:flex;flex-direction:column;gap:8px"></div>
     <button type="button" class="btn ghost small" id="ps-add-st" data-i="addStatus"></button>
-    <div class="sub" data-i="pjOther"></div>
-    <div class="field"><label for="ps-rate" id="ps-rate-l"></label><input id="ps-rate" type="number" inputmode="decimal" min="0" step="0.0001"></div>
+</div></details>
+    <details class="fold" id="ps-f-oth"><summary><span data-i="pjOther"></span></summary><div class="foldbody">    <div class="field"><label for="ps-rate" id="ps-rate-l"></label><input id="ps-rate" type="number" inputmode="decimal" min="0" step="0.0001"></div>
+    <div class="field"><label data-i="pcColT"></label><div class="two"><div class="field"><label for="ps-cfull" data-i="pcFull"></label><input type="color" id="ps-cfull"></div><div class="field"><label for="ps-cpart" data-i="pcPart"></label><input type="color" id="ps-cpart"></div></div><div class="note" data-i="pcColH"></div></div>
     <div class="field"><label for="ps-late" data-i="lateDaysL"></label><input id="ps-late" type="number" inputmode="numeric" min="1" max="365" step="1"><div class="note" data-i="lateDaysH"></div></div>
     <div class="field"><label for="ps-wa" data-i="waTplL"></label><textarea id="ps-wa" rows="4" class="notearea"></textarea><div class="note" data-i="waTplH"></div></div>
-    <div class="sub" data-i="setLists"></div>
-    <div class="field"><label for="ps-names" data-i="setProdNames"></label><textarea id="ps-names" rows="5"></textarea></div>
+</div></details>
+    <details class="fold" id="ps-f-lists"><summary><span data-i="setLists"></span></summary><div class="foldbody">    <div class="field"><label for="ps-names" data-i="setProdNames"></label><textarea id="ps-names" rows="5"></textarea></div>
     <div class="field"><label for="ps-types" data-i="setTypes"></label><textarea id="ps-types" rows="4"></textarea></div>
     <div class="field"><label for="ps-storages" data-i="setStorages"></label><textarea id="ps-storages" rows="4"></textarea></div>
-    <div class="field"><label data-i="setColors"></label><div id="ps-colors" style="display:flex;flex-direction:column;gap:8px"></div><button type="button" class="btn ghost small" id="ps-add-col" data-i="addColor"></button></div>
-    <div class="sub" data-i="batTitle"></div>
-    <div class="two">
+    <details class="fold" id="ps-colfold"><summary><span data-i="setColors"></span> <b id="ps-colcount"></b></summary><div class="field"><div id="ps-colors" style="display:flex;flex-direction:column;gap:8px"></div><button type="button" class="btn ghost small" id="ps-add-col" data-i="addColor"></button></div></details>
+</div></details>
+    <details class="fold" id="ps-f-bat"><summary><span data-i="batTitle"></span></summary><div class="foldbody">    <div class="two">
       <div class="field"><label for="ps-bgood" data-i="batGood"></label><input id="ps-bgood" type="number" inputmode="numeric" min="1" max="100"></div>
       <div class="field"><label for="ps-bmid" data-i="batMid"></label><input id="ps-bmid" type="number" inputmode="numeric" min="1" max="100"></div>
     </div>
     <div class="field"><label data-i="batCols"></label><div class="colors3"><input type="color" id="ps-bcg"><input type="color" id="ps-bcm"><input type="color" id="ps-bcb"></div></div>
+</div></details>
     <div class="field"><button type="button" class="btn ghost" id="ps-import" data-i="pjImport"></button><input type="file" id="ps-file" accept=".xlsx,.xls,.csv" hidden><div class="note" data-i="pjImportNote"></div></div>
-    <div class="sub" data-i="pjMgmtT"></div>
-    <div class="field"><label for="ps-multi" data-i="pjMultiL"></label><select class="select" id="ps-multi"><option value="0" data-i="pjMultiOff"></option><option value="1" data-i="pjMultiOn"></option></select><div class="note" data-i="pjMultiH"></div></div>
+    <details class="fold" id="ps-f-pj"><summary><span data-i="pjMgmtT"></span></summary><div class="foldbody">    <div class="field"><label for="ps-multi" data-i="pjMultiL"></label><select class="select" id="ps-multi"><option value="0" data-i="pjMultiOff"></option><option value="1" data-i="pjMultiOn"></option></select><div class="note" data-i="pjMultiH"></div></div>
     <div id="ps-pj-btns" style="display:flex;flex-direction:column;gap:8px" hidden>
       <div class="two"><button type="button" class="btn ghost small" id="ps-pj-add" data-i="pjAdd"></button><button type="button" class="btn ghost small" id="ps-pj-merge" data-i="pjMerge"></button></div>
       <button type="button" class="btn danger small" id="ps-pj-del" data-i="pjDelete"></button>
     </div>
+</div></details>
     <div class="err" id="ps-err" role="alert"></div>
     <div class="row-actions">
       <button type="button" class="btn ghost" data-close data-i="cancel"></button>
@@ -1174,6 +1227,25 @@ button, [role="button"], .tabs, .seg, .chip, .stat, .lotcard .head { -webkit-tou
       <button type="submit" class="btn" data-i="pjMergeGo"></button>
     </div>
   </form>
+</div>
+
+<div class="scrim" id="sheet-addmenu" hidden>
+  <div class="sheet">
+    <h2 data-i="addShort"></h2>
+    <button type="button" class="btn" id="am-prod" data-i="newProd"></button>
+    <button type="button" class="btn ghost" id="am-lot" data-i="lotNew"></button>
+    <div class="row-actions"><button type="button" class="btn ghost" data-close data-i="cancel"></button></div>
+  </div>
+</div>
+
+<div class="scrim" id="sheet-lotmenu" hidden>
+  <div class="sheet" id="form-lotmenu">
+    <h2 data-i="lotMenuT"></h2>
+    <button type="button" class="btn" id="lm-add" data-i="lotNew"></button>
+    <button type="button" class="btn" id="lm-prod"></button>
+    <button type="button" class="btn ghost" id="lm-edit"></button>
+    <div class="row-actions"><button type="button" class="btn ghost" data-close data-i="cancel"></button></div>
+  </div>
 </div>
 
 <div class="scrim" id="sheet-newpj" hidden>
@@ -2145,6 +2217,44 @@ Object.assign(DICT, {
   pjMergeNote: ['Ses produits et ses lots passent dans « {n} » ; les partenaires de même nom sont regroupés, les autres sont ajoutés. Les réglages de « {n} » s\'appliquent.', 'Its products and lots move into “{n}”; partners with the same name are combined, others are added. The settings of “{n}” apply.', 'تنتقل منتجاته ودفعاته إلى «{n}»؛ يُدمج الشركاء بنفس الاسم ويُضاف الآخرون. تُطبَّق إعدادات «{n}».', 'المنتوجات واللوطات ديالو كيمشيو ل «{n}»؛ الشركاء اللي بنفس السمية كيتجمعو والباقي كيتزاد. كتطبق إعدادات «{n}».'],
   pjMergeBody: ['« {a} » ({n} produit(s)) sera fusionné dans « {b} » puis supprimé. Cette action est définitive : pense à faire une sauvegarde avant.', '“{a}” ({n} product(s)) will be merged into “{b}” and then deleted. This cannot be undone: consider making a backup first.', 'سيتم دمج «{a}» ({n} منتج) في «{b}» ثم حذفه. لا يمكن التراجع: ننصح بنسخة احتياطية أولًا.', 'غادي يتدمج «{a}» ({n} د المنتوجات) ف «{b}» وبعدها يتمسح. ما يمكنش ترجع: دير نسخة احتياطية قبل.']
 });
+
+Object.assign(DICT, {
+  pjLotsChip: ['Lots', 'Lots', 'الدفعات', 'اللوطات'],
+  pcColT: ['Couleurs des cartes produits', 'Product card colours', 'ألوان بطاقات المنتجات', 'ألوان د كاردات المنتوجات'],
+  pcFull: ['Payé à 100 %', 'Fully paid', 'مدفوع بالكامل', 'خالص كامل'],
+  pcPart: ['Paiement en cours', 'Payment in progress', 'الدفع جارٍ', 'الخلاص جاري'],
+  pcColH: ['Une carte sans paiement reste blanche.', 'A card with no payment stays white.', 'البطاقة دون دفع تبقى بيضاء.', 'الكارت بلا خلاص كيبقى أبيض.']
+});
+
+Object.assign(DICT, { lotMenuT: ['Lots', 'Lots', 'الدفعات', 'اللوطات'] });
+
+Object.assign(DICT, {
+  pjSearch: ['Rechercher…', 'Search…', 'بحث…', 'قلّب…'],
+  lotAutoNew: ['Un lot du mois sera créé', 'A monthly batch will be created', 'ستُنشأ دفعة الشهر', 'غادي يتصاوب لو د الشهر'],
+  shPick: ['Choisir les produits à la main…', 'Pick products by hand…', 'اختيار المنتجات يدويًا…', 'خير المنتوجات بيدك…']
+});
+
+Object.assign(DICT, {
+  addAmt: ['Ajouter un montant', 'Add an amount', 'إضافة مبلغ', 'زيد مبلغ'],
+  addEdit: ['Modifier le montant ajouté', 'Edit the added amount', 'تعديل المبلغ المضاف', 'بدّل المبلغ اللي تزاد'],
+  addedAmt: ['Montant ajouté', 'Amount added', 'مبلغ مضاف', 'مبلغ تزاد'],
+  addLentEv: ['Prêt supplémentaire à {w}', 'Extra loan to {w}', 'سلف إضافي ل {w}', 'سلف زايد ل {w}'],
+  addBorrowedEv: ['Emprunt supplémentaire à {w}', 'Extra borrowed from {w}', 'اقتراض إضافي من {w}', 'سلف زايد من عند {w}'],
+  totalNow: ['total {a}', 'total {a}', 'المجموع {a}', 'المجموع {a}'],
+  addHintL: ['Tu as encore prêté de l\'argent à cette personne. Total actuel : {a}. Ce montant sera ajouté au total et tracé dans l\'historique, à part des remboursements.', 'You lent more to this person. Current total: {a}. This amount is added to the total and recorded in the history, separate from repayments.', 'أقرضت هذا الشخص مبلغًا إضافيًا. المجموع الحالي: {a}. يُضاف إلى المجموع ويُسجَّل في السجل بشكل منفصل عن المسترجَع.', 'سلفتي هاد الشخص فلوس زايدين. المجموع دابا: {a}. كيتزاد للمجموع وكيتسجل فالتاريخ بعيد على اللي رجع.'],
+  addHintB: ['Tu as encore emprunté de l\'argent à cette personne. Total actuel : {a}. Ce montant sera ajouté au total et tracé dans l\'historique, à part des remboursements.', 'You borrowed more from this person. Current total: {a}. This amount is added to the total and recorded in the history, separate from repayments.', 'اقترضت من هذا الشخص مبلغًا إضافيًا. المجموع الحالي: {a}. يُضاف إلى المجموع ويُسجَّل في السجل بشكل منفصل عن المسدَّد.', 'تسلفتي من هاد الشخص فلوس زايدين. المجموع دابا: {a}. كيتزاد للمجموع وكيتسجل فالتاريخ بعيد على اللي رجعتي.'],
+  addAccL: ['Compte d\'où sort l\'argent', 'Account the money leaves', 'الحساب الذي يخرج منه المال', 'الحساب اللي خرجات منو الفلوس'],
+  addAccB: ['Compte qui reçoit l\'argent', 'Account receiving the money', 'الحساب الذي يستلم المال', 'الحساب اللي دخلات ليه الفلوس'],
+  addDelWarn: ['Ce montant ajouté sera supprimé et le total du prêt/crédit sera diminué d\'autant.', 'This added amount will be deleted and the loan total reduced accordingly.', 'سيُحذف هذا المبلغ المضاف ويُنقص مجموع القرض بنفس القيمة.', 'غادي يتمسح هاد المبلغ وينقص المجموع بنفس القيمة.'],
+  payDelWarn: ['Ce remboursement sera supprimé et le reste à régler augmentera d\'autant.', 'This repayment will be deleted and the remaining balance will increase accordingly.', 'سيُحذف هذا المسترجَع ويزيد المتبقي بنفس القيمة.', 'غادي يتمسح هاد الخلاص وغادي يزيد الباقي بنفس القيمة.'],
+  settleT: ['Tout régler', 'Settle in full', 'تسوية كاملة', 'خلص كلشي'],
+  settleBL: ['Enregistrer {a} comme reçu de {w} ? Le prêt sera marqué comme soldé.', 'Record {a} as received from {w}? The loan will be marked as settled.', 'تسجيل {a} كمستلَم من {w}؟ سيُعتبر القرض مسدَّدًا.', 'نسجل {a} بحال توصلتي بيها من عند {w}؟ السلف غادي يتسد.'],
+  settleBB: ['Enregistrer {a} comme rendu à {w} ? Le crédit sera marqué comme soldé.', 'Record {a} as paid back to {w}? The debt will be marked as settled.', 'تسجيل {a} كمُسدَّد ل {w}؟ سيُعتبر الدين مسدَّدًا.', 'نسجل {a} بحال رجعتي ليه {w}؟ الكريدي غادي يتسد.'],
+  settleGo: ['Confirmer', 'Confirm', 'تأكيد', 'أكد'],
+  lnDoneT: ['Soldés', 'Settled', 'المسدَّدة', 'اللي تسداو'],
+  lkDone: ['Crédits et prêts soldés', 'Settled credits and loans', 'القروض المسدَّدة', 'الكريديات والسلف اللي تسداو'],
+  lnSearch: ['Rechercher un prêt ou crédit…', 'Search a loan or credit…', 'بحث عن قرض أو دين…', 'قلّب على سلف ولا كريدي…']
+});
 /* ---------- Icônes (traits 24x24) et couleurs ---------- */
 const ICONS = {
   cart: '<circle cx="9" cy="20" r="1.2"/><circle cx="18" cy="20" r="1.2"/><path d="M2 3h3l2.7 11.5a2 2 0 0 0 2 1.5h8.2a2 2 0 0 0 2-1.5L21 7H6"/>',
@@ -2279,7 +2389,7 @@ const fmt = n => {
   const v = round2(n);
   return v.toLocaleString(loc(), { minimumFractionDigits: Number.isInteger(v) ? 0 : 2, maximumFractionDigits: 2 });
 };
-const LK_DEF = { borrowed: '#D9534F', lent: '#2E8FA3', project: '#7B5CC8' };
+const LK_DEF = { borrowed: '#D9534F', lent: '#2E8FA3', project: '#7B5CC8', done: '#8E97A4' };
 const lkCol = k => (state.settings.lkColors && state.settings.lkColors[k]) || LK_DEF[k];
 const RTL = () => LANG === 'ar' || LANG === 'ary';
 const lidx = () => LANG === 'ary' ? 2 : Math.max(0, LANGS.indexOf(LANG));
@@ -2371,7 +2481,10 @@ const inRange = (d, r) => d >= r[0] && d <= r[1];
 
 /* ---------- Calculs (f = 'all' ou l'id d'un compte) ---------- */
 const paidOf = l => (l.payments || []).reduce((s, p) => s + Number(p.amount || 0), 0);
-const remainingOf = l => Math.max(0, round2(Number(l.amount || 0) - paidOf(l)));
+/* Montants ajoutés après coup (ex. j'ai prêté 500 puis encore 100) : tracés dans l'historique */
+const addsOf = l => (l.adds || []).reduce((s, a) => s + Number(a.amount || 0), 0);
+const totalOf = l => round2(Number(l.amount || 0) + addsOf(l));
+const remainingOf = l => Math.max(0, round2(totalOf(l) - paidOf(l)));
 const accIncluded = id => { const a = accs().find(x => x.id === accId(id)); return !a || a.inTotal !== false; };
 const takes = (f, id) => f === '*' || (f === 'all' ? accIncluded(id) : f === id);
 
@@ -2386,6 +2499,7 @@ function balanceFor(f) {
   Object.values(state.loans).forEach(l => {
     const s = l.dir === 'lent' ? -1 : 1;
     if (takes(f, accId(l.acc))) b += s * l.amount;
+    (l.adds || []).forEach(a => { if (takes(f, accId(a.acc || l.acc))) b += s * a.amount; });
     (l.payments || []).forEach(p => { if (takes(f, accId(p.acc || l.acc))) b -= s * p.amount; });
   });
   Object.values(state.products || {}).forEach(pr => {
@@ -2409,6 +2523,7 @@ function periodStats(r, f) {
   Object.values(state.loans).forEach(l => {
     const s = l.dir === 'lent' ? -1 : 1;
     if (takes(f, accId(l.acc)) && inRange(l.date, r)) loan += s * l.amount;
+    (l.adds || []).forEach(a => { if (takes(f, accId(a.acc || l.acc)) && inRange(a.date, r)) loan += s * a.amount; });
     (l.payments || []).forEach(p => { if (takes(f, accId(p.acc || l.acc)) && inRange(p.date, r)) loan -= s * p.amount; });
   });
   return { inc: round2(inc), exp: round2(exp), loan: round2(loan), byCat: byCat };
@@ -2657,10 +2772,15 @@ function buildEvents(f) {
     const lent = l.dir === 'lent';
     if (takes(f, accId(l.acc))) ev.push({ key: 'loan:' + id, date: l.date, ts: l.ts || 0, title: t(lent ? 'titleLent' : 'titleBorrowed', { w: l.who }), sub: (l.note || t('kCredit')) + where(l.acc),
       txt: signed(lent ? -l.amount : l.amount), cls: 'loan', color: '#B06F10', icon: 'coin', warn: true, raw: l.amount });
+    (l.adds || []).forEach(a => {
+      if (!takes(f, accId(a.acc || l.acc))) return;
+      ev.push({ key: 'ladd:' + id + ':' + a.id, date: a.date, ts: a.ts || 0, title: t(lent ? 'addLentEv' : 'addBorrowedEv', { w: l.who }), sub: (a.note || t('addedAmt')) + where(a.acc || l.acc),
+        txt: signed(lent ? -a.amount : a.amount), cls: 'loan', color: '#B06F10', icon: 'plus', raw: a.amount });
+    });
     (l.payments || []).forEach(p => {
       if (!takes(f, accId(p.acc || l.acc))) return;
       ev.push({ key: 'pay:' + id + ':' + p.id, date: p.date, ts: p.ts || 0, title: t(lent ? 'payFrom' : 'payTo', { w: l.who }),
-        sub: t('leftOf', { a: money(remainingOf(l)), b: money(l.amount) }) + where(p.acc || l.acc), txt: signed(lent ? p.amount : -p.amount), cls: 'inc', color: '#0B7A66', icon: 'coin', raw: p.amount });
+        sub: t('leftOf', { a: money(remainingOf(l)), b: money(totalOf(l)) }) + where(p.acc || l.acc), txt: signed(lent ? p.amount : -p.amount), cls: 'inc', color: '#0B7A66', icon: 'coin', raw: p.amount });
     });
   });
   Object.keys(state.products || {}).forEach(pid => {
@@ -2708,37 +2828,48 @@ function renderSearch() {
 }
 
 /* ---------- Crédits ---------- */
+let lnQ = '';
+function loanCardHtml(l, multi) {
+  const lent = l.dir === 'lent', paid = paidOf(l), rest = remainingOf(l), tot = totalOf(l), pct = tot > 0 ? Math.min(100, paid / tot * 100) : 0, done = rest <= 0;
+  const hist = (l.payments || []).map(p => ({ k: 'p', x: p })).concat((l.adds || []).map(a => ({ k: 'a', x: a }))).sort((a, b) => (a.x.date < b.x.date ? 1 : a.x.date > b.x.date ? -1 : (b.x.ts || 0) - (a.x.ts || 0)));
+  const meta = t(lent ? 'lentOn' : 'borrowedOn', { a: money(l.amount), d: shortDate(l.date) }) + ((l.adds || []).length ? ' · ' + t('totalNow', { a: money(tot) }) : '') + (l.note ? ' · ' + l.note : '') + (multi ? ' · ' + accName(accOf(l.acc)) : '');
+  return '<div class="card lk' + (done ? ' done' : '') + '" style="--k:' + (done ? lkCol('done') : lkCol(lent ? 'lent' : 'borrowed')) + '"><div class="head"><div style="min-width:0"><div class="who">' + esc(l.who) + '</div><div class="meta">' + esc(meta) + '</div></div>' +
+    '<span class="pill ' + (rest > 0 ? 'open' : 'done') + '">' + esc(t(rest > 0 ? 'open' : 'done')) + '</span>' +
+    '<button class="icon-btn" data-laddnew="' + esc(l.id) + '" aria-label="' + esc(t('addAmt') + ' : ' + l.who) + '" title="' + esc(t('addAmt')) + '">' + ico('plus') + '</button>' +
+    '<button class="icon-btn" data-loanedit="' + esc(l.id) + '" aria-label="' + esc(t('edit') + ' : ' + l.who) + '">' + ico('pencil') + '</button></div>' +
+    '<div class="bar" role="img" aria-label="' + esc(t('paidAria', { p: Math.round(pct) })) + '"><i style="width:' + pct.toFixed(1) + '%"></i></div>' +
+    '<div class="figures"><span>' + esc(t(lent ? 'received' : 'returned')) + ' <b class="num">' + money(paid) + '</b></span><span>' + esc(t('rest')) + ' <b class="num">' + money(rest) + '</b></span></div>' + loanWaHtml(l, lent, rest) +
+    (rest > 0 ? '<form class="pay-form" data-pay="' + esc(l.id) + '" style="flex-wrap:wrap"><input id="pay-' + esc(l.id) + '" type="number" inputmode="decimal" min="0" step="0.01" placeholder="' + esc(t('payPh')) + '" aria-label="' + esc(t('payPh')) + '">' +
+      '<button type="submit" class="btn small">' + esc(t(lent ? 'received' : 'returned')) + '</button><button type="button" class="btn ghost small" data-settle="' + esc(l.id) + '">' + esc(t('allBtn')) + '</button>' +
+      '<select class="select" style="flex-basis:100%" aria-label="' + esc(t(lent ? 'payAccL' : 'payAccB')) + '" title="' + esc(t(lent ? 'payAccL' : 'payAccB')) + '">' + accs().map(a => '<option value="' + esc(a.id) + '"' + (accId(l.acc) === a.id ? ' selected' : '') + '>' + esc(accName(a)) + '</option>').join('') + '</select></form>' : '') +
+    (hist.length ? '<div class="payments">' + hist.map(h => h.k === 'p'
+      ? '<button type="button" data-lpay="' + esc(l.id) + ':' + esc(h.x.id) + '" style="display:flex;justify-content:space-between;gap:10px;text-align:start"><span>' + esc(shortDate(h.x.date) + ' · ' + accName(accOf(h.x.acc || l.acc))) + '</span><span class="num">' + money(h.x.amount) + '</span></button>'
+      : '<button type="button" class="ladd" data-ladd="' + esc(l.id) + ':' + esc(h.x.id) + '" style="display:flex;justify-content:space-between;gap:10px;text-align:start"><span>' + esc(shortDate(h.x.date) + ' · ' + t('addedAmt') + (h.x.note ? ' · ' + h.x.note : '')) + '</span><span class="num">+ ' + money(h.x.amount) + '</span></button>').join('') + '</div>' : '') + '</div>';
+}
 function renderLoans() {
-  const f = 'all', multi = accs().length > 1, lk = state.lk;
+  const multi = accs().length > 1, lk = state.lk, words = norm(lnQ).split(/\s+/).filter(Boolean);
+  $('#ln-q').hidden = lk === 'project';
   const all = lk === 'project' ? [] : Object.keys(state.loans).map(id => Object.assign({ id: id }, state.loans[id])).filter(l => lk === 'all' || (lk === 'lent') === (l.dir === 'lent'));
   let owed = 0, owe = 0;
   all.forEach(l => { if (l.dir === 'lent') owed += remainingOf(l); else owe += remainingOf(l); });
-  const debts = (lk === 'all' || lk === 'project') ? projDebts() : [];
-  debts.forEach(d => { owe += d.c.toGive; });
+  const debts = (lk === 'all' || lk === 'project') && !words.length ? projDebts() : [];
+  (lk === 'all' || lk === 'project' ? projDebts() : []).forEach(d => { owe += d.c.toGive; });
   $('#ls-owed').textContent = money(owed); $('#ls-owe').textContent = money(owe);
   $('#ls-owed').style.color = lkCol('lent'); $('#ls-owe').style.color = lkCol('borrowed');
   const box = $('#loans');
   if (!all.length && !debts.length) { box.innerHTML = '<div class="empty"><strong>' + esc(t('noLoanT')) + '</strong>' + esc(t('noLoanB')) + '</div>'; return; }
-  all.sort((a, b) => (remainingOf(b) > 0) - (remainingOf(a) > 0) || (a.date < b.date ? 1 : -1));
-  box.innerHTML = all.map(l => {
-    const lent = l.dir === 'lent', paid = paidOf(l), rest = remainingOf(l), pct = l.amount > 0 ? Math.min(100, paid / l.amount * 100) : 0;
-    const pays = (l.payments || []).slice().sort((a, b) => (a.date < b.date ? 1 : -1));
-    const meta = t(lent ? 'lentOn' : 'borrowedOn', { a: money(l.amount), d: shortDate(l.date) }) + (l.note ? ' · ' + l.note : '') + (multi ? ' · ' + accName(accOf(l.acc)) : '');
-    return '<div class="card lk" style="--k:' + lkCol(lent ? 'lent' : 'borrowed') + '"><div class="head"><div style="min-width:0"><div class="who">' + esc(l.who) + '</div><div class="meta">' + esc(meta) + '</div></div>' +
-      '<span class="pill ' + (rest > 0 ? 'open' : 'done') + '">' + esc(t(rest > 0 ? 'open' : 'done')) + '</span>' +
-      '<button class="icon-btn" data-loanedit="' + esc(l.id) + '" aria-label="' + esc(t('edit') + ' : ' + l.who) + '">' + ico('pencil') + '</button></div>' +
-      '<div class="bar" role="img" aria-label="' + esc(t('paidAria', { p: Math.round(pct) })) + '"><i style="width:' + pct.toFixed(1) + '%"></i></div>' +
-      '<div class="figures"><span>' + esc(t(lent ? 'received' : 'returned')) + ' <b class="num">' + money(paid) + '</b></span><span>' + esc(t('rest')) + ' <b class="num">' + money(rest) + '</b></span></div>' + loanWaHtml(l, lent, rest) +
-      (rest > 0 ? '<form class="pay-form" data-pay="' + esc(l.id) + '" style="flex-wrap:wrap"><input id="pay-' + esc(l.id) + '" type="number" inputmode="decimal" min="0" step="0.01" placeholder="' + esc(t('payPh')) + '" aria-label="' + esc(t('payPh')) + '">' +
-        '<button type="submit" class="btn small">' + esc(t(lent ? 'received' : 'returned')) + '</button><button type="button" class="btn ghost small" data-settle="' + esc(l.id) + '">' + esc(t('allBtn')) + '</button>' +
-        '<select class="select" style="flex-basis:100%" aria-label="' + esc(t(lent ? 'payAccL' : 'payAccB')) + '" title="' + esc(t(lent ? 'payAccL' : 'payAccB')) + '">' + accs().map(a => '<option value="' + esc(a.id) + '"' + (accId(l.acc) === a.id ? ' selected' : '') + '>' + esc(accName(a)) + '</option>').join('') + '</select></form>' : '') +
-      (pays.length ? '<div class="payments">' + pays.map(p => '<button type="button" data-lpay="' + esc(l.id) + ':' + esc(p.id) + '" style="display:flex;justify-content:space-between;gap:10px;text-align:start"><span>' + esc(shortDate(p.date) + ' · ' + accName(accOf(p.acc || l.acc))) + '</span><span class="num">' + money(p.amount) + '</span></button>').join('') + '</div>' : '') + '</div>';
-  }).join('') + (debts.length ? '<button type="button" class="row-btn" data-debttoggle style="grid-template-columns:minmax(0,1fr) auto 18px;border:1px solid var(--line);border-inline-start:4px solid ' + lkCol('project') + ';border-radius:12px"><span class="rt">' + esc(t('pjDebtSec')) + '</span><span class="num" style="font-weight:600">' + esc(money(debts.reduce((s, d) => s + d.c.toGive, 0))) + '</span><svg class="go" viewBox="0 0 24 24" style="transform:rotate(' + (state.debtOpen || lk === 'project' ? '90' : '0') + 'deg)">' + ICONS.chev + '</svg></button>' + (!(state.debtOpen || lk === 'project') ? '' : debts.map(d => {
-    const pct = d.c.s1 > 0 ? Math.min(100, d.c.gave / d.c.s1 * 100) : 0;
-    return '<div class="card lk" data-proj="' + esc(d.p.id) + '" role="button" tabindex="0" style="cursor:pointer;--k:' + lkCol('project') + '"><div class="head"><div style="min-width:0"><div class="who">' + esc(t('pjGive', { n: pnOf(d.p) })) + '</div><div class="meta">' + esc(d.p.name) + '</div></div><span class="pill open">' + esc(t('open')) + '</span></div>' +
-      '<div class="bar"><i style="width:' + pct.toFixed(1) + '%"></i></div><div class="figures"><span>' + esc(t('gainsGave')) + ' <b class="num">' + money(d.c.gave) + '</b></span><span>' + esc(t('rest')) + ' <b class="num">' + money(d.c.toGive) + '</b></span></div>' +
-      '<div class="note">' + esc(t('pjDebtNote')) + '</div></div>';
-  }).join('')) : '');
+  const shownL = all.filter(l => !words.length || words.every(w => norm([l.who, l.note, l.phone, l.date, l.amount, fmt(l.amount), totalOf(l), fmt(totalOf(l)), remainingOf(l), fmt(remainingOf(l)), t(l.dir === 'lent' ? 'dirLent' : 'dirBorrowed')].join(' ')).indexOf(w) >= 0))
+    .sort((a, b) => (a.date < b.date ? 1 : -1));
+  const act = shownL.filter(l => remainingOf(l) > 0), fin = shownL.filter(l => remainingOf(l) <= 0), finOpen = state.doneOpen || (words.length > 0 && fin.length > 0);
+  if (words.length && !shownL.length) { box.innerHTML = '<div class="empty"><strong>' + esc(t('noResult')) + '</strong></div>'; return; }
+  box.innerHTML = act.map(l => loanCardHtml(l, multi)).join('') +
+    (debts.length ? '<button type="button" class="row-btn" data-debttoggle style="grid-template-columns:minmax(0,1fr) auto 18px;border:1px solid var(--line);border-inline-start:4px solid ' + lkCol('project') + ';border-radius:12px"><span class="rt">' + esc(t('pjDebtSec')) + '</span><span class="num" style="font-weight:600">' + esc(money(debts.reduce((s, d) => s + d.c.toGive, 0))) + '</span><svg class="go" viewBox="0 0 24 24" style="transform:rotate(' + (state.debtOpen || lk === 'project' ? '90' : '0') + 'deg)">' + ICONS.chev + '</svg></button>' + (!(state.debtOpen || lk === 'project') ? '' : debts.map(d => {
+      const pct = d.c.s1 > 0 ? Math.min(100, d.c.gave / d.c.s1 * 100) : 0;
+      return '<div class="card lk" data-proj="' + esc(d.p.id) + '" role="button" tabindex="0" style="cursor:pointer;--k:' + lkCol('project') + '"><div class="head"><div style="min-width:0"><div class="who">' + esc(t('pjGive', { n: pnOf(d.p) })) + '</div><div class="meta">' + esc(d.p.name) + '</div></div><span class="pill open">' + esc(t('open')) + '</span></div>' +
+        '<div class="bar"><i style="width:' + pct.toFixed(1) + '%"></i></div><div class="figures"><span>' + esc(t('gainsGave')) + ' <b class="num">' + money(d.c.gave) + '</b></span><span>' + esc(t('rest')) + ' <b class="num">' + money(d.c.toGive) + '</b></span></div>' +
+        '<div class="note">' + esc(t('pjDebtNote')) + '</div></div>';
+    }).join('')) : '') +
+    (fin.length ? '<button type="button" class="row-btn" data-donetoggle style="grid-template-columns:minmax(0,1fr) auto 18px;border:1px solid var(--line);border-inline-start:4px solid ' + lkCol('done') + ';border-radius:12px"><span class="rt">' + esc(t('lnDoneT')) + ' · ' + fin.length + '</span><span class="num" style="font-weight:600;color:var(--ink-2)">' + esc(money(fin.reduce((s, l) => s + totalOf(l), 0))) + '</span><svg class="go" viewBox="0 0 24 24" style="transform:rotate(' + (finOpen ? '90' : '0') + 'deg)">' + ICONS.chev + '</svg></button>' + (finOpen ? fin.map(l => loanCardHtml(l, multi)).join('') : '') : '');
 }
 
 /* ---------- Comptes ---------- */
@@ -2763,7 +2894,7 @@ function renderSettings() {
     [['#set-wa-lent', 'waLent', 'waLentDef'], ['#set-wa-borrowed', 'waBorrowed', 'waBorrowedDef']].forEach(a => { const el = $(a[0]); if (document.activeElement !== el) el.value = state.settings[a[1]] || t(a[2]); });
     $('#set-priv').checked = !!prefs.privOn; $('#btn-pin').textContent = t(prefs.pin ? 'pinChange' : 'pinSet');
   }
-  ['borrowed', 'lent', 'project'].forEach(k => { $('#lk-' + k).value = lkCol(k); });
+  ['borrowed', 'lent', 'project', 'done'].forEach(k => { $('#lk-' + k).value = lkCol(k); });
   $('#set-lang').value = LANG; $('#set-cur').value = cur();
   $$('[data-theme-btn]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.themeBtn === themeNow())));
   const go = '<svg class="go" viewBox="0 0 24 24">' + ICONS.chev + '</svg>';
@@ -2903,7 +3034,7 @@ initCalc($('#calc-dep'));
 initCalc($('#calc-pexp'));
 initCalc($('#calc-ppay'));
 /* ---------- Navigation, feuilles, saisie ---------- */
-const SHEETS = ['#sheet-tx', '#sheet-loan', '#sheet-edit', '#sheet-fixed', '#sheet-other', '#sheet-incl', '#sheet-dep', '#sheet-confirm', '#sheet-prod', '#sheet-pexp', '#sheet-ppay', '#sheet-pset', '#sheet-padd', '#sheet-lpay', '#sheet-np', '#sheet-newpj', '#sheet-mergepj', '#sheet-zk', '#sheet-lot', '#sheet-pin', '#sheet-share', '#sheet-sharepay'];
+const SHEETS = ['#sheet-tx', '#sheet-loan', '#sheet-edit', '#sheet-fixed', '#sheet-other', '#sheet-incl', '#sheet-dep', '#sheet-confirm', '#sheet-prod', '#sheet-pexp', '#sheet-ppay', '#sheet-pset', '#sheet-padd', '#sheet-lpay', '#sheet-np', '#sheet-newpj', '#sheet-lotmenu', '#sheet-ladd', '#sheet-addmenu', '#sheet-mergepj', '#sheet-zk', '#sheet-lot', '#sheet-pin', '#sheet-share', '#sheet-sharepay'];
 const VIEWS = ['home', 'history', 'loans', 'zakat', 'accounts', 'settings', 'search', 'savings', 'reports', 'project', 'product', 'pjstats', 'general'];
 const TABS = ['home', 'loans', 'zakat', 'savings', 'project', 'general'];
 function openSheet(sel) { closeSheets(); $(sel).hidden = false; }
@@ -2961,7 +3092,7 @@ $('#btn-reports').addEventListener('click', () => setTab('reports'));
 let swipe = null;
 document.addEventListener('touchstart', e => {
   const tg = e.target;
-  if (e.touches.length !== 1 || tg.closest('input, select, textarea, .calc, .sheet, .scrim, .donut, #pj-filter, #topseg, #accent-chips')) { swipe = null; return; }
+  if (e.touches.length !== 1 || tg.closest('input, select, textarea, .calc, .sheet, .scrim, .donut, #pj-filter, #topseg, #pj-partbar, #pj-lots, #accent-chips')) { swipe = null; return; }
   swipe = { x: e.touches[0].clientX, y: e.touches[0].clientY };
 }, { passive: true });
 document.addEventListener('touchend', e => {
@@ -3088,17 +3219,16 @@ $('#form-loan').addEventListener('submit', async e => {
   if (!who) { $('#loan-err').textContent = t('errWho'); return; }
   if (!(amount > 0)) { $('#loan-err').textContent = t('errAmount'); return; }
   const old = loanEdit ? clone(state.loans[loanEdit]) : null;
-  if (old && amount < paidOf(old) - 0.001) { $('#loan-err').textContent = t('errBelowPaid', { n: money(paidOf(old)) }); return; }
+  if (old && amount + addsOf(old) < paidOf(old) - 0.001) { $('#loan-err').textContent = t('errBelowPaid', { n: money(Math.max(0, paidOf(old) - addsOf(old))) }); return; }
   const obj = Object.assign(old || { payments: [], ts: Date.now() }, { dir: loanDir, who: who, amount: amount, acc: $('#loan-acc').value, date: $('#loan-date').value || today(), note: $('#loan-note').value.trim(), phone: $('#loan-phone').value.trim() });
   if (!obj.phone) delete obj.phone;
   const id = loanEdit || newId(); closeSheets();
   try { await store.put('loans', id, obj); toast(t(old ? 'tSaved' : 'tLoan')); if (!old) setTab('loans'); } catch (err) { /* message déjà affiché */ }
 });
 
-$('#loan-del').addEventListener('click', async () => {
-  if (!loanConfirm) { loanConfirm = true; $('#loan-del').textContent = t('confirmDel'); $('#loan-err').textContent = t('loanDelWarn'); return; }
-  const id = loanEdit; closeSheets();
-  try { await store.del('loans', id); toast(t('tDeleted')); } catch (err) { /* message déjà affiché */ }
+$('#loan-del').addEventListener('click', () => {
+  const id = loanEdit, l = state.loans[id]; if (!l) return; closeSheets();
+  askConfirm({ title: t('del') + ' · ' + l.who, body: t('loanDelWarn'), ok: t('del'), run: async () => { await store.del('loans', id); toast(t('tDeleted')); } });
 });
 
 /* Remboursements par tranches, chacun sur le compte choisi */
@@ -3119,7 +3249,11 @@ $('#loans').addEventListener('submit', e => {
 let lp = null;
 $('#loans').addEventListener('click', e => {
   const b = e.target.closest('[data-settle]');
-  if (b) { const l = state.loans[b.dataset.settle]; if (l) addPayment(b.dataset.settle, remainingOf(l), $('select', b.closest('form')).value); return; }
+  if (b) { const id = b.dataset.settle, l = state.loans[id]; if (!l) return; const acc = $('select', b.closest('form')).value, rest = remainingOf(l);
+    askConfirm({ title: t('settleT') + ' · ' + l.who, body: t(l.dir === 'lent' ? 'settleBL' : 'settleBB', { a: money(rest), w: l.who }), ok: t('settleGo'), run: async () => { await addPayment(id, rest, acc); } }); return; }
+  const dn = e.target.closest('[data-donetoggle]'); if (dn) { state.doneOpen = !state.doneOpen; renderLoans(); return; }
+  const lan = e.target.closest('[data-laddnew]'); if (lan) { openLadd(lan.dataset.laddnew, null); return; }
+  const lad = e.target.closest('[data-ladd]'); if (lad) { const q = lad.dataset.ladd.split(':'); openLadd(q[0], q[1]); return; }
   if (e.target.closest('[data-debttoggle]')) { state.debtOpen = !state.debtOpen; renderLoans(); return; }
   const ed = e.target.closest('[data-loanedit]'); if (ed) { openLoan(ed.dataset.loanedit); return; }
   const pr = e.target.closest('[data-proj]'); if (pr) { state.pid = pr.dataset.proj; setTab('product'); return; }
@@ -3137,44 +3271,83 @@ $('#form-lpay').addEventListener('submit', async e => {
   const amount = round2(num($('#lp-amount').value)), l = clone(state.loans[lp.loan]);
   const others = (l.payments || []).filter(x => x.id !== lp.id).reduce((s, x) => s + x.amount, 0);
   if (!(amount > 0)) { $('#lp-err').textContent = t('errAmount'); return; }
-  if (amount + others > l.amount + 0.001) { $('#lp-err').textContent = t('tOver', { n: money(l.amount - others) }); return; }
+  if (amount + others > totalOf(l) + 0.001) { $('#lp-err').textContent = t('tOver', { n: money(totalOf(l) - others) }); return; }
   l.payments = l.payments.map(x => x.id === lp.id ? Object.assign(x, { amount: amount, date: $('#lp-date').value || x.date, acc: $('#lp-acc').value }) : x);
   closeSheets(); try { await store.put('loans', lp.loan, l); toast(t('tSaved')); } catch (err) { /* message déjà affiché */ }
 });
-$('#lp-del').addEventListener('click', async () => {
-  if (!lp.confirm) { lp.confirm = true; $('#lp-del').textContent = t('confirmDel'); return; }
-  const l = clone(state.loans[lp.loan]); l.payments = l.payments.filter(x => x.id !== lp.id); closeSheets();
-  try { await store.put('loans', lp.loan, l); toast(t('tDeleted')); } catch (err) { /* message déjà affiché */ }
+$('#lp-del').addEventListener('click', () => {
+  const lid = lp.loan, pid = lp.id; closeSheets();
+  askConfirm({ title: t('del'), body: t('payDelWarn'), ok: t('del'), run: async () => { const l = clone(state.loans[lid]); l.payments = l.payments.filter(x => x.id !== pid); await store.put('loans', lid, l); toast(t('tDeleted')); } });
 });
+/* Montant ajouté après coup à un prêt / crédit (avec date, compte et note : tracé dans l'historique) */
+let la = null;
+function openLadd(loanId, addId) {
+  const l = state.loans[loanId]; if (!l) return; const x = addId ? (l.adds || []).find(q => q.id === addId) : null; if (addId && !x) return;
+  la = { loan: loanId, id: addId || null };
+  $('#la-title').textContent = t(addId ? 'addEdit' : 'addAmt') + ' · ' + l.who;
+  $('#la-hint').textContent = t(l.dir === 'lent' ? 'addHintL' : 'addHintB', { a: money(totalOf(l)) });
+  $('#la-amount').value = x ? x.amount : ''; $('#la-date').value = x ? x.date : today(); $('#la-note').value = x ? (x.note || '') : '';
+  $('#la-acc-l').textContent = t(l.dir === 'lent' ? 'addAccL' : 'addAccB'); fillAccSelect('#la-acc', x ? (x.acc || l.acc) : l.acc);
+  $('#la-err').textContent = ''; $('#la-del').hidden = !x; $('#la-del').textContent = t('del'); openSheet('#sheet-ladd');
+  if (!x) setTimeout(() => $('#la-amount').focus(), 30);
+}
+$('#form-ladd').addEventListener('submit', async e => {
+  e.preventDefault(); const l = clone(state.loans[la.loan]); if (!l) return;
+  const amount = round2(num($('#la-amount').value)); if (!(amount > 0)) { $('#la-err').textContent = t('errAmount'); return; }
+  const rec = { amount: amount, date: $('#la-date').value || today(), acc: $('#la-acc').value, note: $('#la-note').value.trim() };
+  l.adds = l.adds || [];
+  if (la.id) { const q = l.adds.find(z => z.id === la.id); if (q) Object.assign(q, rec); }
+  else l.adds.push(Object.assign({ id: newId(), ts: Date.now() }, rec));
+  if (totalOf(l) < paidOf(l) - 0.001) { $('#la-err').textContent = t('errBelowPaid', { n: money(paidOf(l)) }); return; }
+  closeSheets(); try { await store.put('loans', la.loan, l); toast(t('tSaved')); } catch (err) { /* message déjà affiché */ }
+});
+$('#la-del').addEventListener('click', () => {
+  const lid = la.loan, aid = la.id; closeSheets();
+  askConfirm({ title: t('del'), body: t('addDelWarn'), ok: t('del'), run: async () => { const l = clone(state.loans[lid]); l.adds = (l.adds || []).filter(x => x.id !== aid); if (totalOf(l) < paidOf(l) - 0.001) { toast(t('errBelowPaid', { n: money(paidOf(l)) })); return; } await store.put('loans', lid, l); toast(t('tDeleted')); } });
+});
+$('#ln-q').addEventListener('input', e => { lnQ = e.target.value; renderLoans(); });
 
 /* Historique et recherche : ouvrir, supprimer */
+async function delListItem(type, id, pid) {
+  try {
+    if (type === 'tx') {
+      const x = state.tx[id];
+      await store.del('tx', id);
+      if (x && x.fx) { /* évite que la dépense fixe revienne à la prochaine ouverture */
+        const list = clone(fixeds()), f = list.find(z => z.id === x.fx);
+        if (f) { f.skip = (f.skip || []).concat([x.fxm]); await store.setSettings({ fixed: list }); }
+      }
+    } else if (type === 'loan') await store.del('loans', id);
+    else if (type === 'pay' && state.loans[id]) {
+      const copy = clone(state.loans[id]);
+      copy.payments = (copy.payments || []).filter(q => q.id !== pid);
+      await store.put('loans', id, copy);
+    } else if (type === 'ladd' && state.loans[id]) {
+      const copy = clone(state.loans[id]);
+      copy.adds = (copy.adds || []).filter(q => q.id !== pid);
+      if (totalOf(copy) < paidOf(copy) - 0.001) { toast(t('errBelowPaid', { n: money(paidOf(copy)) })); return; }
+      await store.put('loans', id, copy);
+    } else if (type === 'pjpay' && state.products[id]) {
+      const copy = clone(state.products[id]); copy.payments = (copy.payments || []).filter(q => q.id !== pid); await store.put('products', id, copy);
+    } else if (type === 'sav') {
+      const list = clone(goals()), g = list.find(z => z.id === id);
+      if (g) { g.deposits = (g.deposits || []).filter(q => q.id !== pid); await store.setSettings({ goals: list }); }
+    }
+    toast(t('tDeleted'));
+  } catch (err) { /* message déjà affiché */ }
+}
 function toggleItem(key) { state.openKey = state.openKey === key ? null : key; render(); }
 async function onListClick(e) {
   const del = e.target.closest('[data-del]');
   if (del) {
     const p = del.dataset.del.split(':'), type = p[0], id = p[1], pid = p[2];
     state.openKey = null;
-    try {
-      if (type === 'tx') {
-        const x = state.tx[id];
-        await store.del('tx', id);
-        if (x && x.fx) { /* évite que la dépense fixe revienne à la prochaine ouverture */
-          const list = clone(fixeds()), f = list.find(z => z.id === x.fx);
-          if (f) { f.skip = (f.skip || []).concat([x.fxm]); await store.setSettings({ fixed: list }); }
-        }
-      } else if (type === 'loan') await store.del('loans', id);
-      else if (type === 'pay' && state.loans[id]) {
-        const copy = clone(state.loans[id]);
-        copy.payments = (copy.payments || []).filter(q => q.id !== pid);
-        await store.put('loans', id, copy);
-      } else if (type === 'pjpay' && state.products[id]) {
-        const copy = clone(state.products[id]); copy.payments = (copy.payments || []).filter(q => q.id !== pid); await store.put('products', id, copy);
-      } else if (type === 'sav') {
-        const list = clone(goals()), g = list.find(z => z.id === id);
-        if (g) { g.deposits = (g.deposits || []).filter(q => q.id !== pid); await store.setSettings({ goals: list }); }
-      }
-      toast(t('tDeleted'));
-    } catch (err) { /* message déjà affiché */ }
+    if (type === 'loan' || type === 'pay' || type === 'ladd') {
+      const lo = state.loans[id]; render();
+      askConfirm({ title: t('del') + (lo ? ' · ' + lo.who : ''), body: t(type === 'loan' ? 'loanDelWarn' : type === 'pay' ? 'payDelWarn' : 'addDelWarn'), ok: t('del'), run: () => delListItem(type, id, pid) });
+      return;
+    }
+    await delListItem(type, id, pid);
     return;
   }
   if (e.target.closest('[data-keep]')) { state.openKey = null; render(); return; }
@@ -3387,7 +3560,7 @@ function renderAccentChips() {
 $('#accent-chips').addEventListener('click', e => { const b = e.target.closest('[data-accent]'); if (b) setPref({ accent: b.dataset.accent }); });
 
 /* Couleurs crédit / prêt / projet */
-['borrowed', 'lent', 'project'].forEach(k => $('#lk-' + k).addEventListener('change', e => {
+['borrowed', 'lent', 'project', 'done'].forEach(k => $('#lk-' + k).addEventListener('change', e => {
   const v = Object.assign({}, LK_DEF, state.settings.lkColors || {}); v[k] = e.target.value; setPref({ lkColors: v });
 }));
 $('#lk-reset').addEventListener('click', () => setPref({ lkColors: Object.assign({}, LK_DEF) }));
@@ -3587,17 +3760,20 @@ function prodCalc(p) {
   return { cost: cost, adv1: adv1, adv2: adv2, paid: paid, price: price, rest: Math.max(0, round2(price - paid)), expected: round2(price - cost),
     profit: profit, h1: h1, h2: h2, r1: r1, r2: r2, s1: s1, s2: s2, gave: gave, toGive: returned ? 0 : Math.max(0, round2(s1 - gave)), returned: returned };
 }
+const PC_DEF = { full: '#2E9E3F', part: '#F28C28' };
+const pcColors = c => ({ full: (c && c.cFull) || PC_DEF.full, part: (c && c.cPart) || PC_DEF.part });
 const lastPayAcc = p => { const l = (p.payments || []).slice().sort((a, b) => (a.date < b.date ? 1 : -1))[0]; return l && l.acc ? l.acc : firstAcc(); };
 const prodList = () => Object.keys(state.products).map(id => Object.assign({ id: id }, state.products[id]));
 const pjList = () => prodList().filter(inPj);
 const putProd = p => { const c = clone(p); delete c.id; return store.put('products', p.id, c); };
-let pjFilter = 'all', pjQ = '', pjLotSel = 'all';
+let pjFilter = 'all', pjQ = '', pjLotSel = 'all', pjGrp = 'open';
 const pjSel = { on: false, ids: new Set() };
 function prodCardHtml(p) {
   const c = prodCalc(p), pct = c.price > 0 ? Math.min(100, c.paid / c.price * 100) : 0, st = stOf(p.status);
   const meta = [typeLabel(p.type), p.client].filter(Boolean).join(' · ');
   const lvl = c.returned || !(c.price > 0) || c.paid <= 0 ? '' : c.paid >= c.price ? ' pc-full' : ' pc-part';
-  return '<div class="card prodcard' + lvl + '" data-prod="' + esc(p.id) + '" role="button" tabindex="0"><div class="head"><div style="min-width:0"><div class="who">' + esc(p.name) + '</div><div class="meta">' + esc(meta) + '</div></div>' +
+  const pcc = pcColors(cfgOf(p));
+  return '<div class="card prodcard' + lvl + '"' + (lvl ? ' style="--pc:' + (lvl === ' pc-full' ? pcc.full : pcc.part) + '"' : '') + ' data-prod="' + esc(p.id) + '" role="button" tabindex="0"><div class="head"><div style="min-width:0"><div class="who">' + esc(p.name) + '</div><div class="meta">' + esc(meta) + '</div></div>' +
     pillHtml(st) + '</div>' + '<div class="tags">' + (p.storage ? '<span class="tag">' + esc(p.storage) + '</span>' : '') + batTag(p.battery) + colTag(p) + '</div>' +
     (c.price > 0 ? '<div class="bar"><i style="width:' + pct.toFixed(1) + '%"></i></div>' : '') +
     '<div class="figures"><span>' + esc(t('pjPaid')) + ' <b class="num">' + money(c.paid) + '</b> / <span class="num">' + money(c.price) + '</span></span>' +
@@ -3627,10 +3803,22 @@ function renderProject() {
   const used = []; prodList().forEach(p => (p.expenses || []).forEach(e => { const l = kindLabel(e.kind); if (used.indexOf(l) < 0) used.push(l); }));
   dl('#dl-ekind', KINDKEYS.map(k => t('ek.' + k)).concat(used.filter(l => KINDKEYS.every(k => t('ek.' + k) !== l))));
   if (state.tab !== 'project') return;
+  maintainLots();
   if (pjPartner !== 'all' && !partners().some(x => x.id === pjPartner)) pjPartner = 'all';
-  if (pjLotSel !== 'all' && !lotOf(pjLotSel)) pjLotSel = 'all';
-  { const ls = lots(), f = $('#pj-lotsel-f'); f.hidden = !ls.length; $('#pj-lotsel').innerHTML = '<option value="all">' + esc(t('pjAllLots')) + '</option>' + ls.map(l => '<option value="' + esc(l.id) + '"' + (pjLotSel === l.id ? ' selected' : '') + '>' + esc(l.name) + '</option>').join(''); }
-  const list = pjList().filter(p => (pjPartner === 'all' || partnerOf(p.partner).id === pjPartner) && lotFilterFn(p) && (pjLotSel === 'all' || p.lot === pjLotSel));
+  /* Ouverts / Fermés → liste des lots (+ Tous) → tuiles du lot choisi → produits */
+  { if (pjLotSel === '__none') { if (pjGrp !== 'open') pjLotSel = 'all'; } else if (pjLotSel !== 'all') { const l = lotOf(pjLotSel); if (!l) pjLotSel = 'all'; else pjGrp = lotState(l); }
+    const lsAll = lots().filter(l => pjPartner === 'all' || partnerOf(l.partner).id === pjPartner), cntG = { open: 0, closed: 0 };
+    pjList().filter(p => pjPartner === 'all' || partnerOf(p.partner).id === pjPartner).forEach(p => { cntG[prodLotState(p)]++; });
+    $('#pj-grp').innerHTML = [['open', 'lotOpenF'], ['closed', 'lotClosedF']].map(k => '<button type="button" data-g="' + k[0] + '" aria-pressed="' + (pjGrp === k[0]) + '">' + esc(t(k[1])) + ' · ' + cntG[k[0]] + '</button>').join('') +
+      '<button type="button" data-addmenu aria-pressed="false">' + esc(t('addShort')) + '</button>';
+    const inG = lsAll.filter(l => lotState(l) === pjGrp).sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0));
+    const cnt = id => pjList().filter(p => (pjPartner === 'all' || partnerOf(p.partner).id === pjPartner) && p.lot === id).length;
+    $('#pj-lots').innerHTML = '<button type="button" class="chip" data-ls="all" aria-pressed="' + (pjLotSel === 'all') + '">' + esc(t('all')) + '</button>' +
+      inG.map(l => '<button type="button" class="chip" data-ls="' + esc(l.id) + '" aria-pressed="' + (pjLotSel === l.id) + '">' + esc(l.name) + ' · ' + cnt(l.id) + '</button>').join('') +
+      '<button type="button" class="chip" data-lotmenu-open="1" aria-label="' + esc(t('lotMenu')) + '">⋮</button>';
+    pjLotF = pjGrp; }
+  const pool = pjList().filter(p => pjPartner === 'all' || partnerOf(p.partner).id === pjPartner);
+  const list = pool.filter(p => prodLotState(p) === pjGrp && (pjLotSel === 'all' || (pjLotSel === '__none' ? (!p.lot || !lotOf(p.lot)) : p.lot === pjLotSel)));
   let profit = 0, collect = 0, give = 0, eProfit = 0, eGive = 0, paidAll = 0;
   list.forEach(p => {
     const c = prodCalc(p), k = stOf(p.status).kind, e = estCalc(p);
@@ -3667,15 +3855,14 @@ function renderProject() {
     '<span>' + esc(t('pjGaveTo')) + '</span><b class="num">− ' + esc(money(gaveT)) + '</b>' +
     '<span class="tot">' + esc(sel ? t('pjGive', { n: sel }) : t('pjGiveAll')) + '</span><b class="tot num">' + esc(money(giveT)) + '</b></div>' +
     (!sel && partners().length > 1 ? '<div class="sub">' + esc(t('pjToPayEach')) + '</div><div class="kv">' + partners().map(x => '<span>' + esc(x.name) + '</span><b class="num">' + esc(money(per[x.id] || 0)) + '</b>').join('') + '</div>' : '');
-  /* Filtres selon la vue : « Produits » = états (statuts) ; « Par lot » = ouverts / fermés (barre des lots) */
-  { const flat = prefs.pjView === 'flat', cnt = {}; list.forEach(p => { cnt[p.status] = (cnt[p.status] || 0) + 1; });
-    if (!flat) pjFilter = 'all'; else if (pjFilter !== 'all' && !cnt[pjFilter] && !statuses().some(s => s.id === pjFilter)) pjFilter = 'all';
-    const f = $('#pj-filter'); f.hidden = !flat;
+  { const cnt = {}; list.forEach(p => { cnt[p.status] = (cnt[p.status] || 0) + 1; });
+    if (pjFilter !== 'all' && !cnt[pjFilter]) pjFilter = 'all';
+    const f = $('#pj-filter'); f.hidden = false;
     f.innerHTML = '<button type="button" class="chip" data-pf="all" aria-pressed="' + (pjFilter === 'all') + '">' + esc(t('all')) + ' · ' + list.length + '</button>' +
-      statuses().filter(s => cnt[s.id] || pjFilter === s.id).map(s => '<button type="button" class="chip" data-pf="' + esc(s.id) + '" aria-pressed="' + (pjFilter === s.id) + '"><i class="chipdot" style="background:' + stColor(s) + '"></i>' + esc(stName(s)) + ' · ' + (cnt[s.id] || 0) + '</button>').join(''); }
+      statuses().filter(s => cnt[s.id]).map(s => '<button type="button" class="chip" data-pf="' + esc(s.id) + '" aria-pressed="' + (pjFilter === s.id) + '"><i class="chipdot" style="background:' + stColor(s) + '"></i>' + esc(stName(s)) + ' · ' + cnt[s.id] + '</button>').join(''); }
   const words = norm(pjQ).split(/\s+/).filter(Boolean);
-  const shown = list.filter(p => (pjFilter === 'all' || p.status === pjFilter) &&
-    words.every(w => norm([p.name, typeLabel(p.type), p.client, p.serial, p.color, p.storage, p.courier, stName(stOf(p.status))].join(' ')).indexOf(w) >= 0))
+  const shown = (words.length ? pool : list).filter(p => (pjFilter === 'all' || p.status === pjFilter) &&
+    words.every(w => norm([p.name, typeLabel(p.type), p.client, p.serial, p.color, p.storage, p.courier, p.phone, p.note, (p.lot && lotOf(p.lot) ? lotOf(p.lot).name : ''), partnerOf(p.partner).name, stName(stOf(p.status))].join(' ')).indexOf(w) >= 0))
     .sort((a, b) => (b.ts || 0) - (a.ts || 0));
   renderLots(list, shown, words);
   /* graphiques */
@@ -3698,6 +3885,7 @@ function renderProject() {
     '<div class="rep-card"><h3>' + esc(t('pjByType')) + '</h3>' + hb(byT, money) + '</div>' +
     '<div class="rep-card"><h3>' + esc(t('pjByStatus')) + '</h3>' + hb(cnt, n => String(n)) + '</div>' : '';
 }
+new MutationObserver(() => { $('#ps-colcount').textContent = '· ' + $('#ps-colors').children.length; }).observe($('#ps-colors'), { childList: true });
 $('#pj-q').addEventListener('input', e => { pjQ = e.target.value; renderProject(); });
 $('#pj-statusbox').addEventListener('click', e => { if (e.target.closest('[data-sbtog]')) { savePrefs({ pjProds: !prefs.pjProds }); renderProject(); return; } const b = e.target.closest('[data-pf]'); if (b) { if (prefs.pjView !== 'flat') { savePrefs({ pjView: 'flat' }); pjLotF = 'all'; pjFilter = b.dataset.pf; } else pjFilter = pjFilter === b.dataset.pf ? 'all' : b.dataset.pf; renderProject(); } });
 $('#pj-filter').addEventListener('click', e => { const b = e.target.closest('[data-pf]'); if (b) { pjFilter = b.dataset.pf; renderProject(); } });
@@ -3799,7 +3987,7 @@ function openProd(id, preLot) {
   $('#pr-del').hidden = !p; $('#pr-del').textContent = t('del'); $('#pr-err').textContent = ''; $('#pr-warn').textContent = '';
   openSheet('#sheet-prod'); if (!p) setTimeout(() => $('#pr-name').focus(), 30);
 }
-$('#btn-add-prod').addEventListener('click', () => openProd(null));
+$('#btn-add-prod').addEventListener('click', () => openProd(null, (pjLotSel !== 'all' && pjLotSel !== '__none' && lotOf(pjLotSel)) ? pjLotSel : undefined));
 $('#pr-color').addEventListener('input', e => { const h = colHex(e.target.value); if (h) $('#pr-color-c').value = h; });
 /* Passe le statut sur « Vendu » dès que le client a tout payé */
 function autoSold(p) {
@@ -3850,7 +4038,9 @@ $('#form-prod').addEventListener('submit', async e => {
   /* lot : choisi, créé ou aucun (le partenaire suit le lot) */
   const nl = $('#pr-newlot').value.trim(), sl = $('#pr-lot').value;
   if (nl) { const lid = newId(); cfg.lots = (cfg.lots || []).concat([{ id: lid, name: nl, date: p.recv, partner: p.partner }]); cfgChanged = true; p.lot = lid; }
-  else if (sl && lotOf(sl)) { p.lot = sl; p.partner = partnerOf(lotOf(sl).partner).id; } else p.lot = '';
+  else if (sl && lotOf(sl)) { p.lot = sl; p.partner = partnerOf(lotOf(sl).partner).id; }
+  else { /* le lot est obligatoire : on crée un lot du mois de réception */
+    const lid = newId(), d = p.recv || today(); cfg.lots = (cfg.lots || []).concat([{ id: lid, name: new Date(d.slice(0, 7) + '-01T00:00:00').toLocaleDateString(loc(), { month: 'long', year: 'numeric' }), date: d, partner: p.partner }]); cfgChanged = true; p.lot = lid; }
   if (pe.id && state.products[pe.id] && partnerOf(state.products[pe.id].partner).id !== p.partner && (p.transfers || []).length && !pe.moveOk) { pe.moveOk = true; $('#pr-warn').textContent = t('lotMoveWarn'); return; }
   { const L = p.lot ? lotOf(p.lot) : null; if (L && !isDone(p) && lotState(L) === 'closed') { const x = (cfg.lots || []).find(q => q.id === L.id); if (x) { x.force = 'open'; x.soldAt = lotProds(L).filter(q => q.id !== p.id && isDone(q)).length; cfgChanged = true; } } }
   const wasId = pe.id; closeSheets();
@@ -3984,14 +4174,14 @@ function stRow(s) {
 }
 $('#btn-pset').addEventListener('click', () => {
   const c = projCfg();
-  paintPjMgmt(); $('#ps-name').value = curPj().name || ''; $('#ps-role').value = String(pjRole()); psWarned = false;
+  { const pc = pcColors(projCfg()); $('#ps-cfull').value = pc.full; $('#ps-cpart').value = pc.part; } paintPjMgmt(); $('#ps-name').value = curPj().name || ''; $('#ps-role').value = String(pjRole()); psWarned = false;
   $('#ps-late').value = lateDays(); $('#ps-wa').value = waTpl(); $('#form-pset h2').textContent = t('pjSetTitle');
   $('#ps-n2').value = c.n2 || ''; $('#ps-n2').placeholder = t(pjRole() === 1 ? 'partnerMe1' : 'partner2');
   $('#ps-rate').value = pRate(); $('#ps-rate-l').textContent = t('setRate', { c: cur() });
   $('#ps-statuses').innerHTML = statuses().map(stRow).join('');
   const bc = batCfg(); $('#ps-bgood').value = bc.good; $('#ps-bmid').value = bc.mid; $('#ps-bcg').value = bc.cg; $('#ps-bcm').value = bc.cm; $('#ps-bcb').value = bc.cb;
   $('#ps-partners').innerHTML = partners().map(x => partRow(x, myPct(projCfg(), x.id))).join('');
-  $('#ps-names').value = pNames().join('\n'); $('#ps-types').value = pTypes().join('\n'); $('#ps-colors').innerHTML = pColorList().map(colRow).join(''); $('#ps-storages').value = pStorages().join('\n');
+  $('#ps-names').value = pNames().join('\n'); $('#ps-types').value = pTypes().join('\n'); $$('#form-pset details').forEach(d => { d.open = false; }); $('#ps-colors').innerHTML = pColorList().map(colRow).join(''); $('#ps-storages').value = pStorages().join('\n');
   $('#ps-err').textContent = ''; openSheet('#sheet-pset');
 });
 $('#ps-add-st').addEventListener('click', () => $('#ps-statuses').insertAdjacentHTML('beforeend', stRow(null)));
@@ -4013,8 +4203,8 @@ $('#form-pset').addEventListener('submit', async e => {
     if (paidN && !psWarned) { psWarned = true; $('#ps-err').textContent = t('pctWarn', { n: paidN }); return; } }
   pjList().forEach(pr => { const id = partnerOf(pr.partner).id; if (!plist.some(x => x.id === id)) plist.push(clone(partnerOf(pr.partner))); });
   if (!plist.length) plist.push({ id: 'p1', name: t('partner1') });
-  const cfg = { partners: plist, n1: plist[0].name, n2: $('#ps-n2').value.trim(), rate: rate, statuses: sts, names: lines('#ps-names'), types: lines('#ps-types'), bat: { good: parseInt($('#ps-bgood').value, 10) || 95, mid: parseInt($('#ps-bmid').value, 10) || 85, cg: $('#ps-bcg').value, cm: $('#ps-bcm').value, cb: $('#ps-bcb').value }, types: lines('#ps-types'), colors: colorRows(), colorsV: 2, storages: lines('#ps-storages'),
-    role: $('#ps-role').value === '1' ? 1 : 2, pct: myPct(projCfg()), waMsg: $('#ps-wa').value.trim(), lateDays: Math.min(365, Math.max(1, Math.round(num($('#ps-late').value)) || 30)) };
+  const cfg = Object.assign({}, projCfg(), { partners: plist, n1: plist[0].name, n2: $('#ps-n2').value.trim(), rate: rate, statuses: sts, names: lines('#ps-names'), types: lines('#ps-types'), bat: { good: parseInt($('#ps-bgood').value, 10) || 95, mid: parseInt($('#ps-bmid').value, 10) || 85, cg: $('#ps-bcg').value, cm: $('#ps-bcm').value, cb: $('#ps-bcb').value }, types: lines('#ps-types'), colors: colorRows(), colorsV: 2, storages: lines('#ps-storages'),
+    role: $('#ps-role').value === '1' ? 1 : 2, pct: myPct(projCfg()), waMsg: $('#ps-wa').value.trim(), lateDays: Math.min(365, Math.max(1, Math.round(num($('#ps-late').value)) || 30)), cFull: $('#ps-cfull').value, cPart: $('#ps-cpart').value });
   closeSheets(); try { await saveCfg(cfg, { name: $('#ps-name').value.trim() }); toast(t('tSaved')); } catch (err) { /* message déjà affiché */ }
 });
 
@@ -4151,14 +4341,15 @@ $('#ps-partners').addEventListener('click', e => {
 /* Barre du haut : filtre Crédits (Crédit, Prêt, Projet, Tous) ou partenaires du projet */
 function renderTopSeg() {
   const bar = $('#topseg'), tab = state.tab;
+  $('#pj-q').hidden = tab !== 'project'; paintTopName();
   if (tab !== 'loans' && tab !== 'project') { bar.hidden = true; return; }
-  bar.hidden = false;
+  bar.hidden = tab === 'project'; $('#pj-q').hidden = tab !== 'project';
   if (tab === 'loans') {
     bar.innerHTML = [['borrowed', 'lkCredit'], ['lent', 'lkLoan'], ['project', 'lkProj'], ['all', 'lkAll']].map(k => '<button type="button" data-lk="' + k[0] + '" aria-pressed="' + (state.lk === k[0]) + '">' + (k[0] === 'all' ? '' : '<i class="kd" style="--k:' + lkCol(k[0]) + '"></i>') + esc(t(k[1])) + '</button>').join('');
   } else {
     if (pjPartner !== 'all' && !partners().some(x => x.id === pjPartner)) pjPartner = 'all';
-    bar.innerHTML = partners().map(x => '<button type="button" data-pp="' + esc(x.id) + '" aria-pressed="' + (pjPartner === x.id) + '">' + esc(x.name) + '</button>').join('') +
-      '<button type="button" data-pp="all" aria-pressed="' + (pjPartner === 'all') + '">' + esc(t('lkAll')) + '</button><button type="button" data-addpartner>' + esc(t('addShort')) + '</button>';
+    $('#pj-partbar').innerHTML = partners().map(x => '<button type="button" data-pp="' + esc(x.id) + '" aria-pressed="' + (pjPartner === x.id) + '">' + esc(x.name) + '</button>').join('') +
+      '<button type="button" data-pp="all" aria-pressed="' + (pjPartner === 'all') + '">' + esc(t('lkAll')) + '</button>';
   }
 }
 $('#topseg').addEventListener('click', e => {
@@ -4167,6 +4358,17 @@ $('#topseg').addEventListener('click', e => {
   else if (p) { pjPartner = p.dataset.pp; render(); }
   else if (e.target.closest('[data-addpartner]')) { $('#np-name').value = ''; openSheet('#sheet-np'); setTimeout(() => $('#np-name').focus(), 30); }
 });
+$('#pj-partbar').addEventListener('click', e => { const p = e.target.closest('[data-pp]'); if (p) { pjPartner = p.dataset.pp; render(); } });
+$('#pj-grp').addEventListener('click', e => { if (e.target.closest('[data-addmenu]')) { openSheet('#sheet-addmenu'); return; } const g = e.target.closest('[data-g]'); if (g) { pjGrp = g.dataset.g; pjLotSel = 'all'; pjFilter = 'all'; renderProject(); } });
+$('#pj-lots').addEventListener('click', e => {
+  if (e.target.closest('[data-lotmenu-open]')) { const sel = pjLotSel !== 'all' && pjLotSel !== '__none' ? lotOf(pjLotSel) : null; $('#lm-edit').hidden = !sel; $('#lm-prod').hidden = !sel; if (sel) { $('#lm-edit').textContent = t('lotEdit') + ' · ' + sel.name; $('#lm-prod').textContent = t('newProd') + ' · ' + sel.name; } openSheet('#sheet-lotmenu'); return; }
+  const c = e.target.closest('[data-ls]'); if (c) { pjLotSel = c.dataset.ls; pjFilter = 'all'; renderProject(); }
+});
+$('#am-prod').addEventListener('click', () => { closeSheets(); openProd(null, (pjLotSel !== 'all' && pjLotSel !== '__none' && lotOf(pjLotSel)) ? pjLotSel : undefined); });
+$('#am-lot').addEventListener('click', () => { closeSheets(); openLot(null); });
+$('#lm-add').addEventListener('click', () => { closeSheets(); openLot(null); });
+$('#lm-prod').addEventListener('click', () => { const id = pjLotSel; closeSheets(); if (lotOf(id)) openProd(null, id); });
+$('#lm-edit').addEventListener('click', () => { const id = pjLotSel; closeSheets(); if (lotOf(id)) openLot(id); });
 $('#form-np').addEventListener('submit', async e => {
   e.preventDefault();
   const nm = $('#np-name').value.trim(); if (!nm) return;
@@ -4280,12 +4482,13 @@ function renderPjStats() {
 
 /* Un seul projet : on n'affiche que son nom (les partenaires font la différence) */
 function renderPjChips() {
-  $$('#view-project .section-title').forEach(e => { e.textContent = pjName(curPj()); });
-  $('#pj-switch').hidden = pjs().length < 2;
+  const multi = pjs().length > 1;
+  $('#pj-name').textContent = pjName(curPj()); $('#pj-name').title = pjName(curPj());
   $('#pj-sel').innerHTML = pjs().map(x => '<option value="' + esc(x.id) + '"' + (x.id === curPj().id ? ' selected' : '') + '>' + esc(pjName(x)) + '</option>').join('');
+  paintTopName(multi);
 }
+function paintTopName(multi) { const on = state.tab === 'project'; if (multi == null) multi = pjs().length > 1; $('#pj-name').hidden = !on || multi; $('#pj-sel').hidden = !on || !multi; }
 $('#pj-sel').addEventListener('change', e => { setPjCur(e.target.value); pjLotSel = 'all'; pjLotF = 'all'; pjFilter = 'all'; pjQ = ''; $('#pj-q').value = ''; pjSel.on = false; pjSel.ids.clear(); renderProject(); window.scrollTo(0, 0); });
-$('#pj-lotsel').addEventListener('change', e => { pjLotSel = e.target.value; renderProject(); });
 /* Ajouter / supprimer / fusionner (réglages du projet) — activé par l'interrupteur « Plusieurs projets » */
 const multiOn = () => !!state.settings.multiPj || pjs().length > 1;
 function paintPjMgmt() {
@@ -4659,7 +4862,7 @@ $('#btn-xlsx').addEventListener('click', async () => {
   });
   add(t('xTx'), txRows);
   const lRows = [[t('date'), '', t('account'), t('amountL'), t('received'), t('rest'), t('note')]];
-  Object.keys(state.loans).map(id => state.loans[id]).forEach(l => lRows.push([l.date, l.dir === 'lent' ? t('dirLent') : t('dirBorrowed') + ' · ' + l.who, accName(accOf(l.acc)), l.amount, paidOf(l), remainingOf(l), l.note || '']));
+  Object.keys(state.loans).map(id => state.loans[id]).forEach(l => lRows.push([l.date, l.dir === 'lent' ? t('dirLent') : t('dirBorrowed') + ' · ' + l.who, accName(accOf(l.acc)), totalOf(l), paidOf(l), remainingOf(l), l.note || '']));
   add(t('xLoans'), lRows);
   add(t('xAccs'), [[t('accName'), t('amountL'), t('outTotal')]].concat(accs().map(a => [accName(a), balanceFor(a.id), a.inTotal === false ? 'x' : ''])));
   add(t('xSav'), [[t('goalName'), t('goalTarget', { c: cur() }), t('saved'), t('goalDeadline')]].concat(goals().map(g => [g.name, g.target, goalSaved(g), g.deadline || ''])));
@@ -4784,7 +4987,7 @@ function homeAlert() {
 }));
 function loanWaText(l, lent) {
   const tpl = state.settings[lent ? 'waLent' : 'waBorrowed'] || t(lent ? 'waLentDef' : 'waBorrowedDef');
-  const v = { nom: l.who || '', reste: money(remainingOf(l)), total: money(l.amount), paye: money(paidOf(l)), date: shortDate(l.date) };
+  const v = { nom: l.who || '', reste: money(remainingOf(l)), total: money(totalOf(l)), paye: money(paidOf(l)), date: shortDate(l.date) };
   return tpl.replace(/\{(nom|reste|total|paye|date)\}/g, (m, k) => v[k]);
 }
 function loanWaHtml(l, lent, rest) {
@@ -4828,32 +5031,10 @@ const lotCard = (l, shown, multi, q) => {
       '<button type="button" class="btn ghost small" data-lotadd="' + esc(l.id) + '">' + esc(t('lotAddProd')) + '</button></div>' : '') + '</div>';
 };
 function renderLots(list, shown, words) {
-  const bar = $('#pj-lotbar'), q = words.length > 0, view = prefs.pjView === 'flat' ? 'flat' : 'lots';
   pjShownIds = shown.map(p => p.id);
-  bar.innerHTML = [['lots', 'viewLots'], ['flat', 'viewFlat']].map(k => '<button type="button" class="chip" data-view="' + k[0] + '" aria-pressed="' + (view === k[0]) + '">' + esc(t(k[1])) + '</button>').join('') + (view === 'flat' ? '' : '<span class="chipsep"></span>' + [['all', 'all'], ['open', 'lotOpenF'], ['closed', 'lotClosedF']].map(k => '<button type="button" class="chip" data-lf="' + k[0] + '" aria-pressed="' + (pjLotF === k[0]) + '">' + esc(t(k[1])) + '</button>').join('') +
-    '<button type="button" class="chip" data-lotnew="1">+ ' + esc(t('lotNew')) + '</button>');
-  if (view === 'flat') {
-    $('#pj-list').innerHTML = shown.length ? shown.map(prodCardHtml).join('') : '<div class="empty"><strong>' + esc(t('noProdT')) + '</strong>' + esc(t('noProdB')) + '</div>';
-    selPaint(); return;
-  }
-  const multi = pjPartner === 'all' && partners().length > 1;
-  const vis = lots().filter(l => (pjPartner === 'all' || partnerOf(l.partner).id === pjPartner) && (pjLotF === 'all' || lotState(l) === pjLotF) && (pjLotSel === 'all' || l.id === pjLotSel))
-    .sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0));
-  const loose = shown.filter(p => !p.lot || !lotOf(p.lot));
-  const looseAll = list.filter(p => !p.lot || !lotOf(p.lot));
-  let h = '';
-  const hasLotMatch = l => !q || shown.some(p => p.lot === l.id);
-  vis.filter(hasLotMatch).forEach(l => { h += lotCard(l, shown, multi, q); });
-  if (looseAll.length && pjLotF !== 'closed') {
-    h += '<div class="card lotcard"><div class="head" data-lottoggle="__none" role="button" tabindex="0"><div style="min-width:0"><div class="who">' + esc(t('lotNone')) + '</div><div class="meta">' + esc(t('lotN', { n: looseAll.length })) + '</div></div></div>' +
-      (pjOpen.__none || q || pjSel.on ? '<div class="lotbody">' + (loose.length ? loose.map(prodCardHtml).join('') : '<div class="note">' + esc(t('lotEmpty')) + '</div>') + '</div>' : '') + '</div>';
-    if (!lots().length || looseAll.some(p => !p.lot)) h += '<button type="button" class="btn ghost small" data-lotgroup="1">' + esc(t('lotGroup')) + '</button>';
-  }
-  $('#pj-list').innerHTML = h || '<div class="empty"><strong>' + esc(t('noProdT')) + '</strong>' + esc(t('noProdB')) + '</div>';
+  $('#pj-list').innerHTML = shown.length ? shown.sort((a, b) => (b.ts || 0) - (a.ts || 0)).map(prodCardHtml).join('') : '<div class="empty"><strong>' + esc(t('noProdT')) + '</strong>' + esc(t('noProdB')) + '</div>';
   selPaint();
 }
-let pjShownIds = [];
-/* ----- Mode « Sélectionner » : produits (ou lots entiers) à partager ----- */
 function selToggle(ids) {
   const all = ids.length && ids.every(id => pjSel.ids.has(id));
   ids.forEach(id => { if (all) pjSel.ids.delete(id); else pjSel.ids.add(id); });
@@ -4874,15 +5055,10 @@ $('#sel-share').addEventListener('click', () => { if (!pjSel.ids.size) { toast(t
 $('#btn-share').addEventListener('click', () => openShare(pjPartner !== 'all' ? 'p:' + pjPartner : 'all'));
 
 /* Filtre appliqué aux cases du haut : ouverts / fermés */
-const lotFilterFn = p => pjLotF === 'all' || prodLotState(p) === pjLotF;
+const lotFilterFn = p => prodLotState(p) === pjGrp;
 
 /* ----- Clics sur la liste ----- */
 let lotPress = 0;
-$('#pj-lotbar').addEventListener('click', e => {
-  const f = e.target.closest('[data-lf]'), n = e.target.closest('[data-lotnew]'), v = e.target.closest('[data-view]');
-  if (v) { savePrefs({ pjView: v.dataset.view }); if (v.dataset.view === 'flat') pjLotF = 'all'; else pjFilter = 'all'; renderProject(); return; }
-  if (f) { pjLotF = f.dataset.lf; renderProject(); } else if (n) openLot(null);
-});
 $('#pj-list').addEventListener('click', e => {
   if (e.target.closest('[data-prod]')) return;
   const m = e.target.closest('[data-lotmenu]'); if (m) { openLot(m.dataset.lotmenu); return; }
@@ -4918,7 +5094,7 @@ $('#form-lot').addEventListener('submit', async e => {
   const name = $('#lot-name').value.trim(); if (!name) { $('#lot-err').textContent = t('errName'); return; }
   const list = clone(lots()), pid = $('#lot-partner').value; let l = lotEd.id ? list.find(x => x.id === lotEd.id) : null;
   const oldPartner = l ? partnerOf(l.partner).id : null;
-  if (!l) { l = { id: newId() }; list.push(l); }
+  if (!l) { l = { id: newId() }; list.push(l); pjGrp = 'open'; pjLotSel = l.id; }
   Object.assign(l, { name: name, date: $('#lot-date').value || today(), partner: pid });
   const moved = lotEd.id && oldPartner && oldPartner !== pid;
   if (moved && lotProds(lotOf(lotEd.id)).some(p => (p.transfers || []).length) && !lotEd.confirmMove) { lotEd.confirmMove = true; $('#lot-err').textContent = t('lotMoveWarn'); return; }
@@ -4940,7 +5116,7 @@ $('#lot-actions').addEventListener('click', async e => {
   if (act === 'del') {
     if (!lotEd.confirmDel) { lotEd.confirmDel = true; b.textContent = t('confirmDel'); $('#lot-err').textContent = t('lotDelWarn'); return; }
     const ps = lotProds(l); closeSheets();
-    try { await saveLots(list.filter(q => q.id !== l.id)); for (const p of ps) { const c = clone(p); c.lot = ''; await putProd(c); } toast(t('tDeleted')); } catch (err) { /* */ } return;
+    pjLotSel = 'all'; try { await saveLots(list.filter(q => q.id !== l.id)); for (const p of ps) { const c = clone(p); c.lot = ''; await putProd(c); } toast(t('tDeleted')); } catch (err) { /* */ } return;
   }
   const target = $('#lot-target').value, withP = $('#lot-withprods').checked;
   if (act === 'move') {
@@ -4961,7 +5137,22 @@ $('#lot-actions').addEventListener('click', async e => {
 });
 
 /* ----- Regroupement des produits existants par mois de réception (par partenaire) ----- */
-async function groupByMonth() {
+/* Récupération : des produits qui pointent vers un lot disparu (ancien défaut d'enregistrement des réglages) retrouvent un lot */
+let lotRecovering = false;
+async function recoverLots() {
+  if (lotRecovering) return; const orph = {};
+  pjList().forEach(p => { if (p.lot && !lotOf(p.lot)) (orph[p.lot] = orph[p.lot] || []).push(p); });
+  const ids = Object.keys(orph); if (!ids.length) return; lotRecovering = true;
+  try {
+    const list = clone(lots()), used = {};
+    ids.forEach(id => {
+      const ps = orph[id], first = ps.map(p => p.recv || p.date || today()).sort()[0], base = new Date(first.slice(0, 7) + '-01T00:00:00').toLocaleDateString(loc(), { month: 'long', year: 'numeric' });
+      used[base] = (used[base] || 0) + 1; list.push({ id: id, name: used[base] > 1 ? base + ' (' + used[base] + ')' : base, date: first, partner: partnerOf(ps[0].partner).id });
+    });
+    await saveLots(list);
+  } catch (err) { /* */ }
+}
+async function groupByMonth(silent) {
   const loose = pjList().filter(p => !p.lot || !lotOf(p.lot)); if (!loose.length) return;
   const list = clone(lots()), groups = {};
   loose.forEach(p => { const d = p.recv || p.date || today(), key = partnerOf(p.partner).id + '|' + d.slice(0, 7); (groups[key] = groups[key] || { pid: partnerOf(p.partner).id, month: d.slice(0, 7), ps: [] }).ps.push(p); });
@@ -4971,14 +5162,19 @@ async function groupByMonth() {
     const name = new Date(g.month + '-01T00:00:00').toLocaleDateString(loc(), { month: 'long', year: 'numeric' });
     const id = newId(); list.push({ id: id, name: name, date: first, partner: g.pid }); g.ps.forEach(p => upd.push([p, id]));
   });
-  try { await saveLots(list); for (const u of upd) { const c = clone(u[0]); c.lot = u[1]; await putProd(c); } toast(t('lotGrouped', { n: Object.keys(groups).length })); } catch (err) { /* */ }
+  try { await saveLots(list); for (const u of upd) { const c = clone(u[0]); c.lot = u[1]; await putProd(c); } if (!silent) toast(t('lotGrouped', { n: Object.keys(groups).length })); } catch (err) { /* */ }
+}
+let lotMaint = false;
+async function maintainLots() {
+  if (lotMaint) return; lotMaint = true;
+  try { await recoverLots(); if (pjList().some(p => !p.lot || !lotOf(p.lot))) await groupByMonth(true); } finally { lotMaint = false; }
 }
 
 /* ----- Produit : choix du lot ----- */
 function fillLotSelect(partnerId, sel) {
   const ls = lots().filter(l => partnerOf(l.partner).id === partnerId).sort((a, b) => (a.date < b.date ? 1 : -1));
-  $('#pr-lot').innerHTML = '<option value="">' + esc(t('lotNone')) + '</option>' + ls.map(l => '<option value="' + esc(l.id) + '">' + esc(l.name) + (l.date ? ' · ' + esc(shortDate(l.date)) : '') + '</option>').join('');
-  $('#pr-lot').value = ls.some(l => l.id === sel) ? sel : '';
+  $('#pr-lot').innerHTML = (ls.length ? '' : '<option value="">' + esc(t('lotAutoNew')) + '</option>') + ls.map(l => '<option value="' + esc(l.id) + '">' + esc(l.name) + (l.date ? ' · ' + esc(shortDate(l.date)) : '') + '</option>').join('');
+  if (ls.length) $('#pr-lot').value = ls.some(l => l.id === sel) ? sel : ls[0].id;
 }
 $('#pr-partner').addEventListener('change', () => fillLotSelect($('#pr-partner').value, ''));
 $('#pr-lot').addEventListener('change', () => {
@@ -5061,6 +5257,7 @@ function openShare(def) {
   $('#sh-note').textContent = t('shNote');
   openSheet('#sheet-share');
 }
+$('#sh-pick').addEventListener('click', () => { closeSheets(); pjSel.on = true; pjSel.ids.clear(); renderProject(); });
 $('#sheet-share').addEventListener('click', e => {
   const b = e.target.closest('[data-shfmt]'); if (!b) return;
   const v = $('#sh-scope').value; let sc = { all: true };
@@ -5135,6 +5332,7 @@ function onChange() {
   applyPrefs(); render(); maybeApply();
   if (!$('#sheet-incl').hidden) renderIncl();
 }
+try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist(); } catch (e) { /* ignore */ }
 loadPrefs(); applyPrefs(); applyPriv(); if (prefs.pin) showLock(); render();
 initStore(onChange).then(s => {
   store = s; onChange();
