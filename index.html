@@ -304,8 +304,7 @@ input, select { font: inherit; color: inherit; }
 .catline { grid-template-columns: 38px minmax(0,1fr) auto; border: 1px solid var(--line); border-radius: 12px; }
 .field textarea { font: inherit; color: inherit; resize: vertical; }
 .prodcard { cursor: pointer; }
-.prodcard.pc-full { background: color-mix(in srgb, var(--pc) 26%, var(--surface)); border-color: var(--pc); border-inline-start: 6px solid var(--pc); }
-.prodcard.pc-part { background: color-mix(in srgb, var(--pc) 22%, var(--surface)); border-color: var(--pc); border-inline-start: 6px solid var(--pc); }
+.prodcard.pc-st { background: color-mix(in srgb, var(--pc) 20%, var(--surface)); border-color: color-mix(in srgb, var(--pc) 55%, var(--line)); border-inline-start: 6px solid var(--pc); }
 .kv { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 4px 12px; font-size: 14px; }
 .kv b { text-align: end; overflow-wrap: anywhere; }
 .kv .tot { font-weight: 700; border-top: 1px solid var(--line); padding-top: 6px; }
@@ -1187,7 +1186,7 @@ button, [role="button"], .tabs, .seg, .chip, .stat, .lotcard .head { -webkit-tou
     <button type="button" class="btn ghost small" id="ps-add-st" data-i="addStatus"></button>
 </div></details>
     <details class="fold" id="ps-f-oth"><summary><span data-i="pjOther"></span></summary><div class="foldbody">    <div class="field"><label for="ps-rate" id="ps-rate-l"></label><input id="ps-rate" type="number" inputmode="decimal" min="0" step="0.0001"></div>
-    <div class="field"><label data-i="pcColT"></label><div class="two"><div class="field"><label for="ps-cfull" data-i="pcFull"></label><input type="color" id="ps-cfull"></div><div class="field"><label for="ps-cpart" data-i="pcPart"></label><input type="color" id="ps-cpart"></div></div><div class="note" data-i="pcColH"></div></div>
+    <div class="field" hidden><label data-i="pcColT"></label><div class="two"><div class="field"><label for="ps-cfull" data-i="pcFull"></label><input type="color" id="ps-cfull"></div><div class="field"><label for="ps-cpart" data-i="pcPart"></label><input type="color" id="ps-cpart"></div></div><div class="note" data-i="pcColH"></div></div>
     <div class="field"><label for="ps-late" data-i="lateDaysL"></label><input id="ps-late" type="number" inputmode="numeric" min="1" max="365" step="1"><div class="note" data-i="lateDaysH"></div></div>
     <div class="field"><label for="ps-wa" data-i="waTplL"></label><textarea id="ps-wa" rows="4" class="notearea"></textarea><div class="note" data-i="waTplH"></div></div>
 </div></details>
@@ -2259,6 +2258,15 @@ Object.assign(DICT, {
 Object.assign(DICT, {
   settleBP: ['Enregistrer {a} comme payé par {w} ? Le produit sera marqué comme soldé.', 'Record {a} as paid by {w}? The product will be marked as fully paid.', 'تسجيل {a} كمدفوع من {w}؟ سيُعتبر المنتج مدفوعًا بالكامل.', 'نسجل {a} بحال خلصها {w}؟ المنتوج غادي يتعلم بحال خالص كامل.']
 });
+Object.assign(DICT, {
+  errSoldUnpaid: ['Un produit ne peut être « vendu » que s’il est payé à 100 % (reste {n}).', 'A product can only be “sold” once fully paid (remaining {n}).', 'لا يمكن اعتبار المنتج «مباعًا» إلا بعد دفعه بالكامل (المتبقي {n}).', 'المنتوج ما يتحسبش «مباع» حتى يتخلص 100 % (الباقي {n}).'],
+  lotCloseAsk: ['Fermer ce lot ? Il passera dans les lots fermés.', 'Close this batch? It will move to closed batches.', 'إغلاق هذه الدفعة؟ ستنتقل إلى الدفعات المغلقة.', 'تسد هاد اللو؟ غادي يمشي للوطات المسدودة.'],
+  lotReopenAsk: ['Rouvrir ce lot ? Il repassera dans les lots ouverts.', 'Reopen this batch? It will move back to open batches.', 'إعادة فتح هذه الدفعة؟ ستعود إلى الدفعات المفتوحة.', 'تعاود تحل هاد اللو؟ غادي يرجع للوطات المفتوحة.'],
+  lotReadyT: ['Lot « {n} » vendu à 100 %', 'Batch “{n}” 100% sold', 'الدفعة «{n}» بيعت بالكامل', 'اللو «{n}» تباع 100 %'],
+  lotReadyB: ['Tous les produits sont vendus et payés. Transférer ce lot vers les lots fermés, ou le garder ouvert ?', 'All products are sold and paid. Move this batch to closed batches, or keep it open?', 'جميع المنتجات بيعت ودُفعت. هل تنقل هذه الدفعة إلى المغلقة أم تبقيها مفتوحة؟', 'جميع المنتوجات تباعو وتخلصو. نحيدو هاد اللو للمسدودين ولا نخليوه مفتوح؟'],
+  lotReadyClose: ['Fermer le lot', 'Close the batch', 'إغلاق الدفعة', 'سد اللو'],
+  lotReadyKeep: ['Garder ouvert', 'Keep open', 'إبقاؤها مفتوحة', 'خليه مفتوح'],
+});
 /* ---------- Icônes (traits 24x24) et couleurs ---------- */
 const ICONS = {
   cart: '<circle cx="9" cy="20" r="1.2"/><circle cx="18" cy="20" r="1.2"/><path d="M2 3h3l2.7 11.5a2 2 0 0 0 2 1.5h8.2a2 2 0 0 0 2-1.5L21 7H6"/>',
@@ -2832,12 +2840,14 @@ function renderSearch() {
 }
 
 /* ---------- Crédits ---------- */
-let lnQ = '';
+let lnQ = ''; const lnOpen = new Set();
 function loanCardHtml(l, multi) {
   const lent = l.dir === 'lent', paid = paidOf(l), rest = remainingOf(l), tot = totalOf(l), pct = tot > 0 ? Math.min(100, paid / tot * 100) : 0, done = rest <= 0;
   const hist = (l.payments || []).map(p => ({ k: 'p', x: p })).concat((l.adds || []).map(a => ({ k: 'a', x: a }))).sort((a, b) => (a.x.date < b.x.date ? 1 : a.x.date > b.x.date ? -1 : (b.x.ts || 0) - (a.x.ts || 0)));
   const meta = t(lent ? 'lentOn' : 'borrowedOn', { a: money(l.amount), d: shortDate(l.date) }) + ((l.adds || []).length ? ' · ' + t('totalNow', { a: money(tot) }) : '') + (l.note ? ' · ' + l.note : '') + (multi ? ' · ' + accName(accOf(l.acc)) : '');
-  return '<div class="card lk' + (done ? ' done' : '') + '" style="--k:' + (done ? lkCol('done') : lkCol(lent ? 'lent' : 'borrowed')) + '"><div class="head"><div style="min-width:0"><div class="who">' + esc(l.who) + '</div><div class="meta">' + esc(meta) + '</div></div>' +
+  const kc = done ? lkCol('done') : lkCol(lent ? 'lent' : 'borrowed');
+  if (!lnOpen.has(l.id)) return '<div class="card lk compact' + (done ? ' done' : '') + '" data-lnopen="' + esc(l.id) + '" role="button" tabindex="0" style="--k:' + kc + ';cursor:pointer"><div class="head"><div style="min-width:0"><div class="who">' + esc(l.who) + '</div><div class="meta">' + esc(t(lent ? 'lentOn' : 'borrowedOn', { a: money(tot), d: shortDate(l.date) })) + '</div></div><div style="text-align:end"><div class="meta">' + esc(t('rest')) + '</div><b class="num">' + money(rest) + '</b></div></div></div>';
+  return '<div class="card lk' + (done ? ' done' : '') + '" style="--k:' + kc + '"><div class="head" data-lnclose="' + esc(l.id) + '" style="cursor:pointer"><div style="min-width:0"><div class="who">' + esc(l.who) + '</div><div class="meta">' + esc(meta) + '</div></div>' +
     '<span class="pill ' + (rest > 0 ? 'open' : 'done') + '">' + esc(t(rest > 0 ? 'open' : 'done')) + '</span>' +
     '<button class="icon-btn" data-laddnew="' + esc(l.id) + '" aria-label="' + esc(t('addAmt') + ' : ' + l.who) + '" title="' + esc(t('addAmt')) + '">' + ico('plus') + '</button>' +
     '<button class="icon-btn" data-loanedit="' + esc(l.id) + '" aria-label="' + esc(t('edit') + ' : ' + l.who) + '">' + ico('pencil') + '</button></div>' +
@@ -3252,6 +3262,8 @@ $('#loans').addEventListener('submit', e => {
 });
 let lp = null;
 $('#loans').addEventListener('click', e => {
+  { const o = e.target.closest('[data-lnopen]'), c = !o && !e.target.closest('button,a,input,select,form') && e.target.closest('[data-lnclose]');
+    if (o) { lnOpen.add(o.dataset.lnopen); renderLoans(); return; } if (c) { lnOpen.delete(c.dataset.lnclose); renderLoans(); return; } }
   const b = e.target.closest('[data-settle]');
   if (b) { const id = b.dataset.settle, l = state.loans[id]; if (!l) return; const acc = $('select', b.closest('form')).value, rest = remainingOf(l);
     askConfirm({ title: t('settleT') + ' · ' + l.who, body: t(l.dir === 'lent' ? 'settleBL' : 'settleBB', { a: money(rest), w: l.who }), ok: t('settleGo'), run: async () => { await addPayment(id, rest, acc); } }); return; }
@@ -3775,14 +3787,12 @@ const pjSel = { on: false, ids: new Set() };
 function prodCardHtml(p) {
   const c = prodCalc(p), pct = c.price > 0 ? Math.min(100, c.paid / c.price * 100) : 0, st = stOf(p.status);
   const meta = [typeLabel(p.type), p.client].filter(Boolean).join(' · ');
-  const lvl = c.returned || !(c.price > 0) || c.paid <= 0 ? '' : c.paid >= c.price ? ' pc-full' : ' pc-part';
-  const pcc = pcColors(cfgOf(p));
-  return '<div class="card prodcard' + lvl + '"' + (lvl ? ' style="--pc:' + (lvl === ' pc-full' ? pcc.full : pcc.part) + '"' : '') + ' data-prod="' + esc(p.id) + '" role="button" tabindex="0"><div class="head"><div style="min-width:0"><div class="who">' + esc(p.name) + '</div><div class="meta">' + esc(meta) + '</div></div>' +
+  return '<div class="card prodcard pc-st" style="--pc:' + stColor(st) + '" data-prod="' + esc(p.id) + '" role="button" tabindex="0"><div class="head"><div style="min-width:0"><div class="who">' + esc(p.name) + '</div><div class="meta">' + esc(meta) + '</div></div>' +
     pillHtml(st) + '</div>' + '<div class="tags">' + (p.storage ? '<span class="tag">' + esc(p.storage) + '</span>' : '') + batTag(p.battery) + colTag(p) + '</div>' +
     (c.price > 0 ? '<div class="bar"><i style="width:' + pct.toFixed(1) + '%"></i></div>' : '') +
     '<div class="figures"><span>' + esc(t('pjPaid')) + ' <b class="num">' + money(c.paid) + '</b> / <span class="num">' + money(c.price) + '</span></span>' +
     '<span>' + esc(pn2()) + ' <b class="num">' + money(c.s2) + '</b></span></div>' +
-    '<div class="figures"><span>' + esc(pnOf(p)) + ' <b class="num">' + money(c.s1) + '</b></span><span>' + esc(t('gainsGave')) + ' <b class="num">' + money(c.gave) + '</b></span></div>' + (needsAdd(p) ? '<div class="note" style="color:var(--expense);font-weight:600">⚠ ' + esc(t('alertCard')) + '</div>' : '') + '</div>';
+    (c.price > 0 && !c.returned ? '<div class="figures"><span>' + esc(t('rest')) + ' <b class="num">' + money(Math.max(0, c.rest)) + '</b></span></div>' : '') + '<div class="figures"><span>' + esc(pnOf(p)) + ' <b class="num">' + money(c.s1) + '</b></span><span>' + esc(t('gainsGave')) + ' <b class="num">' + money(c.gave) + '</b></span></div>' + (needsAdd(p) ? '<div class="note" style="color:var(--expense);font-weight:600">⚠ ' + esc(t('alertCard')) + '</div>' : '') + '</div>';
 }
 
 const pjTog = { profit: false, collect: false, give: false, prods: false, buy: false };
@@ -3946,6 +3956,7 @@ $('#prod-detail').addEventListener('change', e => { if (e.target.id === 'pd-stat
 async function setStatus(pid, sid) {
   const p = Object.assign({ id: pid }, clone(state.products[pid]));
   p.status = sid;
+  if (stOf(sid).kind === 'sold' && stOf(state.products[pid].status).kind !== 'sold') { const c = prodCalc(p); if (c.price > 0 && c.paid < c.price - 0.005) { toast(t('errSoldUnpaid', { n: money(round2(c.price - c.paid)) })); renderProduct && renderProduct(); return; } }
   try {
     await putProd(p);
     if (stOf(sid).kind === 'returned' && personalTx(p)) { await store.del('tx', 'pj-' + pid); toast(t('retNote')); }
@@ -4020,6 +4031,7 @@ $('#form-prod').addEventListener('submit', async e => {
     if (bcur === 'AED') m.rate = brate;
     p.expenses.unshift(m);
   }
+  { const c0 = prodCalc(p), was = pe.id && state.products[pe.id] ? stOf(state.products[pe.id].status).kind : ''; if (stOf(p.status).kind === 'sold' && was !== 'sold' && c0.price > 0 && c0.paid < c0.price - 0.005) { $('#pr-err').textContent = t('errSoldUnpaid', { n: money(round2(c0.price - c0.paid)) }); return; } }
   const soldNow = autoSold(p);
   const cfg = clone(projCfg()); let cfgChanged = false;
   if (p.storage && pStorages().indexOf(p.storage) < 0) { cfg.storages = pStorages().concat([p.storage]); cfgChanged = true; }
@@ -4046,7 +4058,7 @@ $('#form-prod').addEventListener('submit', async e => {
   else { /* le lot est obligatoire : on crée un lot du mois de réception */
     const lid = newId(), d = p.recv || today(); cfg.lots = (cfg.lots || []).concat([{ id: lid, name: new Date(d.slice(0, 7) + '-01T00:00:00').toLocaleDateString(loc(), { month: 'long', year: 'numeric' }), date: d, partner: p.partner }]); cfgChanged = true; p.lot = lid; }
   if (pe.id && state.products[pe.id] && partnerOf(state.products[pe.id].partner).id !== p.partner && (p.transfers || []).length && !pe.moveOk) { pe.moveOk = true; $('#pr-warn').textContent = t('lotMoveWarn'); return; }
-  { const L = p.lot ? lotOf(p.lot) : null; if (L && !isDone(p) && lotState(L) === 'closed') { const x = (cfg.lots || []).find(q => q.id === L.id); if (x) { x.force = 'open'; x.soldAt = lotProds(L).filter(q => q.id !== p.id && isDone(q)).length; cfgChanged = true; } } }
+  { const L = p.lot ? lotOf(p.lot) : null; if (L && !isDone(p) && lotState(L) === 'closed') { const x = (cfg.lots || []).find(q => q.id === L.id); if (x) { x.force = 'open'; delete x.keep; cfgChanged = true; } } }
   const wasId = pe.id; closeSheets();
   try {
     await putProd(p);
@@ -5004,19 +5016,15 @@ function loanWaHtml(l, lent, rest) {
 /* ---------- Lots : partenaire, puis lots, puis produits ---------- */
 const lots = () => Array.isArray(projCfg().lots) ? projCfg().lots : [];
 const lotOf = id => lots().find(l => l.id === id);
-const isDone = p => stOf(p.status).kind === 'sold'; /* seul un produit vendu compte pour fermer un lot */
+const isDone = p => { if (stOf(p.status).kind !== 'sold') return false; const c = prodCalc(p); return !(c.price > 0) || c.paid >= c.price - 0.005; }; /* vendu ET payé à 100 % */
 const lotProds = l => pjList().filter(p => p.lot === l.id);
 /* Date de réception d'un lot = la plus ancienne date de réception de ses produits (sinon la date du lot) */
 const lotRecv = l => { const ds = lotProds(l).map(p => p.recv || p.date).filter(Boolean).sort(); return ds[0] || l.date || ''; };
 const lotByRecv = (a, b) => { const x = lotRecv(a), y = lotRecv(b); return x < y ? 1 : x > y ? -1 : 0; };
 const lotSold = l => lotProds(l).filter(isDone).length;
-/* Un lot se ferme tout seul seulement quand tous ses produits sont vendus. « force » permet de le rouvrir ou de le fermer à la main. */
-function lotState(l) {
-  const ps = lotProds(l), auto = ps.length && ps.every(isDone) ? 'closed' : 'open';
-  if (l.force === 'closed') return 'closed';
-  if (l.force === 'open') return auto === 'closed' && lotSold(l) > (l.soldAt || 0) ? 'closed' : 'open';
-  return auto;
-}
+/* Un lot ne se ferme jamais tout seul : quand tout est vendu et payé à 100 %, on demande confirmation (lotReady). */
+const lotState = l => l.force === 'closed' ? 'closed' : 'open';
+const lotReady = l => { const ps = lotProds(l); return l.force !== 'closed' && ps.length > 0 && ps.every(isDone) && l.keep !== ps.length; };
 const prodLotState = p => { const l = p.lot ? lotOf(p.lot) : null; return l ? lotState(l) : 'open'; };
 let pjLotF = 'all', pjOpen = {};
 function lotTotals(ps) {
@@ -5117,8 +5125,10 @@ $('#lot-actions').addEventListener('click', async e => {
   const b = e.target.closest('[data-lotact]'); if (!b || !lotEd.id) return;
   const l = lotOf(lotEd.id); if (!l) return; const act = b.dataset.lotact, list = clone(lots()), x = list.find(q => q.id === l.id);
   if (act === 'toggle') {
-    if (lotState(l) === 'open') x.force = 'closed'; else { x.force = 'open'; x.soldAt = lotSold(l); }
-    closeSheets(); try { await saveLots(list); toast(t('tSaved')); } catch (err) { /* */ } return;
+    const closing = lotState(l) === 'open';
+    askConfirm({ title: t(closing ? 'lotClose' : 'lotReopen') + ' · ' + l.name, body: t(closing ? 'lotCloseAsk' : 'lotReopenAsk'), ok: t(closing ? 'lotClose' : 'lotReopen'),
+      run: async () => { const L2 = clone(lots()), y = L2.find(q => q.id === l.id); if (!y) return; if (closing) y.force = 'closed'; else { y.force = 'open'; y.keep = lotProds(l).length; } await saveLots(L2); toast(t('tSaved')); } });
+    return;
   }
   if (act === 'pdf' || act === 'xls' || act === 'wa') { closeSheets(); exportLots({ lot: l.id }, act); return; }
   if (act === 'del') {
@@ -5173,9 +5183,23 @@ async function groupByMonth(silent) {
   try { await saveLots(list); for (const u of upd) { const c = clone(u[0]); c.lot = u[1]; await putProd(c); } if (!silent) toast(t('lotGrouped', { n: Object.keys(groups).length })); } catch (err) { /* */ }
 }
 let lotMaint = false;
+const lotAsked = new Set();
 async function maintainLots() {
   if (lotMaint) return; lotMaint = true;
-  try { await recoverLots(); if (pjList().some(p => !p.lot || !lotOf(p.lot))) await groupByMonth(true); } finally { lotMaint = false; }
+  try {
+    await recoverLots(); if (pjList().some(p => !p.lot || !lotOf(p.lot))) await groupByMonth(true);
+    /* migration : les lots qui étaient fermés automatiquement (tout vendu) restent fermés */
+    if (!projCfg().lotAskV) { const cfg = clone(projCfg()); cfg.lots = (cfg.lots || []).map(l => { const ps = lotProds(l); if (!l.force && ps.length && ps.every(p => stOf(p.status).kind === 'sold')) l.force = 'closed'; return l; }); cfg.lotAskV = 1; await saveCfg(cfg); }
+    checkLotsReady();
+  } finally { lotMaint = false; }
+}
+function checkLotsReady() {
+  if (state.tab !== 'project' || !$('#sheet-confirm').hidden) return;
+  const l = lots().find(x => lotReady(x) && !lotAsked.has(x.id + ':' + lotProds(x).length)); if (!l) return;
+  lotAsked.add(l.id + ':' + lotProds(l).length);
+  const set = async (force, keep) => { const L2 = clone(lots()), y = L2.find(q => q.id === l.id); if (!y) return; if (force) y.force = force; y.keep = keep; await saveLots(L2); };
+  askConfirm({ title: t('lotReadyT', { n: l.name }), body: t('lotReadyB'), ok: t('lotReadyClose'), alt: t('lotReadyKeep'),
+    run: () => set('closed', undefined), altRun: () => set(null, lotProds(l).length) });
 }
 
 /* ----- Produit : choix du lot ----- */
